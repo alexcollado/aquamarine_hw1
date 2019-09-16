@@ -7,6 +7,9 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 public class Cse308AquamarineApplication {
 
+    // Delete comment later
+    // Second bogus comment
+
     public static void main(String[] args) {
         SpringApplication.run(Cse308AquamarineApplication.class, args);
     }
