@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 public class Cse308AquamarineApplication {
 
     // Delete comment later
+    // Second bogus comment
 
     public static void main(String[] args) {
         SpringApplication.run(Cse308AquamarineApplication.class, args);
