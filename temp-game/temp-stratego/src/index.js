@@ -19,6 +19,23 @@ function Square(props) {
     );
 }
 
+function OccupiedSquare(props){
+    //check owner first?
+    if(props.owner === 'P'){
+        return(
+            <button className="square player-square">
+                {props.value}
+            </button>
+        );
+    }else{
+        return(
+            <button className="square computer-square">
+                {props.value}
+            </button>
+        );
+    }
+}
+
 function Piece(props) {
     return (
         <div>
@@ -65,6 +82,15 @@ class PieceTable extends React.Component {
 
 class Board extends React.Component {
     renderSquare(i) {
+        if(this.props.game[i]){
+            return(
+                <OccupiedSquare 
+                    value={this.props.squares[i]}
+                    owner={this.props.game[i]}
+                    //different onclick method? so that you can move it?
+                />
+            );
+        }
         return (
             <Square
                 value={this.props.squares[i]}
@@ -205,7 +231,8 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            squares: Array(100).fill(null),
+            squares: Array(100).fill(null), //contains the values needed to display board
+            game: Array(100).fill(null), // used to differentiate player from computer pieces
             player_pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             player_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
             playerIsNext: true,
@@ -225,6 +252,15 @@ class Game extends React.Component {
             return; 
         }
 
+        const game = this.state.game.slice();
+        if(this.state.playerIsNext){
+            // player's turn == P on game table
+            game[i] = 'P';
+        }else{
+            // computer's turn == C on game table
+            game[i] = 'C';
+        }
+
         squares[i] = this.state.current_piece;
         piece_count[j] = (piece_count[j] - 1);
 
@@ -232,6 +268,7 @@ class Game extends React.Component {
             squares: squares,
             playerIsNext: !this.state.playerIsNext,
             player_piece_count: piece_count,
+            game: game,
         });
     }
 
@@ -264,6 +301,7 @@ class Game extends React.Component {
                 <div className="game">
                     <Board
                         squares={this.state.squares}
+                        game={this.state.game}
                         onClick={(i) => this.handleClick(i)}
                     />
                 </div>

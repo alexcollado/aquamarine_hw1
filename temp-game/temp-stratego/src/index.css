@@ -44,11 +44,18 @@ ol, ul {
 
 .square:focus {
   outline: none;
-  background: #0b8803;
 }
 
 .square:hover{
   background: #0b8803;
+}
+
+.player-square{
+  color: red;
+}
+
+.computer-square{
+  color: blue;
 }
 
 .player-piece {
