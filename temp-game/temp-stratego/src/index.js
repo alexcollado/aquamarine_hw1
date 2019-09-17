@@ -262,6 +262,7 @@ class Game extends React.Component {
             playerIsNext: true,
             gameStart: false,
             current_piece: null,
+            warning: null,
         };
     }
 
@@ -275,10 +276,19 @@ class Game extends React.Component {
              */
 
             const squares = this.state.squares.slice();
-            if (squares[i] || !(this.state.current_piece)) {
+            if(squares[i]){
                 /**
-                 * If no piece is selected or the square is currently occupied, 
-                 * don't continue.
+                 * Selected square is occupied by another piece.
+                 */
+                this.setState({
+                    warning: 'Current space is occupied already!',
+                })
+                return;
+            }
+
+            if (!(this.state.current_piece)) {
+                /**
+                 * No piece is selected yet.
                  */
                 return;
             }
@@ -289,12 +299,21 @@ class Game extends React.Component {
                 /**
                  * Ran out of (this specific) piece to place on the board.
                  */
+                this.setState({
+                    warning: 'No piece remaining for the chosen piece.', /** change this wording lol */
+                })
                 return;
             }
 
-            /**
-            * TO DO: include a check for placing pieces in first four rows
-            */
+            if(i <= 59){
+                /**
+                 * Must place own pieces at the closest 4 rows
+                 */
+                this.setState({
+                    warning: 'Cannot set up outside of limitation!',
+                })
+                return;
+            }
 
             const game = this.state.game.slice();
             game[i] = 'P';
@@ -309,6 +328,7 @@ class Game extends React.Component {
                 squares: squares,
                 player_piece_count: piece_count,
                 game: game,
+                warning: null,
             });
         }
     }
@@ -337,6 +357,8 @@ class Game extends React.Component {
             current_piece = 'No piece selected'
         }
 
+        let warning = this.state.warning;
+
         return (
             <div>
                 <Container className="computer-pieces">
@@ -354,7 +376,10 @@ class Game extends React.Component {
                         onClick={(i) => this.handleClick(i)}
                     />
                 </div>
-                <Container className="game-info">
+                <Container className="game-info my-2">
+                    <Row className="justify-content-md-center text-danger">
+                        <div>{warning}</div>
+                    </Row>
                     <Row className="justify-content-md-center">
                         <div>{status}</div>
                     </Row>
