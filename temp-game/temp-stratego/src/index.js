@@ -48,7 +48,7 @@ function Piece(props) {
                 </div>
             </div>
         );
-    }else{
+    } else {
         return (
             <div>
                 <Button className="computer-piece" onClick={props.onClick}>
@@ -252,44 +252,57 @@ class Game extends React.Component {
             computer_pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             computer_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
             playerIsNext: true,
+            gameStart: false,
             current_piece: null,
         };
     }
 
     handleClick(i) {
-        const squares = this.state.squares.slice();
-        if (squares[i] || !(this.state.current_piece)) {
-            return;
-        }
-        let j = this.state.player_pieces.indexOf(this.state.current_piece);
-
-        const piece_count = this.state.player_piece_count.slice();
-        if (piece_count[j] <= 0) {
-            return;
-        }
-
-        /**
-         * TO DO: include a check for placing pieces in first four rows
-         */
-
-        const game = this.state.game.slice();
-        if (this.state.playerIsNext) {
-            // player's turn == P on game table
-            game[i] = 'P';
+        if (this.state.gameStart) {
+            // different functionality 
         } else {
-            // computer's turn == C on game table
-            game[i] = 'C';
+            /**
+             * Game has not started yet. At this point the player places 
+             * the pieces on the board.
+             */
+
+            const squares = this.state.squares.slice();
+            if (squares[i] || !(this.state.current_piece)) {
+                /**
+                 * If no piece is selected or the square is currently occupied, 
+                 * don't continue.
+                 */
+                return;
+            }
+
+            let j = this.state.player_pieces.indexOf(this.state.current_piece);
+            const piece_count = this.state.player_piece_count.slice();
+            if (piece_count[j] <= 0) {
+                /**
+                 * Ran out of (this specific) piece to place on the board.
+                 */
+                return;
+            }
+
+            /**
+            * TO DO: include a check for placing pieces in first four rows
+            */
+
+            const game = this.state.game.slice();
+            game[i] = 'P';
+            /**
+             * During setup, all of the pieces are placed by the player.
+             */
+
+            squares[i] = this.state.current_piece;
+            piece_count[j] = (piece_count[j] - 1);
+
+            this.setState({
+                squares: squares,
+                player_piece_count: piece_count,
+                game: game,
+            });
         }
-
-        squares[i] = this.state.current_piece;
-        piece_count[j] = (piece_count[j] - 1);
-
-        this.setState({
-            squares: squares,
-            playerIsNext: !this.state.playerIsNext,
-            player_piece_count: piece_count,
-            game: game,
-        });
     }
 
     handlePlayerPieceClick(i) {
