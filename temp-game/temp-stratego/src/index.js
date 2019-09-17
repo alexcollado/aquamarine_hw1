@@ -59,7 +59,7 @@ function Piece(props) {
     } else {
         return (
             <div>
-                <Button className="computer-piece" onClick={props.onClick}>
+                <Button className="computer-piece" onClick={props.onClick} disabled>
                     {props.value}
                 </Button>
                 <div className="text-center piece-count">
@@ -255,9 +255,8 @@ class Game extends React.Component {
         this.state = {
             squares: Array(100).fill(null), //contains the values needed to display board
             game: Array(100).fill(null), // used to differentiate player from computer pieces
-            player_pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             player_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
-            computer_pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             computer_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
             playerIsNext: true,
             gameStart: false,
@@ -268,7 +267,13 @@ class Game extends React.Component {
 
     handleClick(i) {
         if (this.state.gameStart) {
-            // different functionality 
+            /**
+             * Have computer setup their pieces on the board.
+             * 
+             * undisable the buttonen they're put on the grid
+             * FIXME: hide number in real game, but display it for now
+             */
+
         } else {
             /**
              * Game has not started yet. At this point the player places 
@@ -293,7 +298,7 @@ class Game extends React.Component {
                 return;
             }
 
-            let j = this.state.player_pieces.indexOf(this.state.current_piece);
+            let j = this.state.pieces.indexOf(this.state.current_piece);
             const piece_count = this.state.player_piece_count.slice();
             if (piece_count[j] <= 0) {
                 /**
@@ -342,29 +347,38 @@ class Game extends React.Component {
 
     handlePlayerPieceClick(i) {
         this.setState({
-            current_piece: this.state.player_pieces[i],
+            current_piece: this.state.pieces[i],
         });
     }
 
-    handleCompleteSetup(){
+    handleCompleteSetup(playerIsNext){
         /**
-         * Fill in the board from bottom right corner.
+         * Fill in the board from bottom right corner (if player) or from top left corner (if computer).
          */
         const squares = this.state.squares.slice();
         const game = this.state.game.slice();
-        const piece_count = this.state.player_piece_count.slice();
-        const pieces = this.state.player_pieces.slice();
+        const pieces = this.state.pieces.slice();
 
-        // check piece count array if count is valid,
-        // if so put in square starting from bottom right corner
+        const piece_count = this.state.player_piece_count.slice();
+
+        let left;
+        let right;
+        if(playerIsNext){
+            right = 99;
+            left = 60;
+        }else{
+            right = 49;
+            left = 0;
+        }
+
         for(var i = 0; i < piece_count.length; i++){
             if(piece_count[i] > 0){
                 var piece = pieces[i];
-                for(var j = 99; j > 59; j--){
+                for(var j = right; j >= left; j--){
                     if(!squares[j]){
                         // put piece in the square
                         squares[j] = piece;
-                        game[j] = 'P';
+                        game[j] = playerIsNext ? 'P' : 'C';
                         piece_count[i] = piece_count[i] - 1;
                         if(piece_count[i] <= 0){
                             break;
@@ -407,7 +421,7 @@ class Game extends React.Component {
             <div>
                 <Container className="computer-pieces">
                     <PieceTable
-                        pieces={this.state.computer_pieces}
+                        pieces={this.state.pieces}
                         piece_count={this.state.computer_piece_count}
                         owner={'C'}
                         onClick={(i) => this.handlePlayerPieceClick(i)}
@@ -433,7 +447,7 @@ class Game extends React.Component {
                 </Container>
                 <Container className="player-pieces">
                     <PieceTable
-                        pieces={this.state.player_pieces}
+                        pieces={this.state.pieces}
                         piece_count={this.state.player_piece_count}
                         owner={'P'}
                         onClick={(i) => this.handlePlayerPieceClick(i)}
@@ -441,7 +455,7 @@ class Game extends React.Component {
                 </Container>
                 <Container>
                     <Row className="justify-content-md-center">
-                        <Button className="btn-dark" onClick={() => this.handleCompleteSetup()}>
+                        <Button className="btn-dark" onClick={() => this.handleCompleteSetup(this.state.playerIsNext)}>
                             {"Fill in remaining pieces"}
                         </Button>
                     </Row>
