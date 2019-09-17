@@ -13,6 +13,10 @@ ol, ul {
   display: table;
 }
 
+.piece-count{
+  margin-bottom: 20px;
+}
+
 .piece-row{
   margin-top: 20px;
 }
@@ -84,6 +88,35 @@ ol, ul {
 
 .player-piece:focus {
   background: #c0392b;
+  box-shadow: 0 0 0 0.1rem grey;
+}
+
+.computer-piece {
+  background: #3498db;
+  border-radius: 100%;
+  border: 1px solid #000;
+  margin: 5px;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 34px;
+}
+
+.computer-piece:hover{
+  background: #2980b9;
+}
+
+.computer-piece:active{
+  background: #2980b9 !important;
+}
+
+.computer-piece:focus {
+  background: #2980b9;
   box-shadow: 0 0 0 0.1rem grey;
 }
 

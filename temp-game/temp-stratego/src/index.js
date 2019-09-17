@@ -19,16 +19,16 @@ function Square(props) {
     );
 }
 
-function OccupiedSquare(props){
+function OccupiedSquare(props) {
     //check owner first?
-    if(props.owner === 'P'){
-        return(
+    if (props.owner === 'P') {
+        return (
             <button className="square player-square">
                 {props.value}
             </button>
         );
-    }else{
-        return(
+    } else {
+        return (
             <button className="square computer-square">
                 {props.value}
             </button>
@@ -37,16 +37,29 @@ function OccupiedSquare(props){
 }
 
 function Piece(props) {
-    return (
-        <div>
-            <Button className="player-piece" onClick={props.onClick}>
-                {props.value}
-            </Button>
-            <div className="text-center">
-                {'x' + props.count}
+    if (props.owner === 'P') {
+        return (
+            <div>
+                <Button className="player-piece" onClick={props.onClick}>
+                    {props.value}
+                </Button>
+                <div className="text-center piece-count">
+                    {'x' + props.count}
+                </div>
             </div>
-        </div>
-    );
+        );
+    }else{
+        return (
+            <div>
+                <Button className="computer-piece" onClick={props.onClick}>
+                    {props.value}
+                </Button>
+                <div className="text-center piece-count">
+                    {'x' + props.count}
+                </div>
+            </div>
+        );
+    }
 }
 
 class PieceTable extends React.Component {
@@ -56,6 +69,7 @@ class PieceTable extends React.Component {
                 value={this.props.pieces[i]}
                 count={this.props.piece_count[i]}
                 onClick={() => this.props.onClick(i)}
+                owner={this.props.owner}
             />
         );
     }
@@ -82,12 +96,12 @@ class PieceTable extends React.Component {
 
 class Board extends React.Component {
     renderSquare(i) {
-        if(this.props.game[i]){
-            return(
-                <OccupiedSquare 
+        if (this.props.game[i]) {
+            return (
+                <OccupiedSquare
                     value={this.props.squares[i]}
                     owner={this.props.game[i]}
-                    //different onclick method? so that you can move it?
+                //different onclick method? so that you can move it?
                 />
             );
         }
@@ -235,6 +249,8 @@ class Game extends React.Component {
             game: Array(100).fill(null), // used to differentiate player from computer pieces
             player_pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             player_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
+            computer_pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            computer_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
             playerIsNext: true,
             current_piece: null,
         };
@@ -246,17 +262,21 @@ class Game extends React.Component {
             return;
         }
         let j = this.state.player_pieces.indexOf(this.state.current_piece);
-       
+
         const piece_count = this.state.player_piece_count.slice();
-        if(piece_count[j] <= 0){
-            return; 
+        if (piece_count[j] <= 0) {
+            return;
         }
 
+        /**
+         * TO DO: include a check for placing pieces in first four rows
+         */
+
         const game = this.state.game.slice();
-        if(this.state.playerIsNext){
+        if (this.state.playerIsNext) {
             // player's turn == P on game table
             game[i] = 'P';
-        }else{
+        } else {
             // computer's turn == C on game table
             game[i] = 'C';
         }
@@ -290,14 +310,22 @@ class Game extends React.Component {
             status = 'Next turn: ' + (this.state.playerIsNext ? 'Player' : 'Computer');
         }
 
-        if(this.state.current_piece){
+        if (this.state.current_piece) {
             current_piece = 'Current Piece: ' + this.state.current_piece;
-        }else{
+        } else {
             current_piece = 'No piece selected'
         }
 
         return (
             <div>
+                <Container className="computer-pieces">
+                    <PieceTable
+                        pieces={this.state.computer_pieces}
+                        piece_count={this.state.computer_piece_count}
+                        owner={'C'}
+                        onClick={(i) => this.handlePlayerPieceClick(i)}
+                    />
+                </Container>
                 <div className="game">
                     <Board
                         squares={this.state.squares}
@@ -317,6 +345,7 @@ class Game extends React.Component {
                     <PieceTable
                         pieces={this.state.player_pieces}
                         piece_count={this.state.player_piece_count}
+                        owner={'P'}
                         onClick={(i) => this.handlePlayerPieceClick(i)}
                     />
                 </Container>
