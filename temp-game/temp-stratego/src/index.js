@@ -1,12 +1,270 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+// import $ from 'jquery';
+// import Popper from 'popper.js';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+function Square(props) {
+    return (
+        <button className="square" onClick={props.onClick}>
+            {props.value}
+        </button>
+    );
+}
+
+function Piece(props) {
+    return (
+        <button className="piece" onClick={props.onClick}>
+            {props.value}
+        </button>
+    );
+}
+
+class PieceTable extends React.Component {
+    renderPiece(i) {
+        return (
+            <Piece
+                value={this.props.pieces[i]}
+                onClick={() => this.props.onClick(i)}
+            />
+        );
+    }
+
+    render() {
+        return (
+            <Row className="piece-row justify-content-md-center">
+                {this.renderPiece(0)}
+                {this.renderPiece(1)}
+                {this.renderPiece(2)}
+                {this.renderPiece(3)}
+                {this.renderPiece(4)}
+                {this.renderPiece(5)}
+                {this.renderPiece(6)}
+                {this.renderPiece(7)}
+                {this.renderPiece(8)}
+                {this.renderPiece(9)}
+                {this.renderPiece(10)}
+                {this.renderPiece(11)}
+            </Row>
+        );
+    }
+}
+
+class Board extends React.Component {
+    renderSquare(i) {
+        return (
+            <Square
+                value={this.props.squares[i]}
+                onClick={() => this.props.onClick(i)}
+            />
+        );
+    }
+
+    render() {
+        return (
+            <Container>
+                <Row className="board-row justify-content-md-center">
+                    {this.renderSquare(0)}
+                    {this.renderSquare(1)}
+                    {this.renderSquare(2)}
+                    {this.renderSquare(3)}
+                    {this.renderSquare(4)}
+                    {this.renderSquare(5)}
+                    {this.renderSquare(6)}
+                    {this.renderSquare(7)}
+                    {this.renderSquare(8)}
+                    {this.renderSquare(9)}
+                </Row>
+                <Row className="board-row justify-content-md-center">
+                    {this.renderSquare(10)}
+                    {this.renderSquare(11)}
+                    {this.renderSquare(12)}
+                    {this.renderSquare(13)}
+                    {this.renderSquare(14)}
+                    {this.renderSquare(15)}
+                    {this.renderSquare(16)}
+                    {this.renderSquare(17)}
+                    {this.renderSquare(18)}
+                    {this.renderSquare(19)}
+                </Row>
+                <Row className="board-row justify-content-md-center">
+                    {this.renderSquare(20)}
+                    {this.renderSquare(21)}
+                    {this.renderSquare(22)}
+                    {this.renderSquare(23)}
+                    {this.renderSquare(24)}
+                    {this.renderSquare(25)}
+                    {this.renderSquare(26)}
+                    {this.renderSquare(27)}
+                    {this.renderSquare(28)}
+                    {this.renderSquare(29)}
+                </Row>
+                <Row className="board-row justify-content-md-center">
+                    {this.renderSquare(30)}
+                    {this.renderSquare(31)}
+                    {this.renderSquare(32)}
+                    {this.renderSquare(33)}
+                    {this.renderSquare(34)}
+                    {this.renderSquare(35)}
+                    {this.renderSquare(36)}
+                    {this.renderSquare(37)}
+                    {this.renderSquare(38)}
+                    {this.renderSquare(39)}
+                </Row>
+                <Row className="board-row justify-content-md-center">
+                    {this.renderSquare(40)}
+                    {this.renderSquare(41)}
+                    {this.renderSquare(42)}
+                    {this.renderSquare(43)}
+                    {this.renderSquare(44)}
+                    {this.renderSquare(45)}
+                    {this.renderSquare(46)}
+                    {this.renderSquare(47)}
+                    {this.renderSquare(48)}
+                    {this.renderSquare(49)}
+                </Row>
+                <Row className="board-row justify-content-md-center">
+                    {this.renderSquare(50)}
+                    {this.renderSquare(51)}
+                    {this.renderSquare(52)}
+                    {this.renderSquare(53)}
+                    {this.renderSquare(54)}
+                    {this.renderSquare(55)}
+                    {this.renderSquare(56)}
+                    {this.renderSquare(57)}
+                    {this.renderSquare(58)}
+                    {this.renderSquare(59)}
+                </Row>
+                <Row className="board-row justify-content-md-center">
+                    {this.renderSquare(60)}
+                    {this.renderSquare(61)}
+                    {this.renderSquare(62)}
+                    {this.renderSquare(63)}
+                    {this.renderSquare(64)}
+                    {this.renderSquare(65)}
+                    {this.renderSquare(66)}
+                    {this.renderSquare(67)}
+                    {this.renderSquare(68)}
+                    {this.renderSquare(69)}
+                </Row>
+                <Row className="board-row justify-content-md-center">
+                    {this.renderSquare(70)}
+                    {this.renderSquare(71)}
+                    {this.renderSquare(72)}
+                    {this.renderSquare(73)}
+                    {this.renderSquare(74)}
+                    {this.renderSquare(75)}
+                    {this.renderSquare(76)}
+                    {this.renderSquare(77)}
+                    {this.renderSquare(78)}
+                    {this.renderSquare(79)}
+                </Row>
+                <Row className="board-row justify-content-md-center">
+                    {this.renderSquare(80)}
+                    {this.renderSquare(81)}
+                    {this.renderSquare(82)}
+                    {this.renderSquare(83)}
+                    {this.renderSquare(84)}
+                    {this.renderSquare(85)}
+                    {this.renderSquare(86)}
+                    {this.renderSquare(87)}
+                    {this.renderSquare(88)}
+                    {this.renderSquare(89)}
+                </Row>
+                <Row className="board-row justify-content-md-center">
+                    {this.renderSquare(90)}
+                    {this.renderSquare(91)}
+                    {this.renderSquare(92)}
+                    {this.renderSquare(93)}
+                    {this.renderSquare(94)}
+                    {this.renderSquare(95)}
+                    {this.renderSquare(96)}
+                    {this.renderSquare(97)}
+                    {this.renderSquare(98)}
+                    {this.renderSquare(99)}
+                </Row>
+            </Container>
+        );
+    }
+}
+
+class Game extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            squares: Array(100).fill(null),
+            player_pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            xIsNext: true,
+        };
+    }
+
+    handleClick(i) {
+        const squares = this.state.squares.slice();
+        if (squares[i]) {
+            return;
+        }
+        squares[i] = this.state.xIsNext ? 'X' : 'O';
+        this.setState({
+            squares: squares,
+            xIsNext: !this.state.xIsNext,
+        });
+    }
+
+    handlePlayerPieceClick(i) {
+        const player_pieces = this.state.player_pieces.slice();
+        player_pieces[i] = '$';
+        this.setState({
+            player_pieces: player_pieces,
+        });
+    }
+
+    render() {
+        const winner = calculateWinner(this.state.squares);
+
+        let status;
+        if (winner) {
+            status = 'Winner: ' + winner;
+        } else {
+            status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+        }
+
+        return (
+            <div>
+                <div className="game">
+                    <Board
+                        squares={this.state.squares}
+                        onClick={(i) => this.handleClick(i)}
+                    />
+                </div>
+                <Container className="game-info">
+                    <Row className="justify-content-md-center">
+                        <div>{status}</div>
+                    </Row>
+                </Container>
+                <Container className="player-pieces">
+                    <PieceTable
+                        pieces={this.state.player_pieces}
+                        onClick={(i) => this.handlePlayerPieceClick(i)}
+                    />
+                </Container>
+            </div>
+        );
+    }
+}
+
+// ========================================
+
+ReactDOM.render(
+    <Game />,
+    document.getElementById('root')
+);
+
+function calculateWinner(squares) {
+    return null;
+}
