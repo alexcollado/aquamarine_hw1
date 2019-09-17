@@ -330,6 +330,13 @@ class Game extends React.Component {
                 game: game,
                 warning: null,
             });
+
+            if(checkSetup(piece_count)){
+                this.setState({
+                    warning: 'SETUP COMPLETED',
+                    gameStart: true,
+                })
+            }
         }
     }
 
@@ -409,4 +416,11 @@ ReactDOM.render(
 
 function calculateWinner(squares) {
     return null;
+}
+
+function checkSetup(piece_count){
+    /**
+     * See if the sum of the piece counts === 0
+     */
+    return (piece_count.reduce((x,y) => x + y) === 0);
 }
