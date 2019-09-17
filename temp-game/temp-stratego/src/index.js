@@ -23,9 +23,17 @@ function OccupiedSquare(props) {
     //check owner first?
     if (props.owner === 'P') {
         return (
+            /** 
             <button className="square player-square">
                 {props.value}
-            </button>
+            </button> 
+            */
+            <div className="square">
+                <Button className="player-piece mx-auto my-auto" onClick={props.onClick}>
+                    {/** maybe a different method now? */}
+                    {props.value}
+                </Button>
+            </div>
         );
     } else {
         return (
