@@ -346,6 +346,43 @@ class Game extends React.Component {
         });
     }
 
+    handleCompleteSetup(){
+        /**
+         * Fill in the board from bottom right corner.
+         */
+        const squares = this.state.squares.slice();
+        const game = this.state.game.slice();
+        const piece_count = this.state.player_piece_count.slice();
+        const pieces = this.state.player_pieces.slice();
+
+        // check piece count array if count is valid,
+        // if so put in square starting from bottom right corner
+        for(var i = 0; i < piece_count.length; i++){
+            if(piece_count[i] > 0){
+                var piece = pieces[i];
+                for(var j = 99; j > 59; j--){
+                    if(!squares[j]){
+                        // put piece in the square
+                        squares[j] = piece;
+                        game[j] = 'P';
+                        piece_count[i] = piece_count[i] - 1;
+                        if(piece_count[i] <= 0){
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        this.setState({
+            squares: squares,
+            player_piece_count: piece_count,
+            game: game,
+            warning: 'SETUP COMPLETED',
+            gameStart: true,
+        })
+    }
+
     render() {
         const winner = calculateWinner(this.state.squares);
 
@@ -401,6 +438,13 @@ class Game extends React.Component {
                         owner={'P'}
                         onClick={(i) => this.handlePlayerPieceClick(i)}
                     />
+                </Container>
+                <Container>
+                    <Row className="justify-content-md-center">
+                        <Button className="btn-dark" onClick={() => this.handleCompleteSetup()}>
+                            {"Fill in remaining pieces"}
+                        </Button>
+                    </Row>
                 </Container>
             </div>
         );
