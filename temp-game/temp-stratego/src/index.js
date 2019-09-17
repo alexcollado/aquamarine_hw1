@@ -8,7 +8,8 @@ import './index.css';
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button'
+// import Col from 'react-bootstrap/Col'
 
 function Square(props) {
     return (
@@ -20,9 +21,14 @@ function Square(props) {
 
 function Piece(props) {
     return (
-        <button className="piece" onClick={props.onClick}>
-            {props.value}
-        </button>
+        <div>
+            <Button className="piece" onClick={props.onClick}>
+                {props.value}
+            </Button>
+            <div className="text-center">
+                {'x' + props.count}
+            </div>
+        </div>
     );
 }
 
@@ -31,6 +37,7 @@ class PieceTable extends React.Component {
         return (
             <Piece
                 value={this.props.pieces[i]}
+                count={this.props.piece_count[i]}
                 onClick={() => this.props.onClick(i)}
             />
         );
@@ -200,7 +207,8 @@ class Game extends React.Component {
         this.state = {
             squares: Array(100).fill(null),
             player_pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-            xIsNext: true,
+            player_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
+            playerIsNext: true,
         };
     }
 
@@ -209,10 +217,10 @@ class Game extends React.Component {
         if (squares[i]) {
             return;
         }
-        squares[i] = this.state.xIsNext ? 'X' : 'O';
+        squares[i] = this.state.playerIsNext ? 'X' : 'O';
         this.setState({
             squares: squares,
-            xIsNext: !this.state.xIsNext,
+            playerIsNext: !this.state.playerIsNext,
         });
     }
 
@@ -231,7 +239,7 @@ class Game extends React.Component {
         if (winner) {
             status = 'Winner: ' + winner;
         } else {
-            status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+            status = 'Next turn: ' + (this.state.playerIsNext ? 'Player' : 'Computer');
         }
 
         return (
@@ -250,6 +258,7 @@ class Game extends React.Component {
                 <Container className="player-pieces">
                     <PieceTable
                         pieces={this.state.player_pieces}
+                        piece_count={this.state.player_piece_count}
                         onClick={(i) => this.handlePlayerPieceClick(i)}
                     />
                 </Container>
