@@ -22,7 +22,7 @@ function Square(props) {
 function Piece(props) {
     return (
         <div>
-            <Button className="piece" onClick={props.onClick}>
+            <Button className="player-piece" onClick={props.onClick}>
                 {props.value}
             </Button>
             <div className="text-center">
@@ -209,6 +209,7 @@ class Game extends React.Component {
             player_pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             player_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
             playerIsNext: true,
+            current_piece: null,
         };
     }
 
@@ -225,10 +226,9 @@ class Game extends React.Component {
     }
 
     handlePlayerPieceClick(i) {
-        const player_pieces = this.state.player_pieces.slice();
-        player_pieces[i] = '$';
+        // const player_pieces = this.state.player_pieces.slice();
         this.setState({
-            player_pieces: player_pieces,
+            current_piece: this.state.player_pieces[i],
         });
     }
 
@@ -236,10 +236,18 @@ class Game extends React.Component {
         const winner = calculateWinner(this.state.squares);
 
         let status;
+        let current_piece;
+
         if (winner) {
             status = 'Winner: ' + winner;
         } else {
             status = 'Next turn: ' + (this.state.playerIsNext ? 'Player' : 'Computer');
+        }
+
+        if(this.state.current_piece){
+            current_piece = 'Current Piece: ' + this.state.current_piece;
+        }else{
+            current_piece = 'No piece selected'
         }
 
         return (
@@ -253,6 +261,9 @@ class Game extends React.Component {
                 <Container className="game-info">
                     <Row className="justify-content-md-center">
                         <div>{status}</div>
+                    </Row>
+                    <Row className="justify-content-md-center">
+                        <div>{current_piece}</div>
                     </Row>
                 </Container>
                 <Container className="player-pieces">

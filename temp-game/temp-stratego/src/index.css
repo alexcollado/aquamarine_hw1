@@ -28,7 +28,7 @@ ol, ul {
 }
 
 .square {
-  background: #7ff377;
+  background: #27ae60;
   border: 1px solid #0b8803;
   float: left;
   font-size: 24px;
@@ -46,8 +46,8 @@ ol, ul {
   outline: none;
 }
 
-.piece {
-  background: red;
+.player-piece {
+  background: #e74c3c;
   border-radius: 100%;
   border: 1px solid #000;
   margin: 5px;
@@ -62,12 +62,17 @@ ol, ul {
   width: 34px;
 }
 
-.piece:hover{
-  background: darkred;
+.player-piece:hover{
+  background: #c0392b;
 }
 
-.piece:focus {
-  background: darkred;
+.player-piece:active{
+  background: #c0392b !important;
+}
+
+.player-piece:focus {
+  background: #c0392b;
+  box-shadow: 0 0 0 0.1rem grey;
 }
 
 .kbd-navigation .square:focus {
