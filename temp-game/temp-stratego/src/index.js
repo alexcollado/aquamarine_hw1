@@ -215,18 +215,27 @@ class Game extends React.Component {
 
     handleClick(i) {
         const squares = this.state.squares.slice();
-        if (squares[i]) {
+        if (squares[i] || !(this.state.current_piece)) {
             return;
         }
-        squares[i] = this.state.playerIsNext ? 'X' : 'O';
+        let j = this.state.player_pieces.indexOf(this.state.current_piece);
+       
+        const piece_count = this.state.player_piece_count.slice();
+        if(piece_count[j] <= 0){
+            return; 
+        }
+
+        squares[i] = this.state.current_piece;
+        piece_count[j] = (piece_count[j] - 1);
+
         this.setState({
             squares: squares,
             playerIsNext: !this.state.playerIsNext,
+            player_piece_count: piece_count,
         });
     }
 
     handlePlayerPieceClick(i) {
-        // const player_pieces = this.state.player_pieces.slice();
         this.setState({
             current_piece: this.state.player_pieces[i],
         });

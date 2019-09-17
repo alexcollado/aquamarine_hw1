@@ -44,6 +44,11 @@ ol, ul {
 
 .square:focus {
   outline: none;
+  background: #0b8803;
+}
+
+.square:hover{
+  background: #0b8803;
 }
 
 .player-piece {
