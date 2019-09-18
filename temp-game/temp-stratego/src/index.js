@@ -37,9 +37,12 @@ function OccupiedSquare(props) {
         );
     } else {
         return (
-            <button className="square computer-square">
-                {props.value}
-            </button>
+            <div className="square">
+                <Button className="computer-piece mx-auto my-auto" onClick={props.onClick}>
+                    {/** maybe a different method now? */}
+                    {props.value}
+                </Button>
+            </div>
         );
     }
 }
@@ -252,6 +255,7 @@ class Board extends React.Component {
 class Game extends React.Component {
     constructor(props) {
         super(props);
+        this.setupBtnRef = React.createRef();
         this.state = {
             squares: Array(100).fill(null), //contains the values needed to display board
             game: Array(100).fill(null), // used to differentiate player from computer pieces
@@ -261,6 +265,7 @@ class Game extends React.Component {
             computer_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
             playerIsNext: true,
             gameStart: false,
+            setupCompleted: false,
             current_piece: null,
             warning: null,
         };
@@ -272,6 +277,8 @@ class Game extends React.Component {
              * Have computer setup their pieces on the board.
              * 
              * undisable the buttonen they're put on the grid
+             * 
+             * disable the button w/ fill in remaining pieces
              * FIXME: hide number in real game, but display it for now
              */
 
@@ -340,7 +347,7 @@ class Game extends React.Component {
             if (checkSetup(piece_count)) {
                 this.setState({
                     warning: 'SETUP COMPLETED',
-                    gameStart: true,
+                    setupCompleted: true,
                 })
             }
         }
@@ -360,7 +367,7 @@ class Game extends React.Component {
         const game = this.state.game.slice();
         const pieces = this.state.pieces.slice();
 
-        const piece_count = this.state.player_piece_count.slice();
+        const piece_count = playerIsNext ? this.state.player_piece_count.slice() : this.state.computer_piece_count.slice();
 
         let left;
         let right;
@@ -368,7 +375,7 @@ class Game extends React.Component {
             right = 99;
             left = 60;
         } else {
-            right = 49;
+            right = 39;
             left = 0;
         }
 
@@ -390,11 +397,21 @@ class Game extends React.Component {
 
         this.setState({
             squares: squares,
-            player_piece_count: piece_count,
             game: game,
-            warning: 'SETUP COMPLETED',
-            gameStart: true,
         })
+
+        if(playerIsNext){
+            this.setState({
+                player_piece_count: piece_count,
+                setupCompleted: true,
+                warning: 'SETUP COMPLETED',
+            })
+        }else{
+            this.setState({
+                computer_piece_count: piece_count,
+                gameStart: true,
+            })
+        }
     }
 
     render() {
@@ -430,7 +447,27 @@ class Game extends React.Component {
                 <Container className="game" fluid={true}>
                     <Row>
                         <Col md={2} className="mx-auto justify-content-md-center">
-                            {'put status and error messages here, will later compare values of pieces here'}
+                            <Container>
+                                <Row className="justify-content-md-center">
+                                    <Button id="SetupBtn" className="btn-dark my-2" onClick={() => this.handleCompleteSetup(true)} disabled={this.state.setupCompleted}>
+                                        {"Fill in remaining pieces"}
+                                    </Button>
+                                    <Button className="btn-dark my-2" onClick={() => this.handleCompleteSetup(false)} disabled={!this.state.setupCompleted}>
+                                        {"Start game"}
+                                    </Button>
+                                </Row>
+                            </Container>
+                            <Container className="game-info my-2">
+                                <Row className="justify-content-md-center">
+                                    <div>{status}</div>
+                                </Row>
+                                <Row className="justify-content-md-center">
+                                    <div>{current_piece}</div>
+                                </Row>
+                                <Row className="justify-content-md-center text-danger">
+                                    <div>{warning}</div>
+                                </Row>
+                            </Container>
                         </Col>
                         <Col md={8} className="mx-auto justify-content-md-center">
                             <Board
@@ -444,17 +481,6 @@ class Game extends React.Component {
                         </Col>
                     </Row>
                 </Container>
-                <Container className="game-info my-2">
-                    <Row className="justify-content-md-center text-danger">
-                        <div>{warning}</div>
-                    </Row>
-                    <Row className="justify-content-md-center">
-                        <div>{status}</div>
-                    </Row>
-                    <Row className="justify-content-md-center">
-                        <div>{current_piece}</div>
-                    </Row>
-                </Container>
                 <Container className="player-pieces">
                     <PieceTable
                         pieces={this.state.pieces}
@@ -462,13 +488,6 @@ class Game extends React.Component {
                         owner={'P'}
                         onClick={(i) => this.handlePlayerPieceClick(i)}
                     />
-                </Container>
-                <Container>
-                    <Row className="justify-content-md-center">
-                        <Button className="btn-dark" onClick={() => this.handleCompleteSetup(this.state.playerIsNext)}>
-                            {"Fill in remaining pieces"}
-                        </Button>
-                    </Row>
                 </Container>
             </div>
         );
