@@ -307,7 +307,8 @@ class Game extends React.Component {
                     current_piece: null,
                     log: log,
                 });
-                // add log item
+
+                // computer make a move
             }
             return;
         } else {
