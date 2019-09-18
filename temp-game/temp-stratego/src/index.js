@@ -1,6 +1,4 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import $ from 'jquery';
-// import Popper from 'popper.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -10,6 +8,8 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
+
+import HeadShake from 'react-reveal/HeadShake';
 
 function Square(props) {
     return (
@@ -27,17 +27,21 @@ function OccupiedSquare(props) {
         if (props.isVisible) { //add white border
             return (
                 <div className="square">
-                    <Button className="player-piece mx-auto my-auto visible-border" onClick={props.onClick}>
-                        {props.value}
-                    </Button>
+                    <HeadShake>
+                        <Button className="player-piece mx-auto my-auto visible-border" onClick={props.onClick}>
+                            {props.value}
+                        </Button>
+                    </HeadShake>
                 </div>
             );
         } else {
             return (
                 <div className="square">
-                    <Button className="player-piece mx-auto my-auto" onClick={props.onClick}>
-                        {props.value}
-                    </Button>
+                    <HeadShake>
+                        <Button className="player-piece mx-auto my-auto" onClick={props.onClick}>
+                            {props.value}
+                        </Button>
+                    </HeadShake>
                 </div>
             );
         }
@@ -45,16 +49,20 @@ function OccupiedSquare(props) {
         if (props.isVisible) { //add value of square
             return (
                 <div className="square">
-                    <Button className="computer-piece mx-auto my-auto" onClick={props.onClick}>
-                        {props.value}
-                    </Button>
+                    <HeadShake>
+                        <Button className="computer-piece mx-auto my-auto" onClick={props.onClick}>
+                            {props.value}
+                        </Button>
+                    </HeadShake>
                 </div>
             );
         } else {
             return (
                 <div className="square">
-                    <Button className="computer-piece mx-auto my-auto" onClick={props.onClick}>
-                    </Button>
+                    <HeadShake>
+                        <Button className="computer-piece mx-auto my-auto" onClick={props.onClick}>
+                        </Button>
+                    </HeadShake>
                 </div>
             );
         }
