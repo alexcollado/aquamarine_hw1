@@ -278,19 +278,16 @@ class Game extends React.Component {
             /**
              * FIXME: hide number in real game, but display it for now
              */
-            if(!this.state.current_piece){
+            if (!this.state.current_piece) {
                 return;
             }
 
             if (isValidMove(this.state.current_index, i, this.state.current_piece, this.state.game)) {
                 // if selected index is valid compared to current index of selected piece, move piece to that index
 
-                // put new piece on index
-                // remove old piece on current index
-
-                // add checks later
                 const game = this.state.game.slice();
                 const squares = this.state.squares.slice();
+                const log = this.state.log.slice();
 
                 game[i] = 'P';
                 game[this.state.current_index] = null;
@@ -301,11 +298,14 @@ class Game extends React.Component {
                 squares[i] = this.state.current_piece;
                 squares[this.state.current_index] = null;
 
+                log.unshift('Player moved [' + this.state.current_piece + '] from cell ' + this.state.current_index + ' to cell ' + i);
+
                 this.setState({
                     squares: squares,
                     game: game,
                     warning: null,
                     current_piece: null,
+                    log: log,
                 });
                 // add log item
             }
@@ -487,14 +487,6 @@ class Game extends React.Component {
 
         return (
             <div>
-                <Container className="computer-pieces">
-                    <PieceTable
-                        pieces={this.state.pieces}
-                        piece_count={this.state.computer_piece_count}
-                        owner={'C'}
-                        onClick={(i) => this.handlePlayerPieceClick(i)}
-                    />
-                </Container>
                 <Container className="game" fluid={true}>
                     <Row>
                         <Col md={2} className="mx-auto justify-content-md-center">
@@ -521,12 +513,28 @@ class Game extends React.Component {
                             </Container>
                         </Col>
                         <Col md={8} className="mx-auto justify-content-md-center">
+                            <Container className="computer-pieces">
+                                <PieceTable
+                                    pieces={this.state.pieces}
+                                    piece_count={this.state.computer_piece_count}
+                                    owner={'C'}
+                                    onClick={(i) => this.handlePlayerPieceClick(i)}
+                                />
+                            </Container>
                             <Board
                                 squares={this.state.squares}
                                 game={this.state.game}
                                 onClick={(i) => this.handleClick(i)}
                                 onUpdatedClick={(i) => this.handlePlayerPieceOnBoardClick(i)}
                             />
+                            <Container className="player-pieces">
+                                <PieceTable
+                                    pieces={this.state.pieces}
+                                    piece_count={this.state.player_piece_count}
+                                    owner={'P'}
+                                    onClick={(i) => this.handlePlayerPieceClick(i)}
+                                />
+                            </Container>
                         </Col>
                         <Col md={2}>
                             <ul>
@@ -536,14 +544,6 @@ class Game extends React.Component {
                             </ul>
                         </Col>
                     </Row>
-                </Container>
-                <Container className="player-pieces">
-                    <PieceTable
-                        pieces={this.state.pieces}
-                        piece_count={this.state.player_piece_count}
-                        owner={'P'}
-                        onClick={(i) => this.handlePlayerPieceClick(i)}
-                    />
                 </Container>
             </div>
         );
