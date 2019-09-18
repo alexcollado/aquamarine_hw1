@@ -79,6 +79,10 @@ ol, ul {
   width: 34px;
 }
 
+.visible-border{
+  border: 2px solid white;
+}
+
 .player-piece:hover{
   background: #c0392b;
 }

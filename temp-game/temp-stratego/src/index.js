@@ -20,26 +20,44 @@ function Square(props) {
 }
 
 function OccupiedSquare(props) {
-        /**
-         * If visible player -- add white border (use state in in game to track visibility not properties)
-         * If visible computer -- show numbers
-         */
+    /**
+     * If visible computer -- show numbers
+     */
     if (props.owner === 'P') {
-        return (
-            <div className="square">
-                <Button className="player-piece mx-auto my-auto" onClick={props.onClick}>
-                    {props.value}
-                </Button>
-            </div>
-        );
+        if (props.isVisible) { //add white border
+            return (
+                <div className="square">
+                    <Button className="player-piece mx-auto my-auto visible-border" onClick={props.onClick}>
+                        {props.value}
+                    </Button>
+                </div>
+            );
+        } else {
+            return (
+                <div className="square">
+                    <Button className="player-piece mx-auto my-auto" onClick={props.onClick}>
+                        {props.value}
+                    </Button>
+                </div>
+            );
+        }
     } else {
-        return (
-            <div className="square">
-                <Button className="computer-piece mx-auto my-auto" onClick={props.onClick}>
-                    {props.value}
-                </Button>
-            </div>
-        );
+        if (props.isVisible) { //add value of square
+            return (
+                <div className="square">
+                    <Button className="computer-piece mx-auto my-auto" onClick={props.onClick}>
+                        {props.value}
+                    </Button>
+                </div>
+            );
+        } else {
+            return (
+                <div className="square">
+                    <Button className="computer-piece mx-auto my-auto" onClick={props.onClick}>
+                    </Button>
+                </div>
+            );
+        }
     }
 }
 
@@ -108,7 +126,8 @@ class Board extends React.Component {
                 <OccupiedSquare
                     value={this.props.squares[i]}
                     owner={this.props.game[i]}
-                    onClick={() => this.props.onUpdatedClick(i)}
+                    onClick={() => this.props.onUpdatedClick(i)} //update handle method
+                    isVisible={this.props.visibility_arr[i]} //pass in visibility info
                 />
             );
         }
@@ -312,7 +331,7 @@ class Game extends React.Component {
              * Game has not started yet. At this point the player places 
              * the pieces on the board.
              */
-            if(this.state.setupCompleted){
+            if (this.state.setupCompleted) {
                 return; // don't do anything if setup already
             }
 
@@ -414,6 +433,9 @@ class Game extends React.Component {
             left = 0;
         }
 
+        //delete later
+        const visibility_arr = this.state.visibility_arr.slice();
+
         for (var i = 0; i < piece_count.length; i++) {
             if (piece_count[i] > 0) {
                 var piece = pieces[i];
@@ -421,6 +443,10 @@ class Game extends React.Component {
                     if (!squares[j]) {
                         squares[j] = piece;
                         game[j] = playerIsNext ? 'P' : 'C';
+                        //for now make it all visible for testing
+                        //but later delete since initialized to false
+                        visibility_arr[j] = true;
+
                         piece_count[i] = piece_count[i] - 1;
                         if (piece_count[i] <= 0) {
                             break;
@@ -433,6 +459,7 @@ class Game extends React.Component {
         this.setState({
             squares: squares,
             game: game,
+            visibility_arr: visibility_arr, //delete later
         })
 
         const log = this.state.log.slice();
@@ -510,6 +537,7 @@ class Game extends React.Component {
                             <Board
                                 squares={this.state.squares}
                                 game={this.state.game}
+                                visibility_arr={this.state.visibility_arr}
                                 onClick={(i) => this.handleClick(i)}
                                 onUpdatedClick={(i) => this.handlePlayerPieceOnBoardClick(i)}
                             />
