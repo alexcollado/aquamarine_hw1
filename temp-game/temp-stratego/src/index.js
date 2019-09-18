@@ -294,6 +294,10 @@ class Game extends React.Component {
                 return;
             }
 
+            if(!this.state.playerIsNext){
+                return;
+            }
+
             if (isValidMove(this.state.current_index, i, this.state.current_piece, this.state.game)) {
                 // if selected index is valid compared to current index of selected piece, move piece to that index
 
@@ -322,7 +326,7 @@ class Game extends React.Component {
                     playerIsNext: !(this.state.playerIsNext),
                 });
 
-                setTimeout(function(){ this.handleComputerMove(); }.bind(this), 2000);
+                setTimeout(function () { this.handleComputerMove(); }.bind(this), 2000);
             }
             return;
         } else {
@@ -399,15 +403,48 @@ class Game extends React.Component {
         });
     }
 
-    handleComputerMove(){
+    handleComputerMove() {
+        const game = this.state.game.slice();
         const log = this.state.log.slice();
-        //sleep?
+        const squares = this.state.squares.slice();
+        const visibility_arr = this.state.visibility_arr.slice();
 
-        log.unshift('Computer moved');
+        //first get pieces that can move
+        //pass in game map
+        const map = getMoveablePieces(game);
+
+        //randomly select an index from that map
+        var i = Math.round(Math.random() * map.length) //between 0 and length of map
+        var possible_squares = map[i][1];
+        var j = Math.round(Math.random() * possible_squares.length);
+
+        var current_index = map[i][0];
+        var current_piece = squares[current_index];
+        var target_index = possible_squares[j];
+
+        game[target_index] = 'C';
+        game[current_index] = null;
+
+        visibility_arr[target_index] = visibility_arr[current_index];
+        visibility_arr[current_index] = false;
+
+        squares[target_index] = current_piece;
+        squares[current_index] = null;
+
+        //later add a check that if computer can't make a move anymore - player wins
+        //state change
+
+        //modify so that if its visible display piece in brackets
+        log.unshift('Computer moved [?] from cell ' + current_index + ' to cell ' + target_index);
         this.setState({
-            playerIsNext: !this.state.playerIsNext,
+            squares: squares,
+            game: game,
+            warning: null,
+            current_piece: null,
             log: log,
-        })
+            visibility_arr: visibility_arr,
+            playerIsNext: !(this.state.playerIsNext),
+        });
     }
 
     resetPieceCounts() {
@@ -591,4 +628,25 @@ function checkSetup(piece_count) {
 function isValidMove(current_index, target_index, current_piece, game) {
     //check piece to get number of steps
     return true;
+}
+
+function getMoveablePieces(game) {
+    // for now this function just adds the empty spots as the possible places the pieces can go
+    // also all the enemy pieces can move at this point of implementation
+
+    const map = [];
+    let empty_spots = [];
+    let computer_locations = [];
+    for (var i = 0; i < 100; i++) {
+        if (!game[i]) {
+            empty_spots.push(i);
+        } else if (game[i] === 'C') {
+            computer_locations.push(i);
+        }
+    }
+    for (var j = 0; j < computer_locations.length; j++) {
+        map.push([computer_locations[j], empty_spots]);
+    }
+
+    return map;
 }
