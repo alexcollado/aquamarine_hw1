@@ -296,22 +296,16 @@ class Game extends React.Component {
             current_index: null,
             warning: null,
         };
-        this.logProps = {
-            appear: true,
-            enter: true,
-            exit: true,
-        };
         this.state.id = this.state.updated_log.length;
-        this.addToLog = this.addToLog.bind(this);
     }
 
     addToLog(log_item) {
         this.setState({
-            id: this.state.id + 1,
             updated_log: [
                 { id: this.state.id, text: log_item },
                 ...this.state.updated_log
             ],
+            id: this.state.id + 1,
         });
     }
 
@@ -619,9 +613,9 @@ class Game extends React.Component {
                             </Container>
                         </Col>
                         <Col md={2}>
-                            <TransitionGroup {...this.logProps}>
+                            <TransitionGroup>
                                 {this.state.updated_log.map((item) =>
-                                    <Fade key={item.id} collapse bottom>
+                                    <Fade key={item.id} left exit={false} appear={true} enter={true}>
                                         <div className="card">
                                             <div className="card-body justify-content-between">
                                                 {item.text}
