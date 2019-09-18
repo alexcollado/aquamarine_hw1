@@ -260,6 +260,7 @@ class Game extends React.Component {
             squares: Array(100).fill(null), //contains the values needed to display board
             game: Array(100).fill(null), // used to differentiate player from computer pieces
             // maybe add a visibility array? to check if piece is visible or not
+            log: [],
             pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             player_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
             computer_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
@@ -345,8 +346,11 @@ class Game extends React.Component {
             });
 
             if (checkSetup(piece_count)) {
+                const log = this.state.log.slice();
+                log.unshift('Player setup completed')
+
                 this.setState({
-                    warning: 'SETUP COMPLETED',
+                    log: log,
                     setupCompleted: true,
                 })
             }
@@ -400,16 +404,20 @@ class Game extends React.Component {
             game: game,
         })
 
+        const log = this.state.log.slice();
         if(playerIsNext){
+            log.unshift('Player setup completed')
             this.setState({
                 player_piece_count: piece_count,
                 setupCompleted: true,
-                warning: 'SETUP COMPLETED',
+                log: log,
             })
         }else{
+            log.unshift('Computer setup completed')
             this.setState({
                 computer_piece_count: piece_count,
                 gameStart: true,
+                log: log,
             })
         }
     }
@@ -452,7 +460,7 @@ class Game extends React.Component {
                                     <Button id="SetupBtn" className="btn-dark my-2" onClick={() => this.handleCompleteSetup(true)} disabled={this.state.setupCompleted}>
                                         {"Fill in remaining pieces"}
                                     </Button>
-                                    <Button className="btn-dark my-2" onClick={() => this.handleCompleteSetup(false)} disabled={!this.state.setupCompleted}>
+                                    <Button className="btn-dark my-2" onClick={() => this.handleCompleteSetup(false)} disabled={!this.state.setupCompleted || this.state.gameStart}>
                                         {"Start game"}
                                     </Button>
                                 </Row>
@@ -477,7 +485,11 @@ class Game extends React.Component {
                             />
                         </Col>
                         <Col md={2}>
-                            {'will show log of game here'}
+                            <ul>
+                            {this.state.log.map((logItem, index)  => (
+                                <li>{this.state.log[index]}</li>
+                            ))}
+                            </ul>
                         </Col>
                     </Row>
                 </Container>
