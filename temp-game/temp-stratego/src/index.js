@@ -9,7 +9,7 @@ import './index.css';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
-// import Col from 'react-bootstrap/Col'
+import Col from 'react-bootstrap/Col'
 
 function Square(props) {
     return (
@@ -255,6 +255,7 @@ class Game extends React.Component {
         this.state = {
             squares: Array(100).fill(null), //contains the values needed to display board
             game: Array(100).fill(null), // used to differentiate player from computer pieces
+            // maybe add a visibility array? to check if piece is visible or not
             pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             player_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
             computer_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
@@ -281,7 +282,7 @@ class Game extends React.Component {
              */
 
             const squares = this.state.squares.slice();
-            if(squares[i]){
+            if (squares[i]) {
                 /**
                  * Selected square is occupied by another piece.
                  */
@@ -310,7 +311,7 @@ class Game extends React.Component {
                 return;
             }
 
-            if(i <= 59){
+            if (i <= 59) {
                 /**
                  * Must place own pieces at the closest 4 rows
                  */
@@ -336,7 +337,7 @@ class Game extends React.Component {
                 warning: null,
             });
 
-            if(checkSetup(piece_count)){
+            if (checkSetup(piece_count)) {
                 this.setState({
                     warning: 'SETUP COMPLETED',
                     gameStart: true,
@@ -351,7 +352,7 @@ class Game extends React.Component {
         });
     }
 
-    handleCompleteSetup(playerIsNext){
+    handleCompleteSetup(playerIsNext) {
         /**
          * Fill in the board from bottom right corner (if player) or from top left corner (if computer).
          */
@@ -363,24 +364,23 @@ class Game extends React.Component {
 
         let left;
         let right;
-        if(playerIsNext){
+        if (playerIsNext) {
             right = 99;
             left = 60;
-        }else{
+        } else {
             right = 49;
             left = 0;
         }
 
-        for(var i = 0; i < piece_count.length; i++){
-            if(piece_count[i] > 0){
+        for (var i = 0; i < piece_count.length; i++) {
+            if (piece_count[i] > 0) {
                 var piece = pieces[i];
-                for(var j = right; j >= left; j--){
-                    if(!squares[j]){
-                        // put piece in the square
+                for (var j = right; j >= left; j--) {
+                    if (!squares[j]) {
                         squares[j] = piece;
                         game[j] = playerIsNext ? 'P' : 'C';
                         piece_count[i] = piece_count[i] - 1;
-                        if(piece_count[i] <= 0){
+                        if (piece_count[i] <= 0) {
                             break;
                         }
                     }
@@ -427,13 +427,23 @@ class Game extends React.Component {
                         onClick={(i) => this.handlePlayerPieceClick(i)}
                     />
                 </Container>
-                <div className="game">
-                    <Board
-                        squares={this.state.squares}
-                        game={this.state.game}
-                        onClick={(i) => this.handleClick(i)}
-                    />
-                </div>
+                <Container className="game" fluid={true}>
+                    <Row>
+                        <Col md={2} className="mx-auto justify-content-md-center">
+                            {'put status and error messages here, will later compare values of pieces here'}
+                        </Col>
+                        <Col md={8} className="mx-auto justify-content-md-center">
+                            <Board
+                                squares={this.state.squares}
+                                game={this.state.game}
+                                onClick={(i) => this.handleClick(i)}
+                            />
+                        </Col>
+                        <Col md={2}>
+                            {'will show log of game here'}
+                        </Col>
+                    </Row>
+                </Container>
                 <Container className="game-info my-2">
                     <Row className="justify-content-md-center text-danger">
                         <div>{warning}</div>
@@ -476,9 +486,9 @@ function calculateWinner(squares) {
     return null;
 }
 
-function checkSetup(piece_count){
+function checkSetup(piece_count) {
     /**
      * See if the sum of the piece counts === 0
      */
-    return (piece_count.reduce((x,y) => x + y) === 0);
+    return (piece_count.reduce((x, y) => x + y) === 0);
 }
