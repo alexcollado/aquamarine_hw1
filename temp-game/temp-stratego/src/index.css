@@ -63,7 +63,7 @@ ol, ul {
 }
 
 .player-piece {
-  background: #e74c3c;
+  background: #c0392b;
   border-radius: 100%;
   border: 1px solid #000;
   box-shadow: 2px 2px 3px rgba(0,0,0,0.5);
@@ -84,16 +84,21 @@ ol, ul {
 }
 
 .player-piece:hover{
-  background: #c0392b;
+  background: #e74c3c;
+  border-color: #c0392b;
 }
 
 .player-piece:active{
-  background: #c0392b !important;
+  background: #e74c3c !important;
+  border-color: #c0392b !important;
 }
 
 .player-piece:focus {
-  background: #c0392b;
-  box-shadow: 0 0 0 0.1rem grey;
+  background: #e74c3c;
+  border-color: #c0392b;
+  box-shadow: 0 0 0 1px grey;
+  transform: scale(1.2);
+  transition: all 0.5s;
 }
 
 .computer-piece {

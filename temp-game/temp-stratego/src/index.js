@@ -290,9 +290,6 @@ class Game extends React.Component {
 
     handleClick(i) {
         if (this.state.gameStart) {
-            /**
-             * FIXME: hide number in real game, but display it for now
-             */
             if (!this.state.current_piece) {
                 return;
             }
@@ -303,12 +300,13 @@ class Game extends React.Component {
                 const game = this.state.game.slice();
                 const squares = this.state.squares.slice();
                 const log = this.state.log.slice();
+                const visibility_arr = this.state.visibility_arr.slice();
 
                 game[i] = 'P';
                 game[this.state.current_index] = null;
-                /**
-                 * During setup, all of the pieces are placed by the player.
-                 */
+
+                visibility_arr[i] = visibility_arr[this.state.current_index];
+                visibility_arr[this.state.current_index] = false;
 
                 squares[i] = this.state.current_piece;
                 squares[this.state.current_index] = null;
@@ -321,6 +319,7 @@ class Game extends React.Component {
                     warning: null,
                     current_piece: null,
                     log: log,
+                    visibility_arr: visibility_arr,
                 });
 
                 // computer make a move - call a method
