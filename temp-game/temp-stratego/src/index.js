@@ -10,6 +10,8 @@ import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 
 import HeadShake from 'react-reveal/HeadShake';
+import Fade from 'react-reveal/Fade';
+import TransitionGroup from 'react-transition-group/TransitionGroup';
 
 function Square(props) {
     return (
@@ -283,7 +285,7 @@ class Game extends React.Component {
             squares: Array(100).fill(null), //contains the values needed to display board
             game: Array(100).fill(null), // used to differentiate player from computer pieces
             visibility_arr: Array(100).fill(false), // used to check if piece is visible or not
-            log: [],
+            updated_log: [].map((text, id) => ({ id, text })),
             pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             player_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
             computer_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
@@ -294,6 +296,23 @@ class Game extends React.Component {
             current_index: null,
             warning: null,
         };
+        this.logProps = {
+            appear: true,
+            enter: true,
+            exit: true,
+        };
+        this.state.id = this.state.updated_log.length;
+        this.addToLog = this.addToLog.bind(this);
+    }
+
+    addToLog(log_item) {
+        this.setState({
+            id: this.state.id + 1,
+            updated_log: [
+                { id: this.state.id, text: log_item },
+                ...this.state.updated_log
+            ],
+        });
     }
 
     handleClick(i) {
@@ -302,7 +321,7 @@ class Game extends React.Component {
                 return;
             }
 
-            if(!this.state.playerIsNext){
+            if (!this.state.playerIsNext) {
                 return;
             }
 
@@ -311,7 +330,6 @@ class Game extends React.Component {
 
                 const game = this.state.game.slice();
                 const squares = this.state.squares.slice();
-                const log = this.state.log.slice();
                 const visibility_arr = this.state.visibility_arr.slice();
 
                 game[i] = 'P';
@@ -323,13 +341,12 @@ class Game extends React.Component {
                 squares[i] = this.state.current_piece;
                 squares[this.state.current_index] = null;
 
-                log.unshift('Player moved [' + this.state.current_piece + '] from cell ' + this.state.current_index + ' to cell ' + i);
+                this.addToLog('Player moved [' + this.state.current_piece + '] from cell ' + this.state.current_index + ' to cell ' + i);
                 this.setState({
                     squares: squares,
                     game: game,
                     warning: null,
                     current_piece: null,
-                    log: log,
                     visibility_arr: visibility_arr,
                     playerIsNext: !(this.state.playerIsNext),
                 });
@@ -389,14 +406,14 @@ class Game extends React.Component {
             });
 
             if (checkSetup(piece_count)) {
-                const log = this.state.log.slice();
-                log.unshift('Player setup completed')
+                this.addToLog('Player setup completed')
 
                 this.setState({
-                    log: log,
                     setupCompleted: true,
                     current_piece: null,
                 })
+
+                this.addToLog('Player setup completed');
             }
         }
     }
@@ -413,7 +430,6 @@ class Game extends React.Component {
 
     handleComputerMove() {
         const game = this.state.game.slice();
-        const log = this.state.log.slice();
         const squares = this.state.squares.slice();
         const visibility_arr = this.state.visibility_arr.slice();
 
@@ -422,9 +438,9 @@ class Game extends React.Component {
         const map = getMoveablePieces(game);
 
         //randomly select an index from that map
-        var i = Math.round(Math.random() * map.length) //between 0 and length of map
+        var i = Math.floor(Math.random() * map.length) //between 0 and length of map
         var possible_squares = map[i][1];
-        var j = Math.round(Math.random() * possible_squares.length);
+        var j = Math.floor(Math.random() * possible_squares.length);
 
         var current_index = map[i][0];
         var current_piece = squares[current_index];
@@ -443,13 +459,12 @@ class Game extends React.Component {
         //state change
 
         //modify so that if its visible display piece in brackets
-        log.unshift('Computer moved [?] from cell ' + current_index + ' to cell ' + target_index);
+        this.addToLog('Computer moved [?] from cell ' + current_index + ' to cell ' + target_index);
         this.setState({
             squares: squares,
             game: game,
             warning: null,
             current_piece: null,
-            log: log,
             visibility_arr: visibility_arr,
             playerIsNext: !(this.state.playerIsNext),
         });
@@ -517,21 +532,19 @@ class Game extends React.Component {
             visibility_arr: visibility_arr, //delete later
         })
 
-        const log = this.state.log.slice();
         if (playerIsNext) {
-            log.unshift('Player setup completed')
+            this.addToLog('Player setup completed')
             this.setState({
                 player_piece_count: piece_count,
                 setupCompleted: true,
                 current_piece: null,
-                log: log,
             })
+            this.addToLog('Player setup completed');
         } else {
-            log.unshift('Computer setup completed')
+            this.addToLog('Computer setup completed')
             this.setState({
                 computer_piece_count: piece_count,
                 gameStart: true,
-                log: log,
                 current_piece: null,
             })
             this.resetPieceCounts();
@@ -606,11 +619,17 @@ class Game extends React.Component {
                             </Container>
                         </Col>
                         <Col md={2}>
-                            <ul>
-                                {this.state.log.map((logItem, index) => (
-                                    <li className="my-1">{this.state.log[index]}</li>
-                                ))}
-                            </ul>
+                            <TransitionGroup {...this.logProps}>
+                                {this.state.updated_log.map((item) =>
+                                    <Fade key={item.id} collapse bottom>
+                                        <div className="card">
+                                            <div className="card-body justify-content-between">
+                                                {item.text}
+                                            </div>
+                                        </div>
+                                    </Fade>
+                                )}
+                            </TransitionGroup>
                         </Col>
                     </Row>
                 </Container>
