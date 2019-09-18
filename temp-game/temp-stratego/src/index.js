@@ -112,7 +112,7 @@ class Board extends React.Component {
                 <OccupiedSquare
                     value={this.props.squares[i]}
                     owner={this.props.game[i]}
-                //different onclick method? so that you can move it?
+                    onClick={() => this.props.onUpdatedClick(i)}
                 />
             );
         }
@@ -268,6 +268,7 @@ class Game extends React.Component {
             gameStart: false,
             setupCompleted: false,
             current_piece: null,
+            current_index: null,
             warning: null,
         };
     }
@@ -275,14 +276,40 @@ class Game extends React.Component {
     handleClick(i) {
         if (this.state.gameStart) {
             /**
-             * Have computer setup their pieces on the board.
-             * 
-             * undisable the buttonen they're put on the grid
-             * 
-             * disable the button w/ fill in remaining pieces
              * FIXME: hide number in real game, but display it for now
              */
+            if(!this.state.current_piece){
+                return;
+            }
 
+            if (isValidMove(this.state.current_index, i, this.state.current_piece, this.state.game)) {
+                // if selected index is valid compared to current index of selected piece, move piece to that index
+
+                // put new piece on index
+                // remove old piece on current index
+
+                // add checks later
+                const game = this.state.game.slice();
+                const squares = this.state.squares.slice();
+
+                game[i] = 'P';
+                game[this.state.current_index] = null;
+                /**
+                 * During setup, all of the pieces are placed by the player.
+                 */
+
+                squares[i] = this.state.current_piece;
+                squares[this.state.current_index] = null;
+
+                this.setState({
+                    squares: squares,
+                    game: game,
+                    warning: null,
+                    current_piece: null,
+                });
+                // add log item
+            }
+            return;
         } else {
             /**
              * Game has not started yet. At this point the player places 
@@ -352,9 +379,28 @@ class Game extends React.Component {
                 this.setState({
                     log: log,
                     setupCompleted: true,
+                    current_piece: null,
                 })
             }
         }
+    }
+
+    handlePlayerPieceOnBoardClick(i) {
+        // add checks?
+        if (this.state.game[i] === 'C') {
+            return;
+        }
+        this.setState({
+            current_piece: this.state.squares[i],
+            current_index: i,
+        });
+    }
+
+    resetPieceCounts() {
+        this.setState({
+            player_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
+            computer_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
+        });
     }
 
     handlePlayerPieceClick(i) {
@@ -405,34 +451,31 @@ class Game extends React.Component {
         })
 
         const log = this.state.log.slice();
-        if(playerIsNext){
+        if (playerIsNext) {
             log.unshift('Player setup completed')
             this.setState({
                 player_piece_count: piece_count,
                 setupCompleted: true,
+                current_piece: null,
                 log: log,
             })
-        }else{
+        } else {
             log.unshift('Computer setup completed')
             this.setState({
                 computer_piece_count: piece_count,
                 gameStart: true,
                 log: log,
             })
+            this.resetPieceCounts();
         }
     }
 
     render() {
-        const winner = calculateWinner(this.state.squares);
 
         let status;
         let current_piece;
 
-        if (winner) {
-            status = 'Winner: ' + winner;
-        } else {
-            status = 'Next turn: ' + (this.state.playerIsNext ? 'Player' : 'Computer');
-        }
+        status = 'Next turn: ' + (this.state.playerIsNext ? 'Player' : 'Computer');
 
         if (this.state.current_piece) {
             current_piece = 'Current Piece: ' + this.state.current_piece;
@@ -482,13 +525,14 @@ class Game extends React.Component {
                                 squares={this.state.squares}
                                 game={this.state.game}
                                 onClick={(i) => this.handleClick(i)}
+                                onUpdatedClick={(i) => this.handlePlayerPieceOnBoardClick(i)}
                             />
                         </Col>
                         <Col md={2}>
                             <ul>
-                            {this.state.log.map((logItem, index)  => (
-                                <li>{this.state.log[index]}</li>
-                            ))}
+                                {this.state.log.map((logItem, index) => (
+                                    <li>{this.state.log[index]}</li>
+                                ))}
                             </ul>
                         </Col>
                     </Row>
@@ -513,13 +557,14 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-function calculateWinner(squares) {
-    return null;
-}
-
 function checkSetup(piece_count) {
     /**
      * See if the sum of the piece counts === 0
      */
     return (piece_count.reduce((x, y) => x + y) === 0);
+}
+
+function isValidMove(current_index, target_index, current_piece, game) {
+    //check piece to get number of steps
+    return true;
 }
