@@ -20,17 +20,14 @@ function Square(props) {
 }
 
 function OccupiedSquare(props) {
-    //check owner first?
+        /**
+         * If visible player -- add white border (use state in in game to track visibility not properties)
+         * If visible computer -- show numbers
+         */
     if (props.owner === 'P') {
         return (
-            /** 
-            <button className="square player-square">
-                {props.value}
-            </button> 
-            */
             <div className="square">
                 <Button className="player-piece mx-auto my-auto" onClick={props.onClick}>
-                    {/** maybe a different method now? */}
                     {props.value}
                 </Button>
             </div>
@@ -39,7 +36,6 @@ function OccupiedSquare(props) {
         return (
             <div className="square">
                 <Button className="computer-piece mx-auto my-auto" onClick={props.onClick}>
-                    {/** maybe a different method now? */}
                     {props.value}
                 </Button>
             </div>
@@ -259,7 +255,7 @@ class Game extends React.Component {
         this.state = {
             squares: Array(100).fill(null), //contains the values needed to display board
             game: Array(100).fill(null), // used to differentiate player from computer pieces
-            // maybe add a visibility array? to check if piece is visible or not
+            visibility_arr: Array(100).fill(false), // used to check if piece is visible or not
             log: [],
             pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             player_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
@@ -308,7 +304,7 @@ class Game extends React.Component {
                     log: log,
                 });
 
-                // computer make a move
+                // computer make a move - call a method
             }
             return;
         } else {
@@ -316,52 +312,41 @@ class Game extends React.Component {
              * Game has not started yet. At this point the player places 
              * the pieces on the board.
              */
+            if(this.state.setupCompleted){
+                return; // don't do anything if setup already
+            }
 
             const squares = this.state.squares.slice();
             if (squares[i]) {
-                /**
-                 * Selected square is occupied by another piece.
-                 */
                 this.setState({
                     warning: 'Current space is occupied already!',
                 })
-                return;
+                return; // Selected square is occupied by another piece
             }
 
             if (!(this.state.current_piece)) {
-                /**
-                 * No piece is selected yet.
-                 */
-                return;
+                return; // No piece is selected yet
             }
 
             let j = this.state.pieces.indexOf(this.state.current_piece);
             const piece_count = this.state.player_piece_count.slice();
             if (piece_count[j] <= 0) {
-                /**
-                 * Ran out of (this specific) piece to place on the board.
-                 */
                 this.setState({
-                    warning: 'No piece remaining for the chosen piece.', /** change this wording lol */
+                    warning: 'None remaining for the chosen piece.', // Exhausted piece count
                 })
                 return;
             }
 
             if (i <= 59) {
-                /**
-                 * Must place own pieces at the closest 4 rows
-                 */
                 this.setState({
                     warning: 'Cannot set up outside of limitation!',
                 })
-                return;
+                return; // Must place own pieces at the closest 4 rows
             }
 
             const game = this.state.game.slice();
-            game[i] = 'P';
-            /**
-             * During setup, all of the pieces are placed by the player.
-             */
+            game[i] = 'P'; // During setup, all of the pieces are placed by the player
+            // No need to update visibility array yet, since its initialized to false for every piece
 
             squares[i] = this.state.current_piece;
             piece_count[j] = (piece_count[j] - 1);
@@ -387,9 +372,8 @@ class Game extends React.Component {
     }
 
     handlePlayerPieceOnBoardClick(i) {
-        // add checks?
         if (this.state.game[i] === 'C') {
-            return;
+            return; // Can't select computer piece to move
         }
         this.setState({
             current_piece: this.state.squares[i],
@@ -466,6 +450,7 @@ class Game extends React.Component {
                 computer_piece_count: piece_count,
                 gameStart: true,
                 log: log,
+                current_piece: null,
             })
             this.resetPieceCounts();
         }
