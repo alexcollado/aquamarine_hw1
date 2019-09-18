@@ -312,7 +312,6 @@ class Game extends React.Component {
                 squares[this.state.current_index] = null;
 
                 log.unshift('Player moved [' + this.state.current_piece + '] from cell ' + this.state.current_index + ' to cell ' + i);
-
                 this.setState({
                     squares: squares,
                     game: game,
@@ -320,9 +319,10 @@ class Game extends React.Component {
                     current_piece: null,
                     log: log,
                     visibility_arr: visibility_arr,
+                    playerIsNext: !(this.state.playerIsNext),
                 });
 
-                // computer make a move - call a method
+                setTimeout(function(){ this.handleComputerMove(); }.bind(this), 2000);
             }
             return;
         } else {
@@ -397,6 +397,17 @@ class Game extends React.Component {
             current_piece: this.state.squares[i],
             current_index: i,
         });
+    }
+
+    handleComputerMove(){
+        const log = this.state.log.slice();
+        //sleep?
+
+        log.unshift('Computer moved');
+        this.setState({
+            playerIsNext: !this.state.playerIsNext,
+            log: log,
+        })
     }
 
     resetPieceCounts() {
@@ -552,7 +563,7 @@ class Game extends React.Component {
                         <Col md={2}>
                             <ul>
                                 {this.state.log.map((logItem, index) => (
-                                    <li>{this.state.log[index]}</li>
+                                    <li className="my-1">{this.state.log[index]}</li>
                                 ))}
                             </ul>
                         </Col>
