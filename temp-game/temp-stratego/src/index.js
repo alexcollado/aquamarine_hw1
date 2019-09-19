@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 
@@ -325,6 +326,7 @@ class Game extends React.Component {
             gameStart: false,
             gameOver: false,
             setupCompleted: false,
+            fastForward: false,
             current_piece: null,
             current_index: null,
             warning: null,
@@ -666,11 +668,23 @@ class Game extends React.Component {
         }
     }
 
+    /**
+     * Handler called when the user quits
+     */
     handleQuit() {
         let status = 'Game over - Computer won!';
         this.addToLog(status);
         this.setState({
             gameOver: true,
+        });
+    }
+
+    /**
+     * Handler that modifies user play from manual to automatic or vice versa
+     */
+    handleToggleAuto(){
+        this.setState({
+            fastForward: !this.state.fastForward,
         });
     }
 
@@ -796,6 +810,14 @@ class Game extends React.Component {
                                     <Button className="btn-dark my-2" onClick={() => this.handleQuit()} disabled={!this.state.gameStart || this.state.gameOver}>
                                         {"Quit game"}
                                     </Button>
+                                    <ButtonGroup>
+                                        <Button className="btn-dark mx-1" disabled={!this.state.fastForward || this.state.gameOver} onClick={() => this.handleToggleAuto()}>
+                                            {"Manual"}
+                                        </Button>
+                                        <Button className="btn-dark mx-1" disabled={this.state.fastForward || !this.state.gameStart || this.state.gameOver} onClick={() => this.handleToggleAuto()}>
+                                            {"Auto"}
+                                        </Button>
+                                    </ButtonGroup>
                                 </Row>
                             </Container>
                             <Container className="game-info my-2">
