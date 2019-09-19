@@ -145,14 +145,24 @@ class PieceTable extends React.Component {
 class Board extends React.Component {
     renderSquare(i) {
         if (this.props.game[i] === 'P') {
-            return (
-                <OccupiedSquare
-                    value={this.props.squares[i]}
-                    owner={this.props.game[i]}
-                    onClick={() => this.props.onPlayerMove(i)} //update handle method
-                    isVisible={this.props.visibility_arr[i]} //pass in visibility info
-                />
-            );
+            if (this.props.gameOver) { // if game is over no need to have click handlers
+                return (
+                    <OccupiedSquare
+                        value={this.props.squares[i]}
+                        owner={this.props.game[i]}
+                        isVisible={this.props.visibility_arr[i]} //pass in visibility info
+                    />
+                );
+            } else {
+                return (
+                    <OccupiedSquare
+                        value={this.props.squares[i]}
+                        owner={this.props.game[i]}
+                        onClick={() => this.props.onPlayerMove(i)} //update handle method
+                        isVisible={this.props.visibility_arr[i]} //pass in visibility info
+                    />
+                );
+            }
         } else if (this.props.game[i] === 'C') {
             return (
                 <OccupiedSquare
@@ -313,6 +323,7 @@ class Game extends React.Component {
             computer_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
             playerIsNext: true,
             gameStart: false,
+            gameOver: false,
             setupCompleted: false,
             current_piece: null,
             current_index: null,
@@ -559,6 +570,9 @@ class Game extends React.Component {
      * FIXME: further checks are needed 
      */
     handleComputerMove() {
+        if (this.state.gameOver) {
+            return;
+        }
         const game = this.state.game.slice();
         const squares = this.state.squares.slice();
         const visibility_arr = this.state.visibility_arr.slice();
@@ -625,18 +639,29 @@ class Game extends React.Component {
         });
     }
 
-    handleDecrementPieceCount(piece, isPlayer){
+    /**
+     * Helper method that decrements the number of pieces in a specific set
+     */
+    handleDecrementPieceCount(piece, isPlayer) {
         let i = this.state.pieces.indexOf(piece);
         const piece_count = isPlayer ? this.state.player_piece_count.slice() : this.state.computer_piece_count.slice();
         piece_count[i] = piece_count[i] - 1;
 
-        if(isPlayer){
+        if (isPlayer) {
             this.setState({
                 player_piece_count: piece_count,
             });
-        }else{
+        } else {
             this.setState({
                 computer_piece_count: piece_count,
+            });
+        }
+
+        if (!i) {
+            let status = 'Game over - ' + (this.state.playerIsNext ? 'Player' : 'Computer') + ' won!';
+            this.addToLog(status);
+            this.setState({
+                gameOver: true,
             });
         }
     }
@@ -735,6 +760,9 @@ class Game extends React.Component {
         let status;
         let current_piece;
         status = 'Next turn: ' + (this.state.playerIsNext ? 'Player' : 'Computer');
+        if (this.state.gameOver) {
+            status = 'Game Over!'
+        }
 
         if (this.state.current_piece) {
             current_piece = 'Current Piece: ' + this.state.current_piece;
@@ -788,6 +816,7 @@ class Game extends React.Component {
                                 onClick={(i) => this.handleClick(i)}
                                 onPlayerMove={(i) => this.handlePlayerPieceOnBoardClick(i)}
                                 onPlayerAttack={(i) => this.handleComputerPieceOnBoardClick(i)}
+                                gameOver={this.state.gameOver}
                             />
                             <Container className="player-pieces">
                                 <PieceTable
