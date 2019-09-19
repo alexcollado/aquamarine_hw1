@@ -47,9 +47,12 @@ export function comparePieceValues(squares, i, j) {
         return i;
     }
 
+    if(defender === attacker){
+        return -1;
+    }
+
     return (attacker > defender) ? i : j;
-    //if tie - return -1 ?
-    // rules not implemented yet
+    // special rules not implemented yet
 }
 
 export function getMoveablePieces(game, squares) {

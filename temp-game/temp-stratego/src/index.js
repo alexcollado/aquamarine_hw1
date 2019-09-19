@@ -485,55 +485,51 @@ class Game extends React.Component {
             defending_piece = squares[defend_index];
         }
 
-        if (winner < 0) {
-            // both lost - remove both from the board
-            // to be implemented
-            // decrement count
-
-            this.addToLog('Both pieces ' + defending_piece + ' removed from the board')
-            visibility_arr[defend_index] = false;
-            this.setState({
-                visibility_arr: visibility_arr,
-            });
-            return;
-        }
-
-        visibility_arr[defend_index] = true; // attacker or defender is revealed
-        visibility_arr[attack_index] = false; // attacker piece is now empty 
         game[attack_index] = null;
         squares[attack_index] = null;
 
-        if (winner === defend_index) {
-            //defender won
-            //decrement count of attacking piece count here FIXME
-
-            if (isPlayerNext) {
-                this.addToLog('Computer defended cell ' + defend_index + ' with [' +
-                    defending_piece + '] and captured the player\'s [' + attacking_piece + ']'
-                );
-            } else {
-                this.addToLog('Player defended cell ' + defend_index + ' with [' +
-                    defending_piece + '] and captured the player\'s [' + attacking_piece + ']'
-                );
-            }
-
+        if (winner < 0) {
+            // both pieces lost
+            // to be implemented
+            // decrement count
+            this.addToLog('Both pieces [' + defending_piece + '] removed from the board')
+            visibility_arr[defend_index] = false;
+            game[defend_index] = null;
+            squares[defend_index] = null;
         } else {
-            //attacker won
-            //decrement count of defending piece count here FIXME
+            visibility_arr[defend_index] = true; // attacker or defender is revealed
+            visibility_arr[attack_index] = false; // attacker piece is now empty 
 
-            if (isPlayerNext) {
-                this.addToLog('Player attacked cell ' + defend_index + ' with [' +
-                    attacking_piece + '] and captured the computer\'s [' + defending_piece + ']'
-                );
-                game[defend_index] = 'P';
+            if (winner === defend_index) {
+                //defender won
+                //decrement count of attacking piece count here FIXME
+
+                if (isPlayerNext) {
+                    this.addToLog('Computer defended cell ' + defend_index + ' with [' +
+                        defending_piece + '] and captured the player\'s [' + attacking_piece + ']'
+                    );
+                } else {
+                    this.addToLog('Player defended cell ' + defend_index + ' with [' +
+                        defending_piece + '] and captured the player\'s [' + attacking_piece + ']'
+                    );
+                }
             } else {
-                this.addToLog('Computer attacked cell ' + defend_index + ' with [' +
-                    attacking_piece + '] and captured the player\'s [' + defending_piece + ']'
-                );
-                game[defend_index] = 'C';
-            }
+                //attacker won
+                //decrement count of defending piece count here FIXME
 
-            squares[defend_index] = attacking_piece;
+                if (isPlayerNext) {
+                    this.addToLog('Player attacked cell ' + defend_index + ' with [' +
+                        attacking_piece + '] and captured the computer\'s [' + defending_piece + ']'
+                    );
+                    game[defend_index] = 'P';
+                } else {
+                    this.addToLog('Computer attacked cell ' + defend_index + ' with [' +
+                        attacking_piece + '] and captured the player\'s [' + defending_piece + ']'
+                    );
+                    game[defend_index] = 'C';
+                }
+                squares[defend_index] = attacking_piece;
+            }
         }
         this.setState({
             squares: squares,
