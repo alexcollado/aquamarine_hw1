@@ -1,8 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
+import './index.css';
+import * as helper from  './helper.js';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -334,7 +335,7 @@ class Game extends React.Component {
                 return;
             }
 
-            if (isValidMove(this.state.current_index, i, this.state.current_piece, this.state.game)) {
+            if (helper.isValidMove(this.state.current_index, i, this.state.current_piece, this.state.game)) {
                 // if selected index is valid compared to current index of selected piece, move piece to that index
 
                 const game = this.state.game.slice();
@@ -414,7 +415,7 @@ class Game extends React.Component {
                 warning: null,
             });
 
-            if (checkSetup(piece_count)) {
+            if (helper.checkSetup(piece_count)) {
                 this.addToLog('Player setup completed')
 
                 this.setState({
@@ -444,7 +445,7 @@ class Game extends React.Component {
 
         //first get pieces that can move
         //pass in game map
-        const map = getMoveablePieces(game);
+        const map = helper.getMoveablePieces(game);
 
         //randomly select an index from that map
         var i = Math.floor(Math.random() * map.length) //between 0 and length of map
@@ -662,36 +663,3 @@ ReactDOM.render(
     <Game />,
     document.getElementById('root')
 );
-
-function checkSetup(piece_count) {
-    /**
-     * See if the sum of the piece counts === 0
-     */
-    return (piece_count.reduce((x, y) => x + y) === 0);
-}
-
-function isValidMove(current_index, target_index, current_piece, game) {
-    //check piece to get number of steps
-    return true;
-}
-
-function getMoveablePieces(game) {
-    // for now this function just adds the empty spots as the possible places the pieces can go
-    // also all the enemy pieces can move at this point of implementation
-
-    const map = [];
-    let empty_spots = [];
-    let computer_locations = [];
-    for (var i = 0; i < 100; i++) {
-        if (!game[i]) {
-            empty_spots.push(i);
-        } else if (game[i] === 'C') {
-            computer_locations.push(i);
-        }
-    }
-    for (var j = 0; j < computer_locations.length; j++) {
-        map.push([computer_locations[j], empty_spots]);
-    }
-
-    return map;
-}
