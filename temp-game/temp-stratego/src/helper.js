@@ -41,10 +41,13 @@ export function comparePieceValues(squares, i, j) {
     let defender = squares[j];
 
     if(defender === 'B'){
-        return j;
+        return (attacker === 3) ? i : j;  // only miner could defuse a bomb
     }
     if(defender === 'F'){
         return i;
+    }
+    if((attacker === 1) && (defender === 10)){
+        return i; //spy attacking marshall
     }
 
     if(defender === attacker){
