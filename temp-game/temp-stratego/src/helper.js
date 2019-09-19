@@ -40,6 +40,7 @@ export function getMoveablePieces(game, squares) {
         }else if(piece === 'F'){
             continue; // the flag cannot move
         }
+        // have check for more than 1 square move later on
         if (isLeftValid(index, game)) {
             temp.push(index - 1);
         }

@@ -24,9 +24,6 @@ function Square(props) {
 }
 
 function OccupiedSquare(props) {
-    /**
-     * If visible computer -- show numbers
-     */
     if (props.owner === 'P') {
         if (props.isVisible) { //add white border
             return (
@@ -147,13 +144,22 @@ class PieceTable extends React.Component {
 
 class Board extends React.Component {
     renderSquare(i) {
-        if (this.props.game[i]) {
+        if (this.props.game[i] === 'P') {
             return (
                 <OccupiedSquare
                     value={this.props.squares[i]}
                     owner={this.props.game[i]}
-                    onClick={() => this.props.onUpdatedClick(i)} //update handle method
+                    onClick={() => this.props.onPlayerMove(i)} //update handle method
                     isVisible={this.props.visibility_arr[i]} //pass in visibility info
+                />
+            );
+        }else if(this.props.game[i] === 'C'){
+            return(
+                <OccupiedSquare 
+                    value={this.props.squares[i]}
+                    owner={this.props.game[i]}
+                    onClick={() => this.props.onPlayerAttack(i)} //squares with the computer on it -- handle player attacking it
+                    isVisible={this.props.visibility_arr[i]}
                 />
             );
         }
@@ -325,18 +331,29 @@ class Game extends React.Component {
         });
     }
 
+    /**
+     * This handler is called when a player selects on an empty square on the board.
+     * This same handler is use for piece setup and piece movement.
+     */
     handleClick(i) {
         if (this.state.gameStart) {
+            /**
+             * Game has started. Clicking on an empty square means moving the intended player
+             * piece to that square.
+             */
             if (!this.state.current_piece) {
-                return;
+                return; // no player piece is selected yet
             }
 
             if (!this.state.playerIsNext) {
-                return;
+                return; // it is currently the computer's turn
             }
 
+            /**
+             * If the empty square is valid compared to the current index of the selected piece,
+             * move that piece to that square.
+             */
             if (helper.isValidMove(this.state.current_index, i, this.state.current_piece, this.state.game)) {
-                // if selected index is valid compared to current index of selected piece, move piece to that index
 
                 const game = this.state.game.slice();
                 const squares = this.state.squares.slice();
@@ -428,29 +445,51 @@ class Game extends React.Component {
         }
     }
 
-    handlePlayerPieceOnBoardClick(i) {
-        if (this.state.game[i] === 'C') {
-            return; // Can't select computer piece to move
+    /** 
+     * This handler is called when a player selects on a square with a computer piece on it. 
+     * If a player piece is currently selected, attack the computer piece on the selected square.
+    */
+    handleComputerPieceOnBoardClick(i){
+        if(this.state.current_piece){
+            // has a selected piece rn
+            this.setState({
+                warning: 'player ' + this.state.current_piece + ' attacks ' + this.state.squares[i],
+            });
         }
+    }
+
+    /** 
+     * This handler is called when a player selects on a square with a player piece on it. 
+     * Saves the current piece type and index of the player piece in the game state.
+     * Essentially, "picking up" the player piece to decide what to do next.
+    */
+    handlePlayerPieceOnBoardClick(i) {
         this.setState({
             current_piece: this.state.squares[i],
             current_index: i,
         });
     }
 
+    /**
+     * Helper method that calculates and moves the computer piece
+     * 
+     * FIXME: further checks are needed 
+     */
     handleComputerMove() {
         const game = this.state.game.slice();
         const squares = this.state.squares.slice();
         const visibility_arr = this.state.visibility_arr.slice();
 
-        //first get pieces that can move
-        //pass in game map
         const map = helper.getMoveablePieces(game, squares);
+        /**
+         * map returns an array of arrays
+         * map[i][0] is the current index of the computer piece
+         * map[i][1] is an array of possible indices that the piece could go to
+         */
 
-        //randomly select an index from that map
-        var i = Math.floor(Math.random() * map.length) //between 0 and length of map
+        var i = Math.floor(Math.random() * map.length) // randomly select a computer piece
         var possible_squares = map[i][1];
-        var j = Math.floor(Math.random() * possible_squares.length);
+        var j = Math.floor(Math.random() * possible_squares.length); // randomly select a possible move wrt to the computer piece
 
         var current_index = map[i][0];
         var current_piece = squares[current_index];
@@ -483,6 +522,9 @@ class Game extends React.Component {
         });
     }
 
+    /**
+     * Helper method that resets the player and computer pieces to their initial values.
+     */
     resetPieceCounts() {
         this.setState({
             player_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
@@ -490,16 +532,23 @@ class Game extends React.Component {
         });
     }
 
+    /**
+     * This handler is called when a player selects a certain piece on their "piece table"
+     * during the setup portion of the game.
+     */
     handlePlayerPieceClick(i) {
         this.setState({
             current_piece: this.state.pieces[i],
         });
     }
 
+    /**
+     * Randomly place the remaining pieces on the board.
+     * 
+     * @param playerIsNext - boolean value if the player is being setup or not
+     * If false, the computer pieces are setup on the table
+     */
     handleCompleteSetup(playerIsNext) {
-        /**
-         * Randomly place remaining pieces on the board
-         */
         const squares = this.state.squares.slice();
         const game = this.state.game.slice();
         const pieces = this.state.pieces.slice();
@@ -516,7 +565,9 @@ class Game extends React.Component {
             left = 0;
         }
 
-        //delete later
+        /**
+         * FIX ME: remove visibility_arr modification later
+         */
         const visibility_arr = this.state.visibility_arr.slice();
 
         for (var i = 0; i < piece_count.length; i++) {
@@ -572,10 +623,8 @@ class Game extends React.Component {
     }
 
     render() {
-
         let status;
         let current_piece;
-
         status = 'Next turn: ' + (this.state.playerIsNext ? 'Player' : 'Computer');
 
         if (this.state.current_piece) {
@@ -628,7 +677,8 @@ class Game extends React.Component {
                                 game={this.state.game}
                                 visibility_arr={this.state.visibility_arr}
                                 onClick={(i) => this.handleClick(i)}
-                                onUpdatedClick={(i) => this.handlePlayerPieceOnBoardClick(i)}
+                                onPlayerMove={(i) => this.handlePlayerPieceOnBoardClick(i)}
+                                onPlayerAttack={(i) => this.handleComputerPieceOnBoardClick(i)}
                             />
                             <Container className="player-pieces">
                                 <PieceTable
