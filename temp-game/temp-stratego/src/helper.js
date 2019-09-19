@@ -27,6 +27,8 @@ export function checkSetup(piece_count) {
  */
 export function isValidMove(current_index, target_index, current_piece, game) {
     //check piece to get number of steps
+
+    //maybe do something similar to what computer does? check if piece is in the array of valid moves or something?
     return true;
 }
 

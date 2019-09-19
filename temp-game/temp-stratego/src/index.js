@@ -755,7 +755,7 @@ class Game extends React.Component {
         this.setState({
             squares: squares,
             game: game,
-            visibility_arr: visibility_arr, //delete later
+            // visibility_arr: visibility_arr, //delete later
             warning: null,
         })
 
