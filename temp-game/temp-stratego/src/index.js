@@ -467,6 +467,7 @@ class Game extends React.Component {
 
         //later add a check that if computer can't make a move anymore - player wins
         //state change
+        //maybe if map is empty?
 
         //modify so that if its visible display piece in brackets
         this.addToLog('Computer moved [?] from cell ' + current_index + ' to cell ' + target_index);

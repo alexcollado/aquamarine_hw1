@@ -42,7 +42,6 @@ export function getMoveablePieces(game) {
             temp.push(index + 1);
         }
         if (isTopValid(index, game)) {
-            console.log('shits valid apparently');
             temp.push(index - 10);
         }
         if (isBottomValid(index, game)) {
@@ -57,7 +56,7 @@ export function getMoveablePieces(game) {
 }
 
 function isLeftValid(i, game) {
-    if (i % 10) {
+    if (!(i % 10)) {
         return false;  //current piece is on the left boundary
     }
     let left = i - 1;
