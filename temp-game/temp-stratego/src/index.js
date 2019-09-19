@@ -469,6 +469,9 @@ class Game extends React.Component {
         setTimeout(function () { this.handleComputerMove(); }.bind(this), 2000);
     }
 
+    /** 
+     * This helper is called when an attacker attacks a square with a piece on it
+    */
     handleAttack(attack_index, defend_index, isPlayerNext) {
         const squares = this.state.squares.slice();
         const game = this.state.game.slice();
@@ -575,29 +578,39 @@ class Game extends React.Component {
         var current_piece = squares[current_index];
         var target_index = possible_squares[j];
 
-        game[target_index] = 'C';
-        game[current_index] = null;
+        if (game[target_index] === 'P') {
+            /**
+             * Computer is attempting to attack a player's piece
+             */
+            this.handleAttack(current_index, target_index, false);
+        } else {
+            /**
+             * Computer is simply moving a piece
+             */
+            game[target_index] = 'C';
+            game[current_index] = null;
 
-        visibility_arr[target_index] = visibility_arr[current_index];
-        visibility_arr[current_index] = false;
+            visibility_arr[target_index] = visibility_arr[current_index];
+            visibility_arr[current_index] = false;
 
-        // add code to check if target piece is a player piece
-        // if so - call code to compare piece values
-        squares[target_index] = current_piece;
-        squares[current_index] = null;
+            squares[target_index] = current_piece;
+            squares[current_index] = null;
 
-        //later add a check that if computer can't make a move anymore - player wins
-        //state change
-        //maybe if map is empty?
+            //later add a check that if computer can't make a move anymore - player wins
+            //state change
+            //maybe if map is empty?
 
-        //modify so that if its visible display piece in brackets
-        this.addToLog('Computer moved [?] from cell ' + current_index + ' to cell ' + target_index);
+            //modify so that if its visible display piece in brackets
+            this.addToLog('Computer moved [?] from cell ' + current_index + ' to cell ' + target_index);
+            this.setState({
+                squares: squares,
+                game: game,
+                visibility_arr: visibility_arr,
+            });
+        }
         this.setState({
-            squares: squares,
-            game: game,
             warning: null,
             current_piece: null,
-            visibility_arr: visibility_arr,
             playerIsNext: !(this.state.playerIsNext),
         });
     }
