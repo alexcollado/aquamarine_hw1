@@ -666,6 +666,14 @@ class Game extends React.Component {
         }
     }
 
+    handleQuit() {
+        let status = 'Game over - Computer won!';
+        this.addToLog(status);
+        this.setState({
+            gameOver: true,
+        });
+    }
+
     /**
      * This handler is called when a player selects a certain piece on their "piece table"
      * during the setup portion of the game.
@@ -784,6 +792,9 @@ class Game extends React.Component {
                                     </Button>
                                     <Button className="btn-dark my-2" onClick={() => this.handleCompleteSetup(false)} disabled={!this.state.setupCompleted || this.state.gameStart}>
                                         {"Start game"}
+                                    </Button>
+                                    <Button className="btn-dark my-2" onClick={() => this.handleQuit()} disabled={!this.state.gameStart || this.state.gameOver}>
+                                        {"Quit game"}
                                     </Button>
                                 </Row>
                             </Container>
