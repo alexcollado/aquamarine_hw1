@@ -10,10 +10,7 @@ export function isValidMove(current_index, target_index, current_piece, game) {
     return true;
 }
 
-export function getMoveablePieces(game) {
-    // for now this function just adds the empty spots as the possible places the pieces can go
-    // also all the enemy pieces can move at this point of implementation
-
+export function getMoveablePieces(game, squares) {
     /**
      * game array marks player positions as 'P'
      * and computer positions as 'C'
@@ -25,6 +22,8 @@ export function getMoveablePieces(game) {
     //first find enemy positions
     //for each of those positions, check if the piece can go left, right, up, or down
     //implement piece checking later
+
+    //later implement passing in 'C' or 'P' to allow for player speed playing
     let computer_squares = [];
     let i;
     for (i = 0; i < 100; i++) {
@@ -35,6 +34,12 @@ export function getMoveablePieces(game) {
     for (i = 0; i < computer_squares.length; i++) {
         let temp = [];
         let index = computer_squares[i];
+        let piece = squares[index];
+        if(piece === 'B'){
+            continue; // bombs cannot move
+        }else if(piece === 'F'){
+            continue; // the flag cannot move
+        }
         if (isLeftValid(index, game)) {
             temp.push(index - 1);
         }
@@ -64,7 +69,7 @@ function isLeftValid(i, game) {
 }
 
 function isRightValid(i, game) {
-    if ((i + 1) % 10) {
+    if (!((i + 1) % 10)) {
         return false; // current piece is on the right boundary
     }
     let right = i + 1;

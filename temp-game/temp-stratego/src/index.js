@@ -445,7 +445,7 @@ class Game extends React.Component {
 
         //first get pieces that can move
         //pass in game map
-        const map = helper.getMoveablePieces(game);
+        const map = helper.getMoveablePieces(game, squares);
 
         //randomly select an index from that map
         var i = Math.floor(Math.random() * map.length) //between 0 and length of map
@@ -462,6 +462,8 @@ class Game extends React.Component {
         visibility_arr[target_index] = visibility_arr[current_index];
         visibility_arr[current_index] = false;
 
+        // add code to check if target piece is a player piece
+        // if so - call code to compare piece values
         squares[target_index] = current_piece;
         squares[current_index] = null;
 
