@@ -1,5 +1,7 @@
-package com.cse308.stratego.demo;
+package com.cse308.stratego.demo.controller;
 
+import com.cse308.stratego.demo.repository.UserRepository;
+import com.cse308.stratego.demo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,10 +12,11 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+
     @GetMapping(path="/add")
     public @ResponseBody String addNewUser (@RequestParam String name) {
         User n = new User();
-        n.setName(name);
+        n.setFirst_name(name);
         userRepository.save(n);
         return "Saved";
     }
