@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import './index.css';
-import * as helper from  './helper.js';
+import * as helper from './helper.js';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -153,9 +153,9 @@ class Board extends React.Component {
                     isVisible={this.props.visibility_arr[i]} //pass in visibility info
                 />
             );
-        }else if(this.props.game[i] === 'C'){
-            return(
-                <OccupiedSquare 
+        } else if (this.props.game[i] === 'C') {
+            return (
+                <OccupiedSquare
                     value={this.props.squares[i]}
                     owner={this.props.game[i]}
                     onClick={() => this.props.onPlayerAttack(i)} //squares with the computer on it -- handle player attacking it
@@ -449,13 +449,97 @@ class Game extends React.Component {
      * This handler is called when a player selects on a square with a computer piece on it. 
      * If a player piece is currently selected, attack the computer piece on the selected square.
     */
-    handleComputerPieceOnBoardClick(i){
-        if(this.state.current_piece){
-            // has a selected piece rn
-            this.setState({
-                warning: 'player ' + this.state.current_piece + ' attacks ' + this.state.squares[i],
-            });
+    handleComputerPieceOnBoardClick(i) {
+        if (!this.state.current_piece) {
+            return; // no player piece is selected yet
         }
+
+        if (!this.state.playerIsNext) {
+            return; // it is currently the computer's turn
+        }
+
+        this.handleAttack(this.state.current_index, i, true);
+
+        this.setState({
+            warning: null,
+            current_piece: null,
+            playerIsNext: !(this.state.playerIsNext),
+        })
+
+        setTimeout(function () { this.handleComputerMove(); }.bind(this), 2000);
+    }
+
+    handleAttack(attack_index, defend_index, isPlayerNext) {
+        const squares = this.state.squares.slice();
+        const game = this.state.game.slice();
+        const visibility_arr = this.state.visibility_arr.slice();
+
+        let winner = helper.comparePieceValues(squares, attack_index, defend_index);
+        let attacking_piece;
+        let defending_piece;
+        if (isPlayerNext) {
+            attacking_piece = this.state.current_piece;
+            defending_piece = squares[defend_index];
+        } else {
+            attacking_piece = squares[attack_index];
+            defending_piece = squares[defend_index];
+        }
+
+        if (winner < 0) {
+            // both lost - remove both from the board
+            // to be implemented
+            // decrement count
+
+            this.addToLog('Both pieces ' + defending_piece + ' removed from the board')
+            visibility_arr[defend_index] = false;
+            this.setState({
+                visibility_arr: visibility_arr,
+            });
+            return;
+        }
+
+        visibility_arr[defend_index] = true; // attacker or defender is revealed
+        visibility_arr[attack_index] = false; // attacker piece is now empty 
+        game[attack_index] = null;
+        squares[attack_index] = null;
+
+        if (winner === defend_index) {
+            //defender won
+            //decrement count of attacking piece count here FIXME
+
+            if (isPlayerNext) {
+                this.addToLog('Computer defended cell ' + defend_index + ' with [' +
+                    defending_piece + '] and captured the player\'s [' + attacking_piece + ']'
+                );
+            } else {
+                this.addToLog('Player defended cell ' + defend_index + ' with [' +
+                    defending_piece + '] and captured the player\'s [' + attacking_piece + ']'
+                );
+            }
+
+        } else {
+            //attacker won
+            //decrement count of defending piece count here FIXME
+
+            if (isPlayerNext) {
+                this.addToLog('Player attacked cell ' + defend_index + ' with [' +
+                    attacking_piece + '] and captured the computer\'s [' + defending_piece + ']'
+                );
+                game[defend_index] = 'P';
+            } else {
+                this.addToLog('Computer attacked cell ' + defend_index + ' with [' +
+                    attacking_piece + '] and captured the player\'s [' + defending_piece + ']'
+                );
+                game[defend_index] = 'C';
+            }
+
+            squares[defend_index] = attacking_piece;
+        }
+        this.setState({
+            squares: squares,
+            game: game,
+            visibility_arr: visibility_arr,
+        });
     }
 
     /** 
@@ -575,8 +659,8 @@ class Game extends React.Component {
                 var piece = pieces[i];
 
                 var possible_squares = []
-                for(var j = right; j >= left; j--){
-                    if(!squares[j]){
+                for (var j = right; j >= left; j--) {
+                    if (!squares[j]) {
                         possible_squares.push(j);
                     }
                 }

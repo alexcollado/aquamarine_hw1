@@ -128,7 +128,9 @@ ol, ul {
 
 .computer-piece:focus {
   background: #2980b9;
-  box-shadow: 0 0 0 0.1rem grey;
+  box-shadow: 0 0 0 1px grey;
+  transform: scale(1.2);
+  transition: all 0.5s;
 }
 
 .kbd-navigation .square:focus {
