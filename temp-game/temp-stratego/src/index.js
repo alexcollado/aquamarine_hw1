@@ -73,20 +73,33 @@ function OccupiedSquare(props) {
 
 function Piece(props) {
     if (props.owner === 'P') {
-        return (
-            <div>
-                <Button className="player-piece" onClick={props.onClick}>
-                    {props.value}
-                </Button>
-                <div className="text-center piece-count">
-                    {'x' + props.count}
+        if (props.isDisabled) {
+            return (
+                <div>
+                    <Button className="player-piece">
+                        {props.value}
+                    </Button>
+                    <div className="text-center piece-count">
+                        {'x' + props.count}
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        } else {
+            return (
+                <div>
+                    <Button className="player-piece" onClick={props.onClick}>
+                        {props.value}
+                    </Button>
+                    <div className="text-center piece-count">
+                        {'x' + props.count}
+                    </div>
+                </div>
+            );
+        }
     } else {
         return (
             <div>
-                <Button className="computer-piece" onClick={props.onClick} disabled>
+                <Button className="computer-piece">
                     {props.value}
                 </Button>
                 <div className="text-center piece-count">
@@ -105,6 +118,7 @@ class PieceTable extends React.Component {
                 count={this.props.piece_count[i]}
                 onClick={() => this.props.onClick(i)}
                 owner={this.props.owner}
+                isDisabled={this.props.isDisabled}
             />
         );
     }
@@ -594,6 +608,7 @@ class Game extends React.Component {
                                     piece_count={this.state.computer_piece_count}
                                     owner={'C'}
                                     onClick={(i) => this.handlePlayerPieceClick(i)}
+                                    isDisabled={true}
                                 />
                             </Container>
                             <Board
@@ -609,6 +624,7 @@ class Game extends React.Component {
                                     piece_count={this.state.player_piece_count}
                                     owner={'P'}
                                     onClick={(i) => this.handlePlayerPieceClick(i)}
+                                    isDisabled={this.state.setupCompleted}
                                 />
                             </Container>
                         </Col>
