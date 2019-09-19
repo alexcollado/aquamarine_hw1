@@ -8,6 +8,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
 
 import HeadShake from 'react-reveal/HeadShake';
 import Fade from 'react-reveal/Fade';
@@ -493,7 +494,7 @@ class Game extends React.Component {
 
     handleCompleteSetup(playerIsNext) {
         /**
-         * Fill in the board from bottom right corner (if player) or from top left corner (if computer).
+         * Randomly place remaining pieces on the board
          */
         const squares = this.state.squares.slice();
         const game = this.state.game.slice();
@@ -515,22 +516,28 @@ class Game extends React.Component {
         const visibility_arr = this.state.visibility_arr.slice();
 
         for (var i = 0; i < piece_count.length; i++) {
-            if (piece_count[i] > 0) {
+            while (piece_count[i] > 0) {
                 var piece = pieces[i];
-                for (var j = right; j >= left; j--) {
-                    if (!squares[j]) {
-                        squares[j] = piece;
-                        game[j] = playerIsNext ? 'P' : 'C';
-                        //for now make it all visible for testing
-                        //but later delete since initialized to false
-                        visibility_arr[j] = true;
 
-                        piece_count[i] = piece_count[i] - 1;
-                        if (piece_count[i] <= 0) {
-                            break;
-                        }
+                var possible_squares = []
+                for(var j = right; j >= left; j--){
+                    if(!squares[j]){
+                        possible_squares.push(j);
                     }
                 }
+
+                var k = Math.floor(Math.random() * possible_squares.length);
+                var index = possible_squares[k];
+
+                squares[index] = piece;
+                game[index] = playerIsNext ? 'P' : 'C';
+
+                /**
+                 * FIXME delete visibility to true later 
+                 */
+                visibility_arr[index] = true;
+
+                piece_count[i] = piece_count[i] - 1;
             }
         }
 
@@ -538,6 +545,7 @@ class Game extends React.Component {
             squares: squares,
             game: game,
             visibility_arr: visibility_arr, //delete later
+            warning: null,
         })
 
         if (playerIsNext) {
@@ -591,10 +599,10 @@ class Game extends React.Component {
                             </Container>
                             <Container className="game-info my-2">
                                 <Row className="justify-content-md-center">
-                                    <div>{status}</div>
-                                </Row>
-                                <Row className="justify-content-md-center">
-                                    <div>{current_piece}</div>
+                                    <Card className="my-2">
+                                        <Card.Body>{status}</Card.Body>
+                                        <Card.Body>{current_piece}</Card.Body>
+                                    </Card>
                                 </Row>
                                 <Row className="justify-content-md-center text-danger">
                                     <div>{warning}</div>
