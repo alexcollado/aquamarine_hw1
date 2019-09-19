@@ -499,14 +499,14 @@ class Game extends React.Component {
             visibility_arr[defend_index] = false;
             game[defend_index] = null;
             squares[defend_index] = null;
+            this.handleDecrementPieceCount(attacking_piece, isPlayerNext);
+            this.handleDecrementPieceCount(defending_piece, !isPlayerNext);
         } else {
             visibility_arr[defend_index] = true; // attacker or defender is revealed
             visibility_arr[attack_index] = false; // attacker piece is now empty 
 
             if (winner === defend_index) {
                 //defender won
-                //decrement count of attacking piece count here FIXME
-
                 if (isPlayerNext) {
                     this.addToLog('Computer defended cell ' + defend_index + ' with [' +
                         defending_piece + '] and captured the player\'s [' + attacking_piece + ']'
@@ -516,10 +516,9 @@ class Game extends React.Component {
                         defending_piece + '] and captured the player\'s [' + attacking_piece + ']'
                     );
                 }
+                this.handleDecrementPieceCount(attacking_piece, isPlayerNext);
             } else {
                 //attacker won
-                //decrement count of defending piece count here FIXME
-
                 if (isPlayerNext) {
                     this.addToLog('Player attacked cell ' + defend_index + ' with [' +
                         attacking_piece + '] and captured the computer\'s [' + defending_piece + ']'
@@ -532,6 +531,7 @@ class Game extends React.Component {
                     game[defend_index] = 'C';
                 }
                 squares[defend_index] = attacking_piece;
+                this.handleDecrementPieceCount(defending_piece, !isPlayerNext);
             }
         }
         this.setState({
@@ -623,6 +623,22 @@ class Game extends React.Component {
             player_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
             computer_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
         });
+    }
+
+    handleDecrementPieceCount(piece, isPlayer){
+        let i = this.state.pieces.indexOf(piece);
+        const piece_count = isPlayer ? this.state.player_piece_count.slice() : this.state.computer_piece_count.slice();
+        piece_count[i] = piece_count[i] - 1;
+
+        if(isPlayer){
+            this.setState({
+                player_piece_count: piece_count,
+            });
+        }else{
+            this.setState({
+                computer_piece_count: piece_count,
+            });
+        }
     }
 
     /**
