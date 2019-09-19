@@ -40,17 +40,17 @@ export function comparePieceValues(squares, i, j) {
     let attacker = squares[i];
     let defender = squares[j];
 
-    if(defender === 'B'){
+    if (defender === 'B') {
         return (attacker === 3) ? i : j;  // only miner could defuse a bomb
     }
-    if(defender === 'F'){
+    if (defender === 'F') {
         return i;
     }
-    if((attacker === 1) && (defender === 10)){
+    if ((attacker === 1) && (defender === 10)) {
         return i; //spy attacking marshall
     }
 
-    if(defender === attacker){
+    if (defender === attacker) {
         return -1;
     }
 
@@ -87,19 +87,25 @@ export function getMoveablePieces(game, squares) {
             continue; // bombs cannot move
         } else if (piece === 'F') {
             continue; // the flag cannot move
-        }
-        // have check for more than 1 square move later on
-        if (isLeftValid(index, game)) {
-            temp.push(index - 1);
-        }
-        if (isRightValid(index, game)) {
-            temp.push(index + 1);
-        }
-        if (isTopValid(index, game)) {
-            temp.push(index - 10);
-        }
-        if (isBottomValid(index, game)) {
-            temp.push(index + 10);
+        } else if (piece === 2) {
+            // scout can move any distance in a straight line
+            isLeftValidScout(index, game, temp);
+            isRightValidScout(index, game, temp);
+            isTopValidScout(index, game, temp);
+            isBottomValidScout(index, game, temp);
+        } else {
+            if (isLeftValid(index, game)) {
+                temp.push(index - 1);
+            }
+            if (isRightValid(index, game)) {
+                temp.push(index + 1);
+            }
+            if (isTopValid(index, game)) {
+                temp.push(index - 10);
+            }
+            if (isBottomValid(index, game)) {
+                temp.push(index + 10);
+            }
         }
         if (temp.length) {
             map.push([index, temp])
@@ -107,6 +113,23 @@ export function getMoveablePieces(game, squares) {
     }
 
     return map;
+}
+
+function isLeftValidScout(index, game, temp) {
+    for (let i = index; i % 10; i--) { // go from current index - check if left index is clear 
+
+        let left = (i - 1);
+        if(!game[left]){
+            // if left is clear - put in temp
+            temp.push(left);
+            continue;
+        }else if(game[left] === 'P'){
+            // left has a player - put in temp
+            temp.push(left);
+        }
+        return temp;
+    }
+    return temp;
 }
 
 function isLeftValid(i, game) {
@@ -117,6 +140,21 @@ function isLeftValid(i, game) {
     return game[left] === 'C' ? false : true;
 }
 
+function isRightValidScout(index, game, temp){
+    for (let i = index; ((i + 1) % 10); i++){
+
+        let right = (i + 1);
+        if(!game[right]){
+            temp.push(right);
+            continue;
+        }else if(game[right] === 'P'){
+            temp.push(right);
+        }
+        return temp;
+    }
+    return temp;
+}
+
 function isRightValid(i, game) {
     if (!((i + 1) % 10)) {
         return false; // current piece is on the right boundary
@@ -125,12 +163,42 @@ function isRightValid(i, game) {
     return game[right] === 'C' ? false : true;
 }
 
+function isTopValidScout(index, game, temp){
+    for (let i = index; i >= 10; i-=10){
+
+        let top = (i - 10);
+        if(!game[top]){
+            temp.push(top);
+            continue;
+        }else if(game[top] === 'P'){
+            temp.push(top);
+        }
+        return temp;
+    }
+    return temp;
+}
+
 function isTopValid(i, game) {
     if (i < 10) {
         return false; // current piece is on the top boundary
     }
     let top = i - 10;
     return game[top] === 'C' ? false : true;
+}
+
+function isBottomValidScout(index, game, temp){
+    for (let i = index; i < 90; i+=10){
+
+        let bottom = (i + 10);
+        if(!game[bottom]){
+            temp.push(bottom);
+            continue;
+        }else if(game[bottom] === 'P'){
+            temp.push(bottom);
+        }
+        return temp;
+    }
+    return temp;
 }
 
 function isBottomValid(i, game) {
