@@ -146,7 +146,7 @@ class PieceTable extends React.Component {
 class Board extends React.Component {
     renderSquare(i) {
         if (this.props.game[i] === 'P') {
-            if (this.props.gameOver) { // if game is over no need to have click handlers
+            if (this.props.isDisabled) { // if game is disabled prevent user from clicking
                 return (
                     <OccupiedSquare
                         value={this.props.squares[i]}
@@ -330,6 +330,7 @@ class Game extends React.Component {
             current_piece: null,
             current_index: null,
             warning: null,
+            interval_id: null,
         };
         this.state.id = this.state.updated_log.length;
     }
@@ -396,7 +397,7 @@ class Game extends React.Component {
                     playerIsNext: !(this.state.playerIsNext),
                 });
 
-                setTimeout(function () { this.handleComputerMove(); }.bind(this), 2000);
+                setTimeout(function () { this.handleComputerMove('P'); }.bind(this), 2000);
             }
             this.setState({
                 warning: warning,
@@ -489,7 +490,7 @@ class Game extends React.Component {
                 playerIsNext: !(this.state.playerIsNext),
             })
 
-            setTimeout(function () { this.handleComputerMove(); }.bind(this), 2000);
+            setTimeout(function () { this.handleComputerMove('P'); }.bind(this), 2000);
         }
         this.setState({
             warning: warning,
@@ -579,10 +580,10 @@ class Game extends React.Component {
 
     /**
      * Helper method that calculates and moves the computer piece
-     * 
-     * FIXME: further checks are needed 
      */
-    handleComputerMove() {
+    async handleComputerMove(enemy) {
+        var team = (enemy === 'P') ? 'C' : 'P';
+
         if (this.state.gameOver) {
             return;
         }
@@ -590,7 +591,13 @@ class Game extends React.Component {
         const squares = this.state.squares.slice();
         const visibility_arr = this.state.visibility_arr.slice();
 
-        const map = helper.getMoveablePieces(game, squares);
+        const map = helper.getMoveablePieces(game, squares, enemy);
+        if (map.length == 0) {
+            let status = 'Game over - ' + (this.state.playerIsNext ? 'Player' : 'Computer') + ' won!';
+            this.addToLog(status);
+            this.handleGameOver();
+        }
+
         /**
          * map returns an array of arrays
          * map[i][0] is the current index of the computer piece
@@ -600,8 +607,9 @@ class Game extends React.Component {
         var i = Math.floor(Math.random() * map.length) // randomly select a computer piece
         var possible_squares = map[i][1];
 
+        var temp = (enemy === 'P') ? 0 : (possible_squares.length - 1)
         var k = Math.floor(Math.random() * 2);
-        var j = k ? 0 : (Math.floor(Math.random() * possible_squares.length));
+        var j = k ? temp : (Math.floor(Math.random() * possible_squares.length));
         // either go down (aggressive) or select a random move wrt to the piece
 
         // var j = Math.floor(Math.random() * possible_squares.length); // randomly select a possible move wrt to the computer piece
@@ -610,16 +618,11 @@ class Game extends React.Component {
         var current_piece = squares[current_index];
         var target_index = possible_squares[j];
 
-        if (game[target_index] === 'P') {
-            /**
-             * Computer is attempting to attack a player's piece
-             */
+        if (game[target_index] === enemy) {//FIXME ADD PLAYER THInG
+            //fix with decrement too...
             this.handleAttack(current_index, target_index, false);
         } else {
-            /**
-             * Computer is simply moving a piece
-             */
-            game[target_index] = 'C';
+            game[target_index] = team;
             game[current_index] = null;
 
             visibility_arr[target_index] = visibility_arr[current_index];
@@ -632,9 +635,10 @@ class Game extends React.Component {
             //state change
             //maybe if map is empty?
 
-            let piece = (visibility_arr[target_index]) ? current_piece : '?';
+            var piece = (visibility_arr[target_index]) ? current_piece : '?';
+            var user = (enemy === 'P') ? 'Computer' : 'Player';
 
-            this.addToLog('Computer moved [' + piece + '] from cell ' + current_index + ' to cell ' + target_index);
+            this.addToLog(user + ' moved [' + piece + '] from cell ' + current_index + ' to cell ' + target_index);
             this.setState({
                 squares: squares,
                 game: game,
@@ -679,10 +683,18 @@ class Game extends React.Component {
         if (!i) {
             let status = 'Game over - ' + (this.state.playerIsNext ? 'Player' : 'Computer') + ' won!';
             this.addToLog(status);
-            this.setState({
-                gameOver: true,
-            });
+            this.handleGameOver();
         }
+    }
+
+    /**
+     * End game
+     */
+    handleGameOver() {
+        clearInterval(this.state.interval_id);
+        this.setState({
+            gameOver: true,
+        });
     }
 
     /**
@@ -691,17 +703,27 @@ class Game extends React.Component {
     handleQuit() {
         let status = 'Game over - Computer won!';
         this.addToLog(status);
-        this.setState({
-            gameOver: true,
-        });
+        this.handleGameOver();
     }
 
     /**
      * Handler that modifies user play from manual to automatic or vice versa
      */
     handleToggleAuto() {
+        let temp = this.state.interval_id;
+        // update so that it depends on if player is next who goes first// update so that no click too during fast forward
+        if (!this.state.fastForward) {
+            temp = setInterval(function () {
+                this.handleComputerMove('P');
+                setTimeout(function () { this.handleComputerMove('C'); }.bind(this), 1500);
+            }.bind(this), 3000);
+        } else {
+            clearInterval(temp);
+        }
+
         this.setState({
             fastForward: !this.state.fastForward,
+            interval_id: temp,
         });
     }
 
@@ -866,7 +888,7 @@ class Game extends React.Component {
                                 onClick={(i) => this.handleClick(i)}
                                 onPlayerMove={(i) => this.handlePlayerPieceOnBoardClick(i)}
                                 onPlayerAttack={(i) => this.handleComputerPieceOnBoardClick(i)}
-                                gameOver={this.state.gameOver}
+                                isDisabled={this.state.gameOver || this.state.fastForward}
                             />
                             <Container className="player-pieces">
                                 <PieceTable

@@ -81,13 +81,13 @@ export function comparePieceValues(squares, i, j) {
     // special rules not implemented yet
 }
 
-export function getMoveablePieces(game, squares) {
+export function getMoveablePieces(game, squares, enemy) {
     /**
      * game array marks player positions as 'P'
      * and computer positions as 'C'
      * the cells are from cell 0 to cell 99 
      */
-
+    var team = (enemy === 'P') ? 'C' : 'P';
     const map = [];
 
     //first find enemy positions
@@ -98,7 +98,7 @@ export function getMoveablePieces(game, squares) {
     let computer_squares = [];
     let i;
     for (i = 0; i < 100; i++) {
-        if (game[i] === 'C') {
+        if (game[i] === team) {
             computer_squares.push(i);
         }
     }
@@ -112,22 +112,22 @@ export function getMoveablePieces(game, squares) {
             continue; // the flag cannot move
         } else if (piece === 2) {
             // scout can move any distance in a straight line
-            isBottomValidScout(index, game, temp, 'P');
-            isLeftValidScout(index, game, temp, 'P');
-            isRightValidScout(index, game, temp, 'P');
-            isTopValidScout(index, game, temp, 'P');
+            isBottomValidScout(index, game, temp, enemy);
+            isLeftValidScout(index, game, temp, enemy);
+            isRightValidScout(index, game, temp, enemy);
+            isTopValidScout(index, game, temp, enemy);
         } else {
-            if (isBottomValid(index, game)) {
+            if (isBottomValid(index, game, team)) {
                 temp.push(index + 10);
             } // move bottom to the top so ai could be more aggressive
 
-            if (isLeftValid(index, game)) {
+            if (isLeftValid(index, game, team)) {
                 temp.push(index - 1);
             }
-            if (isRightValid(index, game)) {
+            if (isRightValid(index, game, team)) {
                 temp.push(index + 1);
             }
-            if (isTopValid(index, game)) {
+            if (isTopValid(index, game, team)) {
                 temp.push(index - 10);
             }
         }
@@ -156,12 +156,12 @@ function isLeftValidScout(index, game, temp, enemy) {
     return temp;
 }
 
-function isLeftValid(i, game) {
+function isLeftValid(i, game, team) {
     if (!(i % 10)) {
         return false;  //current piece is on the left boundary
     }
     let left = i - 1;
-    return game[left] === 'C' ? false : true;
+    return game[left] === team ? false : true;
 }
 
 function isRightValidScout(index, game, temp, enemy) {
@@ -179,12 +179,12 @@ function isRightValidScout(index, game, temp, enemy) {
     return temp;
 }
 
-function isRightValid(i, game) {
+function isRightValid(i, game, team) {
     if (!((i + 1) % 10)) {
         return false; // current piece is on the right boundary
     }
     let right = i + 1;
-    return game[right] === 'C' ? false : true;
+    return game[right] === team ? false : true;
 }
 
 function isTopValidScout(index, game, temp, enemy) {
@@ -202,12 +202,12 @@ function isTopValidScout(index, game, temp, enemy) {
     return temp;
 }
 
-function isTopValid(i, game) {
+function isTopValid(i, game, team) {
     if (i < 10) {
         return false; // current piece is on the top boundary
     }
     let top = i - 10;
-    return game[top] === 'C' ? false : true;
+    return game[top] === team ? false : true;
 }
 
 function isBottomValidScout(index, game, temp, enemy) {
@@ -225,10 +225,10 @@ function isBottomValidScout(index, game, temp, enemy) {
     return temp;
 }
 
-function isBottomValid(i, game) {
+function isBottomValid(i, game, team) {
     if (i >= 90) {
         return false // current piece is on the bottom boundary
     }
     let bottom = i + 10;
-    return game[bottom] === 'C' ? false : true;
+    return game[bottom] === team ? false : true;
 }
