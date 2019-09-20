@@ -335,6 +335,10 @@ class Game extends React.Component {
     }
 
     addToLog(log_item) {
+        if(this.state.updated_log.length >= 7){
+            this.state.updated_log.pop();
+        }
+
         this.setState({
             updated_log: [
                 { id: this.state.id, text: log_item },
@@ -505,10 +509,7 @@ class Game extends React.Component {
         squares[attack_index] = null;
 
         if (winner < 0) {
-            // both pieces lost
-            // to be implemented
-            // decrement count
-            this.addToLog('Both pieces [' + defending_piece + '] removed from the board')
+            this.addToLog('Both pieces [' + defending_piece + '] from cell ' + defend_index + ' removed from the board')
             visibility_arr[defend_index] = false;
             game[defend_index] = null;
             squares[defend_index] = null;
@@ -588,7 +589,9 @@ class Game extends React.Component {
 
         var i = Math.floor(Math.random() * map.length) // randomly select a computer piece
         var possible_squares = map[i][1];
-        var j = Math.floor(Math.random() * possible_squares.length); // randomly select a possible move wrt to the computer piece
+
+        var j = 0; // more aggressive - since it is more likely to go down
+        // var j = Math.floor(Math.random() * possible_squares.length); // randomly select a possible move wrt to the computer piece
 
         var current_index = map[i][0];
         var current_piece = squares[current_index];
@@ -616,8 +619,9 @@ class Game extends React.Component {
             //state change
             //maybe if map is empty?
 
-            //modify so that if its visible display piece in brackets
-            this.addToLog('Computer moved [?] from cell ' + current_index + ' to cell ' + target_index);
+            let piece = (visibility_arr[target_index]) ? current_piece : '?';
+
+            this.addToLog('Computer moved [' + piece + '] from cell ' + current_index + ' to cell ' + target_index);
             this.setState({
                 squares: squares,
                 game: game,
@@ -864,7 +868,7 @@ class Game extends React.Component {
                         <Col md={2}>
                             <TransitionGroup>
                                 {this.state.updated_log.map((item) =>
-                                    <Fade key={item.id} left exit={false} appear={true} enter={true}>
+                                    <Fade key={item.id} collapse left exit={true} appear={true} enter={true}>
                                         <div className="card">
                                             <div className="card-body justify-content-between">
                                                 {item.text}

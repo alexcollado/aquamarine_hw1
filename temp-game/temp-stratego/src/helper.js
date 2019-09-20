@@ -91,11 +91,16 @@ export function getMoveablePieces(game, squares) {
             continue; // the flag cannot move
         } else if (piece === 2) {
             // scout can move any distance in a straight line
+            isBottomValidScout(index, game, temp);
+
             isLeftValidScout(index, game, temp);
             isRightValidScout(index, game, temp);
             isTopValidScout(index, game, temp);
-            isBottomValidScout(index, game, temp);
         } else {
+            if (isBottomValid(index, game)) {
+                temp.push(index + 10);
+            } // move bottom to the top so ai could be more aggressive
+
             if (isLeftValid(index, game)) {
                 temp.push(index - 1);
             }
@@ -104,9 +109,6 @@ export function getMoveablePieces(game, squares) {
             }
             if (isTopValid(index, game)) {
                 temp.push(index - 10);
-            }
-            if (isBottomValid(index, game)) {
-                temp.push(index + 10);
             }
         }
         if (temp.length) {
