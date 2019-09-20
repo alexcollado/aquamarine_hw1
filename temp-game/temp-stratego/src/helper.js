@@ -24,12 +24,18 @@ export function checkSetup(piece_count) {
 
 /**
  * TO BE IMPLEMENTED
+ * Returns a warning if not valid
  */
 export function isValidMove(current_index, target_index, current_piece, game) {
     //check piece to get number of steps
-
+    let warning = null;
+    if(current_piece === 'B'){
+        warning = "Cannot move a bomb.";
+    }else if(current_piece === 'F'){
+        warning = "Cannot move the flag.";
+    }
     //maybe do something similar to what computer does? check if piece is in the array of valid moves or something?
-    return true;
+    return warning;
 }
 
 /**

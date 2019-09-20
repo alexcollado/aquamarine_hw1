@@ -370,7 +370,8 @@ class Game extends React.Component {
              * If the empty square is valid compared to the current index of the selected piece,
              * move that piece to that square.
              */
-            if (helper.isValidMove(this.state.current_index, i, this.state.current_piece, this.state.game)) {
+            let warning = helper.isValidMove(this.state.current_index, i, this.state.current_piece, this.state.game);
+            if (!warning) {
 
                 const game = this.state.game.slice();
                 const squares = this.state.squares.slice();
@@ -397,6 +398,9 @@ class Game extends React.Component {
 
                 setTimeout(function () { this.handleComputerMove(); }.bind(this), 2000);
             }
+            this.setState({
+                warning: warning,
+            })
             return;
         } else {
             /**
@@ -590,7 +594,10 @@ class Game extends React.Component {
         var i = Math.floor(Math.random() * map.length) // randomly select a computer piece
         var possible_squares = map[i][1];
 
-        var j = 0; // more aggressive - since it is more likely to go down
+        var k = Math.floor(Math.random() * 2);
+        var j = k ? 0 : (Math.floor(Math.random() * possible_squares.length));
+        // either go down (aggressive) or select a random move wrt to the piece
+
         // var j = Math.floor(Math.random() * possible_squares.length); // randomly select a possible move wrt to the computer piece
 
         var current_index = map[i][0];
