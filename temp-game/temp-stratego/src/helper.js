@@ -32,10 +32,10 @@ export function isValidMove(current_index, target_index, current_piece, game) {
         warning = "Cannot move the flag.";
     } else if (current_piece === 2) {
         let temp = [];
-        isBottomValidScout(current_index, game, temp, 'P');
-        isLeftValidScout(current_index, game, temp, 'P');
-        isRightValidScout(current_index, game, temp, 'P');
-        isTopValidScout(current_index, game, temp, 'P');
+        isBottomValidScout(current_index, game, temp, 'C');
+        isLeftValidScout(current_index, game, temp, 'C');
+        isRightValidScout(current_index, game, temp, 'C');
+        isTopValidScout(current_index, game, temp, 'C');
 
         if(temp.indexOf(target_index) < 0){
             warning = "Can only move the scout in a straight line in up, down, left, or right direction."

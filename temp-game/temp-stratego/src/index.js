@@ -335,7 +335,7 @@ class Game extends React.Component {
     }
 
     addToLog(log_item) {
-        if(this.state.updated_log.length >= 7){
+        if (this.state.updated_log.length >= 7) {
             this.state.updated_log.pop();
         }
 
@@ -479,15 +479,21 @@ class Game extends React.Component {
             return; // it is currently the computer's turn
         }
 
-        this.handleAttack(this.state.current_index, i, true);
+        let warning = helper.isValidMove(this.state.current_index, i, this.state.current_piece, this.state.game);
+        if (!warning) {
+            this.handleAttack(this.state.current_index, i, true);
 
+            this.setState({
+                warning: null,
+                current_piece: null,
+                playerIsNext: !(this.state.playerIsNext),
+            })
+
+            setTimeout(function () { this.handleComputerMove(); }.bind(this), 2000);
+        }
         this.setState({
-            warning: null,
-            current_piece: null,
-            playerIsNext: !(this.state.playerIsNext),
+            warning: warning,
         })
-
-        setTimeout(function () { this.handleComputerMove(); }.bind(this), 2000);
     }
 
     /** 
@@ -693,7 +699,7 @@ class Game extends React.Component {
     /**
      * Handler that modifies user play from manual to automatic or vice versa
      */
-    handleToggleAuto(){
+    handleToggleAuto() {
         this.setState({
             fastForward: !this.state.fastForward,
         });
