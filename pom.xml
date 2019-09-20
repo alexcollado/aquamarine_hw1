@@ -81,7 +81,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -142,7 +141,7 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v10.16.3</nodeVersion>
+                            <nodeVersion>v12.6.0</nodeVersion>
                             <npmVersion>6.11.3</npmVersion>
                         </configuration>
                     </execution>

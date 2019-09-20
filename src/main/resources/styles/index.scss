@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
+
+html body {
+  font-family: 'Roboto Mono', monospace;
+  margin: 0;
+}
+
+::selection {
+  background: #4febb2; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+  background: #4febb2; /* Gecko Browsers */
+}
+
