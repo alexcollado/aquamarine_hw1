@@ -1,7 +1,7 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
-import './index.css';
-import * as helper from './helper.js';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/js/bootstrap.bundle.min';
+import '../styles/game.css';
+import * as helper from '../helper.js';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -920,9 +920,11 @@ class Game extends React.Component {
     }
 }
 
+export default Game;
+
 // ========================================
 
-ReactDOM.render(
-    <Game />,
-    document.getElementById('root')
-);
+// ReactDOM.render(
+    // { <Game />, }
+    // document.getElementById('root')
+// );
