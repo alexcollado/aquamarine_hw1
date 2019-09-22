@@ -2,12 +2,14 @@ package com.cse308.stratego.demo.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.sql.Date;
 
 @Getter
 @Setter
+@Accessors(chain = true)
 @Entity // This tells Hibernate to make a table out of this class
 public class Move {
 
@@ -19,12 +21,13 @@ public class Move {
     @JoinColumn(name="game_id", referencedColumnName = "id")
     private Game game;
 
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name="player_id", referencedColumnName = "id")
     private User player;
 
     private boolean isCpu;
 
+    @ManyToOne
     @JoinColumn(name="piece_id", referencedColumnName = "id")
     private Piece piece;
 
