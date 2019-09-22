@@ -41,7 +41,7 @@ public class MoveServiceImp implements MoveService {
 
     @Override
     public List<MoveDTO> findMovesByGame(MoveDTO movedto) {
-        moveRepository.findByGameID(movedto.getGame_id());
+        moveRepository.findByGame_Id(movedto.getGame_id());
         return null;
     }
 }
