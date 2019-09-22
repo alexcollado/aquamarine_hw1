@@ -1,9 +1,5 @@
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import 'bootstrap/dist/js/bootstrap.bundle.min';
-import '../styles/game.css';
 import * as helper from '../helper.js';
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -16,9 +12,11 @@ import HeadShake from 'react-reveal/HeadShake';
 import Fade from 'react-reveal/Fade';
 import TransitionGroup from 'react-transition-group/TransitionGroup';
 
+import styles from '../styles/Game.module.css';
+
 function Square(props) {
     return (
-        <button className="square" onClick={props.onClick}>
+        <button className={styles.square} onClick={props.onClick}>
             {props.value}
         </button>
     );
@@ -28,9 +26,10 @@ function OccupiedSquare(props) {
     if (props.owner === 'P') {
         if (props.isVisible) { //add white border
             return (
-                <div className="square">
+                <div className={styles.square}>
                     <HeadShake>
-                        <Button className="player-piece mx-auto my-auto visible-border" onClick={props.onClick}>
+                        <Button className={`${styles['player-piece']} mx-auto my-auto ${styles['visible-border']}`} 
+                        onClick={props.onClick}>
                             {props.value}
                         </Button>
                     </HeadShake>
@@ -38,9 +37,10 @@ function OccupiedSquare(props) {
             );
         } else {
             return (
-                <div className="square">
+                <div className={styles.square}>
                     <HeadShake>
-                        <Button className="player-piece mx-auto my-auto" onClick={props.onClick}>
+                        <Button className={`${styles['player-piece']} mx-auto my-auto`} 
+                        onClick={props.onClick}>
                             {props.value}
                         </Button>
                     </HeadShake>
@@ -50,9 +50,9 @@ function OccupiedSquare(props) {
     } else {
         if (props.isVisible) { //add value of square
             return (
-                <div className="square">
+                <div className={styles.square}>
                     <HeadShake>
-                        <Button className="computer-piece mx-auto my-auto" onClick={props.onClick}>
+                        <Button className={`${styles['computer-piece']} mx-auto my-auto`} onClick={props.onClick}>
                             {props.value}
                         </Button>
                     </HeadShake>
@@ -60,9 +60,9 @@ function OccupiedSquare(props) {
             );
         } else {
             return (
-                <div className="square">
+                <div className={styles.square}>
                     <HeadShake>
-                        <Button className="computer-piece mx-auto my-auto" onClick={props.onClick}>
+                        <Button className={`${styles['computer-piece']} mx-auto my-auto`} onClick={props.onClick}>
                         </Button>
                     </HeadShake>
                 </div>
@@ -76,10 +76,10 @@ function Piece(props) {
         if (props.isDisabled) {
             return (
                 <div>
-                    <Button className="player-piece">
+                    <Button className={`${styles['player-piece']}`}>
                         {props.value}
                     </Button>
-                    <div className="text-center piece-count">
+                    <div className={`${styles['text-center']} ${styles['piece-count']}`}>
                         {'x' + props.count}
                     </div>
                 </div>
@@ -87,10 +87,10 @@ function Piece(props) {
         } else {
             return (
                 <div>
-                    <Button className="player-piece" onClick={props.onClick}>
+                    <Button className={`${styles['player-piece']}`} onClick={props.onClick}>
                         {props.value}
                     </Button>
-                    <div className="text-center piece-count">
+                    <div className={`${styles['text-center']} ${styles['piece-count']}`}>
                         {'x' + props.count}
                     </div>
                 </div>
@@ -99,10 +99,10 @@ function Piece(props) {
     } else {
         return (
             <div>
-                <Button className="computer-piece">
+                <Button className={`${styles['computer-piece']}`}>
                     {props.value}
                 </Button>
-                <div className="text-center piece-count">
+                <div className={`${styles['text-center']} ${styles['piece-count']}`}>
                     {'x' + props.count}
                 </div>
             </div>
@@ -125,7 +125,7 @@ class PieceTable extends React.Component {
 
     render() {
         return (
-            <Row className="piece-row justify-content-md-center">
+            <Row className={`${styles['piece-row']} justify-content-md-center`}>
                 {this.renderPiece(0)}
                 {this.renderPiece(1)}
                 {this.renderPiece(2)}
@@ -185,7 +185,7 @@ class Board extends React.Component {
     render() {
         return (
             <Container>
-                <Row className="board-row justify-content-md-center">
+                <Row className={`${styles['board-row']} justify-content-md-center`}>
                     {this.renderSquare(0)}
                     {this.renderSquare(1)}
                     {this.renderSquare(2)}
@@ -197,7 +197,7 @@ class Board extends React.Component {
                     {this.renderSquare(8)}
                     {this.renderSquare(9)}
                 </Row>
-                <Row className="board-row justify-content-md-center">
+                <Row className={`${styles['board-row']} justify-content-md-center`}>
                     {this.renderSquare(10)}
                     {this.renderSquare(11)}
                     {this.renderSquare(12)}
@@ -209,7 +209,7 @@ class Board extends React.Component {
                     {this.renderSquare(18)}
                     {this.renderSquare(19)}
                 </Row>
-                <Row className="board-row justify-content-md-center">
+                <Row className={`${styles['board-row']} justify-content-md-center`}>
                     {this.renderSquare(20)}
                     {this.renderSquare(21)}
                     {this.renderSquare(22)}
@@ -221,7 +221,7 @@ class Board extends React.Component {
                     {this.renderSquare(28)}
                     {this.renderSquare(29)}
                 </Row>
-                <Row className="board-row justify-content-md-center">
+                <Row className={`${styles['board-row']} justify-content-md-center`}>
                     {this.renderSquare(30)}
                     {this.renderSquare(31)}
                     {this.renderSquare(32)}
@@ -233,7 +233,7 @@ class Board extends React.Component {
                     {this.renderSquare(38)}
                     {this.renderSquare(39)}
                 </Row>
-                <Row className="board-row justify-content-md-center">
+                <Row className={`${styles['board-row']} justify-content-md-center`}>
                     {this.renderSquare(40)}
                     {this.renderSquare(41)}
                     {this.renderSquare(42)}
@@ -245,7 +245,7 @@ class Board extends React.Component {
                     {this.renderSquare(48)}
                     {this.renderSquare(49)}
                 </Row>
-                <Row className="board-row justify-content-md-center">
+                <Row className={`${styles['board-row']} justify-content-md-center`}>
                     {this.renderSquare(50)}
                     {this.renderSquare(51)}
                     {this.renderSquare(52)}
@@ -257,7 +257,7 @@ class Board extends React.Component {
                     {this.renderSquare(58)}
                     {this.renderSquare(59)}
                 </Row>
-                <Row className="board-row justify-content-md-center">
+                <Row className={`${styles['board-row']} justify-content-md-center`}>
                     {this.renderSquare(60)}
                     {this.renderSquare(61)}
                     {this.renderSquare(62)}
@@ -269,7 +269,7 @@ class Board extends React.Component {
                     {this.renderSquare(68)}
                     {this.renderSquare(69)}
                 </Row>
-                <Row className="board-row justify-content-md-center">
+                <Row className={`${styles['board-row']} justify-content-md-center`}>
                     {this.renderSquare(70)}
                     {this.renderSquare(71)}
                     {this.renderSquare(72)}
@@ -281,7 +281,7 @@ class Board extends React.Component {
                     {this.renderSquare(78)}
                     {this.renderSquare(79)}
                 </Row>
-                <Row className="board-row justify-content-md-center">
+                <Row className={`${styles['board-row']} justify-content-md-center`}>
                     {this.renderSquare(80)}
                     {this.renderSquare(81)}
                     {this.renderSquare(82)}
@@ -293,7 +293,7 @@ class Board extends React.Component {
                     {this.renderSquare(88)}
                     {this.renderSquare(89)}
                 </Row>
-                <Row className="board-row justify-content-md-center">
+                <Row className={`${styles['board-row']} justify-content-md-center`}>
                     {this.renderSquare(90)}
                     {this.renderSquare(91)}
                     {this.renderSquare(92)}
@@ -835,31 +835,41 @@ class Game extends React.Component {
 
         return (
             <div>
-                <Container className="game" fluid={true}>
+                <Container className={styles.game} fluid={true}>
                     <Row>
                         <Col md={2} className="mx-auto justify-content-md-center">
                             <Container>
                                 <Row className="justify-content-md-center">
-                                    <Button id="SetupBtn" className="btn-dark my-2" onClick={() => this.handleCompleteSetup(true)} disabled={this.state.setupCompleted}>
+                                    <Button id="SetupBtn" className="btn-dark my-2" 
+                                    onClick={() => this.handleCompleteSetup(true)} 
+                                    disabled={this.state.setupCompleted}>
                                         {"Fill in remaining pieces"}
                                     </Button>
-                                    <Button className="btn-dark my-2" onClick={() => this.handleCompleteSetup(false)} disabled={!this.state.setupCompleted || this.state.gameStart}>
+                                    <Button className="btn-dark my-2" 
+                                    onClick={() => this.handleCompleteSetup(false)} 
+                                    disabled={!this.state.setupCompleted || this.state.gameStart}>
                                         {"Start game"}
                                     </Button>
-                                    <Button className="btn-dark my-2" onClick={() => this.handleQuit()} disabled={!this.state.gameStart || this.state.gameOver}>
+                                    <Button className="btn-dark my-2" 
+                                    onClick={() => this.handleQuit()} 
+                                    disabled={!this.state.gameStart || this.state.gameOver}>
                                         {"Quit game"}
                                     </Button>
                                     <ButtonGroup>
-                                        <Button className="btn-dark mx-1" disabled={!this.state.fastForward || this.state.gameOver} onClick={() => this.handleToggleAuto()}>
+                                        <Button className="btn-dark mx-1" 
+                                        disabled={!this.state.fastForward || this.state.gameOver} 
+                                        onClick={() => this.handleToggleAuto()}>
                                             {"Manual"}
                                         </Button>
-                                        <Button className="btn-dark mx-1" disabled={this.state.fastForward || !this.state.gameStart || this.state.gameOver} onClick={() => this.handleToggleAuto()}>
+                                        <Button className="btn-dark mx-1" 
+                                        disabled={this.state.fastForward || !this.state.gameStart || this.state.gameOver} 
+                                        onClick={() => this.handleToggleAuto()}>
                                             {"Auto"}
                                         </Button>
                                     </ButtonGroup>
                                 </Row>
                             </Container>
-                            <Container className="game-info my-2">
+                            <Container className={`${styles['game-info']} my-2`}>
                                 <Row className="justify-content-md-center">
                                     <Card className="my-2">
                                         <Card.Body>{status}</Card.Body>
@@ -872,7 +882,7 @@ class Game extends React.Component {
                             </Container>
                         </Col>
                         <Col md={8} className="mx-auto justify-content-md-center">
-                            <Container className="computer-pieces">
+                            <Container className={`${styles['computer-pieces']}`}>
                                 <PieceTable
                                     pieces={this.state.pieces}
                                     piece_count={this.state.computer_piece_count}
@@ -890,7 +900,7 @@ class Game extends React.Component {
                                 onPlayerAttack={(i) => this.handleComputerPieceOnBoardClick(i)}
                                 isDisabled={this.state.gameOver || this.state.fastForward}
                             />
-                            <Container className="player-pieces">
+                            <Container className={`${styles['player-pieces']}`}>
                                 <PieceTable
                                     pieces={this.state.pieces}
                                     piece_count={this.state.player_piece_count}
