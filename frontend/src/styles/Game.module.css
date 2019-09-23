@@ -69,7 +69,7 @@ ol, ul {
   height: 34px;
   margin-right: -1px;
   margin-top: -1px;
-  padding: 0;
+  padding: 0 !important;
   text-align: center;
   width: 34px;
 }
@@ -108,7 +108,7 @@ ol, ul {
   height: 34px;
   margin-right: -1px;
   margin-top: -1px;
-  padding: 0;
+  padding: 0 !important;
   text-align: center;
   width: 34px;
 }
