@@ -1,21 +1,21 @@
 package com.cse308.stratego.demo.controller;
 
+import com.cse308.stratego.demo.dto.model.UserDTO;
+import com.cse308.stratego.demo.model.Game;
 import com.cse308.stratego.demo.repository.UserRepository;
 import com.cse308.stratego.demo.model.User;
+import com.cse308.stratego.demo.service.user.interfaces.UserService;
+import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path="/demo")
+@RequestMapping(path="/user")
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    private UserService userService;
 
     @RequestMapping(value = "/addUser", method = RequestMethod.GET)
     public @ResponseBody String addNewUser (@RequestParam String first_name,
@@ -23,20 +23,22 @@ public class UserController {
                                             @RequestParam String password,
                                             @RequestParam String last_name) {
 
-        User n = User.builder().first_name(first_name)
-                .email(email).hash_pass(passwordEncoder.encode(password)).last_name(last_name).build();
+        UserDTO userDTO = UserDTO.builder().first_name(first_name).last_name(last_name)
+                .email(email).password(password).build();
 
-        userRepository.save(n);
-        return "Saved";
+        userService.signUp(userDTO);
+
+        return "Success\n";
     }
 
     @GetMapping(path="/getUser/{player_id}")
-    public @ResponseBody User getUser(@PathVariable int player_id) {
-        return userRepository.findById(player_id).get();
+    public @ResponseBody UserDTO getUser(@PathVariable int player_id) {
+        return userService.findUserById(player_id);
     }
 
     @GetMapping(path="/allUsers")
-    public @ResponseBody Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+    public @ResponseBody Iterable<UserDTO> getAllUsers() {
+
+        return userService.findAll();
     }
 }
