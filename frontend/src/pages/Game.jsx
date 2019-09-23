@@ -538,7 +538,7 @@ class Game extends React.Component {
                     );
                 } else {
                     this.addToLog('Player defended cell ' + defend_index + ' with [' +
-                        defending_piece + '] and captured the player\'s [' + attacking_piece + ']'
+                        defending_piece + '] and captured the computer\'s [' + attacking_piece + ']'
                     );
                 }
                 this.handleDecrementPieceCount(attacking_piece, isPlayerNext);
