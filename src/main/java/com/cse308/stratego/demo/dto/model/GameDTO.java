@@ -28,5 +28,4 @@ public class GameDTO {
 
     private String created;
 
-    private List<Move> moves;
 }

@@ -13,6 +13,7 @@ import javax.persistence.Id;
 @Setter
 @Builder
 @Entity // This tells Hibernate to make a table out of this class
+
 public class Piece {
 
     @Id

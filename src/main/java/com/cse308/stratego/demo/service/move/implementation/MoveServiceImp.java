@@ -8,9 +8,11 @@ import com.cse308.stratego.demo.repository.MoveRepository;
 import com.cse308.stratego.demo.repository.PieceRepository;
 import com.cse308.stratego.demo.repository.UserRepository;
 import com.cse308.stratego.demo.service.move.interfaces.MoveService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class MoveServiceImp implements MoveService {
 
     private GameRepository gameRepository;
@@ -25,23 +27,21 @@ public class MoveServiceImp implements MoveService {
     public MoveDTO newMove(MoveDTO movedto) {
         Move move = new Move().setGame(gameRepository.findById(movedto.getGame_id()).get())
                 .setPlayer(userRepository.findById(movedto.getPlayer_id()).get())
-                .setCpu(Boolean.parseBoolean(movedto.getIsCpu()))
+                .setCpu(movedto.isCpu())
                 .setPiece(pieceRepository.findById(movedto.getPiece_id()).get())
                 .setStart_position(movedto.getStart_position())
-                .setEnd_position(movedto.getEnd_position());
+                .setEnd_position(movedto.getEnd_position())
+                .setDescription(movedto.getDescription());
 
         moveRepository.save(move);
         return null;
     }
 
     @Override
-    public List<MoveDTO> newGameMoves(GameDTO gamedto) {
+    public List<MoveDTO> newGameMoves(GameDTO gamedto, int[] moves) {
         return null;
     }
 
-    @Override
-    public List<MoveDTO> findMovesByGame(MoveDTO movedto) {
-        moveRepository.findByGame_Id(movedto.getGame_id());
-        return null;
-    }
+
+
 }

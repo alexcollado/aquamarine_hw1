@@ -31,6 +31,7 @@ public class UserController {
         return "Success\n";
     }
 
+
     @GetMapping(path="/getUser/{player_id}")
     public @ResponseBody UserDTO getUser(@PathVariable int player_id) {
         return userService.findUserById(player_id);
