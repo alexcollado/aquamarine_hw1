@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.sql.Date;
 
 @Getter
 @Setter

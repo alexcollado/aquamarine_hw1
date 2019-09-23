@@ -51,7 +51,7 @@ public class GameServiceImp implements GameService {
     public List<Game> getGamesByPlayer(GameDTO gamedto) {
         int player_id = gamedto.getPlayer();
 
-        List<Game> games = gameRepository.findByPlayerID(player_id);
+        List<Game> games = gameRepository.findByplayer(player_id);
 
         if (games.isEmpty()) {
             return null;

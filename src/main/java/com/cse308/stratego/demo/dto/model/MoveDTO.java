@@ -22,7 +22,7 @@ public class MoveDTO {
 
     private int player_id;
 
-    private boolean isCpu;
+    private String isCpu;
 
     private int piece_id;
 

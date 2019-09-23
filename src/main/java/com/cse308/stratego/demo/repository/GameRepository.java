@@ -10,4 +10,6 @@ import java.util.List;
 // This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
 // CRUD refers Create, Read, Update, Delete
 
-public interface GameRepository extends JpaRepository<Game, Integer> { }
+public interface GameRepository extends JpaRepository<Game, Integer> {
+    List<Game> findByplayer(int player_id);
+}

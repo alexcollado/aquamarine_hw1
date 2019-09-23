@@ -35,13 +35,10 @@ public class MoveServiceImp implements MoveService {
     }
 
     @Override
-    public List<MoveDTO> newGameMoves(GameDTO gamedto) {
+    public List<MoveDTO> newGameMoves(GameDTO gamedto, int[] moves) {
         return null;
     }
 
-    @Override
-    public List<MoveDTO> findMovesByGame(MoveDTO movedto) {
-        moveRepository.findByGame_Id(movedto.getGame_id());
-        return null;
-    }
+
+
 }

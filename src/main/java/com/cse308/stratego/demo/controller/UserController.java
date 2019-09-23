@@ -30,7 +30,7 @@ public class UserController {
         return "Saved";
     }
 
-    @GetMapping(path="/getUser/{player_id}")
+    @RequestMapping(path="/getUser/{player_id}", method = RequestMethod.GET)
     public @ResponseBody User getUser(@PathVariable int player_id) {
         return userRepository.findById(player_id).get();
     }
