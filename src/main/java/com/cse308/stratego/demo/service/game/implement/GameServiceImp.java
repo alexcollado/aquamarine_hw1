@@ -10,7 +10,6 @@ import com.cse308.stratego.demo.service.game.interfaces.GameService;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.Optional;
 
 public class GameServiceImp implements GameService {
 
@@ -20,14 +19,21 @@ public class GameServiceImp implements GameService {
 
     private UserRepository userRepository;
     @Override
-    public GameDTO newGame(GameDTO gamedto) {
+    public void newGame(GameDTO gamedto) {
         Game game = new Game()
                 .setPlayer(userRepository.findById(gamedto.getPlayer()).get())
                 .setState(gamedto.getState())
                 .setCreated(Date.valueOf(gamedto.getCreated()));
 
         gameRepository.save(game);
-        return null;
+    }
+
+    @Override
+    public void newGameMoves(GameDTO gamedto, int[] board) {
+        int game_id = gamedto.getId();
+
+
+
     }
 
     @Override
@@ -42,7 +48,16 @@ public class GameServiceImp implements GameService {
     }
 
     @Override
-    public List<GameDTO> getGamesByPlayer(GameDTO gamedto) {
-        return null;
+    public List<Game> getGamesByPlayer(GameDTO gamedto) {
+        int player_id = gamedto.getPlayer();
+
+        List<Game> games = gameRepository.findByPlayerID(player_id);
+
+        if (games.isEmpty()) {
+            return null;
+        }
+        else {
+            return games;
+        }
     }
 }

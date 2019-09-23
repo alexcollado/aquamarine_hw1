@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface MoveService {
     MoveDTO newMove(MoveDTO movedto);
-    List<MoveDTO> newGameMoves(GameDTO gamedto);
-    List<MoveDTO> findMovesByGame(MoveDTO movedto);
+    List<MoveDTO> newGameMoves(GameDTO gamedto, int[] moves);
 
 }

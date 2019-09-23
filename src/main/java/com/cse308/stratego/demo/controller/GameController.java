@@ -17,7 +17,7 @@ public class GameController {
     private MoveRepository moveRepository;
 
     @GetMapping(path="/newGame/{player_id}")
-    public @ResponseBody String newGame(@PathVariable int player_id) {
+    public @ResponseBody String newGame(@PathVariable int player_id, @RequestParam int[] board) {
         Game n = new Game();
         System.out.println();
         gameRepository.save(n);
