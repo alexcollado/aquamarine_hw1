@@ -1,9 +1,14 @@
 package com.cse308.stratego.demo.service.user.interfaces;
 
+import com.cse308.stratego.demo.dto.model.GameDTO;
 import com.cse308.stratego.demo.dto.model.UserDTO;
 
+import java.util.List;
+
 public interface UserService {
-    UserDTO signup(UserDTO userdto);
-    UserDTO findUserByEmail(UserDTO userdto);
+    void signUp(UserDTO userdto);
+    UserDTO findUserByEmail(String email);
+    UserDTO findUserById(int id);
+    List<UserDTO> findAll();
 
 }
