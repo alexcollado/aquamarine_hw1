@@ -38,7 +38,7 @@ public class GameServiceImp implements GameService {
 
     @Override
     public List<Move> getMovesByGame(GameDTO gameDTO) {
-        List<Move> moves = moveRepository.findByGameID(gameDTO.getId());
+        List<Move> moves = moveRepository.findByGame_Id(gameDTO.getId());
         if (moves.isEmpty()) {
             return null;
         }

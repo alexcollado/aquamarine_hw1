@@ -1,37 +1,25 @@
 import React, {Fragment, Component} from 'react';
-import '../styles/App.css';
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import Game from './Game';
+import Home from './Home';
+import UserMenu from './UserMenu';
+import NewAccount from './NewAccount';
+import Error from './Error';
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-        // this.state = {
-        //     message: ""
-        // }
-    }
-
-    // componentDidMount() {
-    //     fetch('/')
-    //         .then(response => response.text())
-    //         .then(message => {
-    //             this.setState({message: message});
-    //         });
-    // }
-
     render() {
         return (
             <Fragment>
-                <div className="App">
-                    <header className="App-header">
-                        <a
-                            className="App-link"
-                            href="https://reactjs.org"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Learn React
-                        </a>
-                    </header>
-                </div>
+                <Router>
+                    <Switch>
+                        <Route path="/" exact component={Home} />
+                        <Route path="/createaccount" component={NewAccount} />
+                        <Route path="/menu" component={UserMenu} />
+                        <Route path="/play" component={Game} />
+                        <Route component={Error} />
+                    </Switch>
+                    
+                </Router>
             </Fragment>
         );
     }
