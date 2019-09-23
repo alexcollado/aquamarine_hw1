@@ -11,5 +11,6 @@ public class UserDTOMapper {
                 .setLast_name(user.getLast_name())
                 .setEmail(user.getEmail())
                 .setPassword(user.getHash_pass());
+
     }
 }

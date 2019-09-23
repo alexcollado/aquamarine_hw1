@@ -25,10 +25,11 @@ public class MoveServiceImp implements MoveService {
     public MoveDTO newMove(MoveDTO movedto) {
         Move move = new Move().setGame(gameRepository.findById(movedto.getGame_id()).get())
                 .setPlayer(userRepository.findById(movedto.getPlayer_id()).get())
-                .setCpu(Boolean.parseBoolean(movedto.getIsCpu()))
+                .setCpu(movedto.isCpu())
                 .setPiece(pieceRepository.findById(movedto.getPiece_id()).get())
                 .setStart_position(movedto.getStart_position())
-                .setEnd_position(movedto.getEnd_position());
+                .setEnd_position(movedto.getEnd_position())
+                .setDescription(movedto.getDescription());
 
         moveRepository.save(move);
         return null;

@@ -7,7 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path="/demo")
+@RequestMapping(path="/user")
 public class UserController {
 
     @Autowired

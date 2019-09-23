@@ -38,5 +38,8 @@ public class Move {
     @Column(name="end_position", nullable=false, length = 3)
     private String end_position;
 
+    @Column(name="description", nullable=false)
+    private String description;
+
 
 }
