@@ -35,7 +35,7 @@ public class UserController {
         return userRepository.findById(player_id).get();
     }
 
-    @GetMapping(path="/allUsers")
+    @RequestMapping(path="/allUsers", method=RequestMethod.GET,headers = "Accept=application/json")
     public @ResponseBody Iterable<User> getAllUsers() {
         return userRepository.findAll();
     }

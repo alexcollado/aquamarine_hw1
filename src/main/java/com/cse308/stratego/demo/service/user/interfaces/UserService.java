@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+//@Service
 public interface UserService {
     UserDTO signup(UserDTO userdto);
     UserDTO findUserByEmail(UserDTO userdto);

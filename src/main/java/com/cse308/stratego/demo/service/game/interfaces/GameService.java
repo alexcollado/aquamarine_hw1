@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+//@Service
 public interface GameService {
     void newGame(GameDTO gamedto);
     void newGameMoves(GameDTO gamedto, List board);

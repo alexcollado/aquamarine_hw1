@@ -8,9 +8,11 @@ import com.cse308.stratego.demo.repository.MoveRepository;
 import com.cse308.stratego.demo.repository.PieceRepository;
 import com.cse308.stratego.demo.repository.UserRepository;
 import com.cse308.stratego.demo.service.move.interfaces.MoveService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class MoveServiceImp implements MoveService {
 
     private GameRepository gameRepository;

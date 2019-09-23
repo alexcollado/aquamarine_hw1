@@ -5,10 +5,12 @@ import com.cse308.stratego.demo.dto.mapper.UserDTOMapper;
 import com.cse308.stratego.demo.model.User;
 import com.cse308.stratego.demo.repository.UserRepository;
 import com.cse308.stratego.demo.service.user.interfaces.UserService;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class UserServiceImp implements UserService {
     private UserRepository userRepository;
 

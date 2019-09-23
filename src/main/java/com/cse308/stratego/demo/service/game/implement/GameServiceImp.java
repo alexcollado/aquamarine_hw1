@@ -10,10 +10,12 @@ import com.cse308.stratego.demo.repository.UserRepository;
 import com.cse308.stratego.demo.service.game.interfaces.GameService;
 import com.cse308.stratego.demo.service.move.interfaces.MoveService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.List;
 
+@Service
 public class GameServiceImp implements GameService {
 
     private GameRepository gameRepository;
