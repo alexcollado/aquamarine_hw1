@@ -524,8 +524,8 @@ class Game extends React.Component {
             visibility_arr[defend_index] = false;
             game[defend_index] = null;
             squares[defend_index] = null;
-            this.handleDecrementPieceCount(attacking_piece, isPlayerNext);
-            this.handleDecrementPieceCount(defending_piece, !isPlayerNext);
+            this.handleDecrementPieceCount(attacking_piece, 'P');
+            this.handleDecrementPieceCount(defending_piece, 'C');
         } else {
             visibility_arr[defend_index] = true; // attacker or defender is revealed
             visibility_arr[attack_index] = false; // attacker piece is now empty 
@@ -597,14 +597,11 @@ class Game extends React.Component {
 
         const map = helper.getMoveablePieces(game, squares, enemy);
         if (map.length == 0) {
-            let status = (!this.state.playerIsNext ? 'Player' : 'Computer') + 'ran out of possible moves. Game over!'; // there might be an error here
-            // let status = 'Game over - ' + (!this.state.playerIsNext ? 'Player' : 'Computer') + ' won!';
-            console.log(status);
-            
-            this.addToLog(status);
-            this.setState({
-                warning: status,
-            });
+            setTimeout(function () { 
+                let status = 'Game Over - ' + (!this.state.playerIsNext ? 'Player' : 'Computer') + 'ran out of possible moves.'; // there might be an error here
+                this.addToLog(status);
+                this.handleGameOver();
+            }.bind(this), 1000);
             this.handleGameOver();
         }
 
@@ -687,9 +684,11 @@ class Game extends React.Component {
         }
 
         if (!i) {
-            let status = 'Game over - ' + (piece_count_to_decrement === 'P' ? 'Computer' : 'Player') + ' won!';
-            this.addToLog(status);
-            this.handleGameOver();
+            setTimeout(function () { 
+                let status = 'Game Over - ' + (piece_count_to_decrement === 'P' ? 'Computer' : 'Player') + ' won!';
+                this.addToLog(status);
+                this.handleGameOver();
+            }.bind(this), 1000);
         }
     }
 
@@ -707,7 +706,7 @@ class Game extends React.Component {
      * Handler called when the user quits
      */
     handleQuit() {
-        let status = 'Game over - Computer won!';
+        let status = 'Game over - Computer won! (Player quit)';
         this.addToLog(status);
         this.handleGameOver();
     }
@@ -808,7 +807,7 @@ class Game extends React.Component {
         this.setState({
             squares: squares,
             game: game,
-            // visibility_arr: visibility_arr, //delete later
+            visibility_arr: visibility_arr, //delete later
             warning: null,
         })
 
