@@ -336,10 +336,6 @@ class Game extends React.Component {
     }
 
     addToLog(log_item) {
-        if (this.state.updated_log.length >= 7) {
-            this.state.updated_log.pop();
-        }
-
         this.setState({
             updated_log: [
                 { id: this.state.id, text: log_item },
@@ -499,8 +495,10 @@ class Game extends React.Component {
 
     /** 
      * This helper is called when an attacker attacks a square with a piece on it
+     * 
+     * This method works during manual play - how to modify for auto play?
     */
-    handleAttack(attack_index, defend_index, isPlayerNext) {
+    handleAttack(attack_index, defend_index, isPlayerNext) { /* maybe modify so that its enemy ? */
         const squares = this.state.squares.slice();
         const game = this.state.game.slice();
         const visibility_arr = this.state.visibility_arr.slice();
@@ -508,6 +506,8 @@ class Game extends React.Component {
         let winner = helper.comparePieceValues(squares, attack_index, defend_index);
         let attacking_piece;
         let defending_piece;
+        // let team = (enemy === 'P') ? 'C' : 'P';
+        // var user = (enemy === 'P') ? 'Computer' : 'Player';
         if (isPlayerNext) {
             attacking_piece = this.state.current_piece;
             defending_piece = squares[defend_index];
@@ -536,12 +536,14 @@ class Game extends React.Component {
                     this.addToLog('Computer defended cell ' + defend_index + ' with [' +
                         defending_piece + '] and captured the player\'s [' + attacking_piece + ']'
                     );
+                    this.handleDecrementPieceCount(attacking_piece, 'P');
                 } else {
                     this.addToLog('Player defended cell ' + defend_index + ' with [' +
                         defending_piece + '] and captured the computer\'s [' + attacking_piece + ']'
                     );
+                    this.handleDecrementPieceCount(attacking_piece, 'C');
                 }
-                this.handleDecrementPieceCount(attacking_piece, isPlayerNext);
+                // this.handleDecrementPieceCount(attacking_piece, isPlayerNext);
             } else {
                 //attacker won
                 if (isPlayerNext) {
@@ -549,14 +551,16 @@ class Game extends React.Component {
                         attacking_piece + '] and captured the computer\'s [' + defending_piece + ']'
                     );
                     game[defend_index] = 'P';
+                    this.handleDecrementPieceCount(defending_piece, 'C');
                 } else {
                     this.addToLog('Computer attacked cell ' + defend_index + ' with [' +
                         attacking_piece + '] and captured the player\'s [' + defending_piece + ']'
                     );
                     game[defend_index] = 'C';
+                    this.handleDecrementPieceCount(defending_piece, 'P');
                 }
                 squares[defend_index] = attacking_piece;
-                this.handleDecrementPieceCount(defending_piece, !isPlayerNext);
+                // this.handleDecrementPieceCount(defending_piece, !isPlayerNext);
             }
         }
         this.setState({
@@ -593,8 +597,14 @@ class Game extends React.Component {
 
         const map = helper.getMoveablePieces(game, squares, enemy);
         if (map.length == 0) {
-            let status = 'Game over - ' + (this.state.playerIsNext ? 'Player' : 'Computer') + ' won!';
+            let status = (!this.state.playerIsNext ? 'Player' : 'Computer') + 'ran out of possible moves. Game over!'; // there might be an error here
+            // let status = 'Game over - ' + (!this.state.playerIsNext ? 'Player' : 'Computer') + ' won!';
+            console.log(status);
+            
             this.addToLog(status);
+            this.setState({
+                warning: status,
+            });
             this.handleGameOver();
         }
 
@@ -612,15 +622,13 @@ class Game extends React.Component {
         var j = k ? temp : (Math.floor(Math.random() * possible_squares.length));
         // either go down (aggressive) or select a random move wrt to the piece
 
-        // var j = Math.floor(Math.random() * possible_squares.length); // randomly select a possible move wrt to the computer piece
-
         var current_index = map[i][0];
         var current_piece = squares[current_index];
         var target_index = possible_squares[j];
 
-        if (game[target_index] === enemy) {//FIXME ADD PLAYER THInG
+        if (game[target_index] === enemy) {
             //fix with decrement too...
-            this.handleAttack(current_index, target_index, false);
+            this.handleAttack(current_index, target_index, this.state.isPlayerNext);
         } else {
             game[target_index] = team;
             game[current_index] = null;
@@ -630,10 +638,6 @@ class Game extends React.Component {
 
             squares[target_index] = current_piece;
             squares[current_index] = null;
-
-            //later add a check that if computer can't make a move anymore - player wins
-            //state change
-            //maybe if map is empty?
 
             var piece = (visibility_arr[target_index]) ? current_piece : '?';
             var user = (enemy === 'P') ? 'Computer' : 'Player';
@@ -665,12 +669,14 @@ class Game extends React.Component {
     /**
      * Helper method that decrements the number of pieces in a specific set
      */
-    handleDecrementPieceCount(piece, isPlayer) {
+    handleDecrementPieceCount(piece, piece_count_to_decrement) {
+
         let i = this.state.pieces.indexOf(piece);
-        const piece_count = isPlayer ? this.state.player_piece_count.slice() : this.state.computer_piece_count.slice();
+        const piece_count = (piece_count_to_decrement === 'P') ? this.state.player_piece_count.slice() : this.state.computer_piece_count.slice();
+
         piece_count[i] = piece_count[i] - 1;
 
-        if (isPlayer) {
+        if (piece_count_to_decrement === 'P') {
             this.setState({
                 player_piece_count: piece_count,
             });
@@ -681,7 +687,7 @@ class Game extends React.Component {
         }
 
         if (!i) {
-            let status = 'Game over - ' + (this.state.playerIsNext ? 'Player' : 'Computer') + ' won!';
+            let status = 'Game over - ' + (piece_count_to_decrement === 'P' ? 'Computer' : 'Player') + ' won!';
             this.addToLog(status);
             this.handleGameOver();
         }
@@ -711,14 +717,22 @@ class Game extends React.Component {
      */
     handleToggleAuto() {
         let temp = this.state.interval_id;
-        // update so that it depends on if player is next who goes first// update so that no click too during fast forward
+        /**
+         * FIX ME - too slow in the beginning
+         */
         if (!this.state.fastForward) {
             temp = setInterval(function () {
                 this.handleComputerMove('P');
-                setTimeout(function () { this.handleComputerMove('C'); }.bind(this), 1500);
-            }.bind(this), 3000);
+                setTimeout(function () { this.handleComputerMove('C'); }.bind(this), 1000);
+            }.bind(this), 2000);
         } else {
-            clearInterval(temp);
+            if(this.state.isPlayerNext){
+                clearInterval(temp);
+            }else{
+                this.setState({
+                    warning: 'Cannot switch over to manual during the Computer\'s turn',
+                })
+            }
         }
 
         this.setState({
