@@ -67,4 +67,19 @@ public class UserServiceImp implements UserService {
 
     }
 
+    @Override
+    public int verify(String email, String password) {
+        String service_password = passwordEncoder.encode(password);
+        int areCredentialsValid = -1;
+
+        User u = userRepository.findByEmail_AndHash_pass(email, service_password);
+
+        if (u != null){
+            areCredentialsValid = u.getId();
+        }
+
+        return areCredentialsValid;
+
+    }
+
 }
