@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Builder
 @JsonInclude(value = JsonInclude.Include.NON_NULL)

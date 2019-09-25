@@ -11,4 +11,5 @@ public interface UserService {
     UserDTO findUserByEmail(String email);
     UserDTO findUserById(int id);
     List<UserDTO> findAll();
+    int verify(String email, String password);
 }

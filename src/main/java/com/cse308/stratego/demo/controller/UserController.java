@@ -7,6 +7,8 @@ import com.cse308.stratego.demo.model.User;
 import com.cse308.stratego.demo.service.user.interfaces.UserService;
 import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,5 +43,20 @@ public class UserController {
     public @ResponseBody Iterable<UserDTO> getAllUsers() {
 
         return userService.findAll();
+    }
+
+    @GetMapping(path="/login")
+    public @ResponseBody ResponseEntity<Object> verifyUserCredentials(@RequestParam String email,
+                                                                      @RequestParam String password){
+
+        int id = userService.verify(email, password);
+
+        if (id == -1){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.OK).body(id);
+        }
     }
 }
