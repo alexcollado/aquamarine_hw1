@@ -715,24 +715,19 @@ class Game extends React.Component {
      * Handler that modifies user play from manual to automatic or vice versa
      */
     handleToggleAuto() {
-        let temp = this.state.interval_id;
-        /**
-         * FIX ME - too slow in the beginning
-         */
+        let temp = this.state.interval_id; /* fix me check if player or computer goes first */
+        let status = (!this.state.fastForward ? 'Enabling' : 'Disabling') + ' auto play';
         if (!this.state.fastForward) {
             temp = setInterval(function () {
                 this.handleComputerMove('P');
-                setTimeout(function () { this.handleComputerMove('C'); }.bind(this), 1000);
-            }.bind(this), 2000);
+                setTimeout(function () { this.handleComputerMove('C'); }.bind(this), 2000);
+            }.bind(this), 4000);
         } else {
-            if(this.state.isPlayerNext){
-                clearInterval(temp);
-            }else{
-                this.setState({
-                    warning: 'Cannot switch over to manual during the Computer\'s turn',
-                })
-            }
+            clearInterval(temp);
+            // check if ended during computer's turn or player's turn 
         }
+
+        this.addToLog(status);
 
         this.setState({
             fastForward: !this.state.fastForward,
