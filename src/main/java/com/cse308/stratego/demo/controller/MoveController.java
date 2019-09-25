@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path="/game")
-public class GameController {
+public class MoveController {
 
 
     @Autowired
@@ -25,24 +25,15 @@ public class GameController {
     @Autowired
     private UserService userService;
 
+    @RequestMapping(path="/newMove/{game_id}", method= RequestMethod.POST, headers = "Accept=application/json")
+    public @ResponseBody String newMove(@PathVariable int game_id) {
 
-    @RequestMapping(path="/newGame/{player_id}", method= RequestMethod.POST, headers = "Accept=application/json")
-    public @ResponseBody String newGame(@PathVariable int player_id, @RequestBody List<Integer> board) {
-        Game n = new Game();
+        return "";
+    }
 
-        Calendar calendar = Calendar.getInstance();
-        java.util.Date currentDate = calendar.getTime();
-        java.sql.Date date = new java.sql.Date(currentDate.getTime());
-
-        GameDTO gamedto = new GameDTO()
-                .setPlayer(player_id)
-                .setState("N")
-                .setCreated(date.toString());
-
-        System.out.println(player_id);
-        int game_id = gameService.newGame(gamedto);
-        gamedto.setId(game_id);
-        gameService.newGameMoves(gamedto, board);
+    @RequestMapping(path="/gameMoves/{game_id}", method= RequestMethod.POST, headers = "Accept=application/json")
+    public @ResponseBody String gameMoves(@PathVariable int game_id) {
+        
 
         return "Saved";
     }
