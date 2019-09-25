@@ -1,4 +1,5 @@
 import React, {Fragment, Component} from 'react';
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import styles from '../styles/Home.module.css';
 
 import Container from 'react-bootstrap/Container';
@@ -27,9 +28,9 @@ class Home extends Component {
         });
     }
     
-    // handleSubmit = event => {
-    //     event.preventDefault();
-    // }
+    handleSubmit = event => {
+        event.preventDefault();
+    }
 
     render() {
         return (
@@ -42,7 +43,7 @@ class Home extends Component {
                                 <h5>The classic game of battlefield strategy</h5>
                             </div>
 
-                            <Form>
+                            <Form onSubmit={this.handleSubmit}>
                                 <Form.Group controlId="email">
                                     <Form.Label>Email address</Form.Label>
 
@@ -76,12 +77,14 @@ class Home extends Component {
                                         Login
                                     </Button>
 
-                                    <Button 
-                                        type="submit"
-                                        className={`${styles.createAcc} ${styles.btn}`}
-                                    >
-                                        Create Account
-                                    </Button>
+                                    <Link to="/createaccount">
+                                        <Button 
+                                            type="submit"
+                                            className={`${styles.createAcc} ${styles.btn}`}
+                                        >
+                                            Create Account
+                                        </Button>
+                                    </Link>
                                 </div>
                             </Form>
                         </Col>

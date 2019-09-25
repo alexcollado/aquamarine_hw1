@@ -15,11 +15,21 @@ import TransitionGroup from 'react-transition-group/TransitionGroup';
 import styles from '../styles/Game.module.css';
 
 function Square(props) {
-    return (
-        <button className={styles.square} onClick={props.onClick}>
-            {props.value}
-        </button>
-    );
+    if (props.isWater) {
+        return (
+            <button className={styles.water} onClick={props.onClick}>
+                {props.value}
+            </button>
+        );
+
+    } else {
+        return (
+            <button className={styles.square} onClick={props.onClick}>
+                {props.value}
+            </button>
+        );
+
+    }
 }
 
 function OccupiedSquare(props) {
@@ -28,8 +38,8 @@ function OccupiedSquare(props) {
             return (
                 <div className={styles.square}>
                     <HeadShake>
-                        <Button className={`${styles['player-piece']} mx-auto my-auto ${styles['visible-border']}`} 
-                        onClick={props.onClick}>
+                        <Button className={`${styles['player-piece']} mx-auto my-auto ${styles['visible-border']}`}
+                            onClick={props.onClick}>
                             {props.value}
                         </Button>
                     </HeadShake>
@@ -39,8 +49,8 @@ function OccupiedSquare(props) {
             return (
                 <div className={styles.square}>
                     <HeadShake>
-                        <Button className={`${styles['player-piece']} mx-auto my-auto`} 
-                        onClick={props.onClick}>
+                        <Button className={`${styles['player-piece']} mx-auto my-auto`}
+                            onClick={props.onClick}>
                             {props.value}
                         </Button>
                     </HeadShake>
@@ -173,13 +183,23 @@ class Board extends React.Component {
                     isVisible={this.props.visibility_arr[i]}
                 />
             );
+        } else if (this.props.game[i] === 'X') {
+            return (
+                <Square
+                    value={this.props.squares[i]}
+                    onClick={() => this.props.onClick(i)} /*FIXME add checks for water */
+                    isWater={true}
+                />
+            );
+        } else {
+            return (
+                <Square
+                    value={this.props.squares[i]}
+                    onClick={() => this.props.onClick(i)}
+                    isWater={false}
+                />
+            );
         }
-        return (
-            <Square
-                value={this.props.squares[i]}
-                onClick={() => this.props.onClick(i)}
-            />
-        );
     }
 
     render() {
@@ -316,7 +336,19 @@ class Game extends React.Component {
         this.setupBtnRef = React.createRef();
         this.state = {
             squares: Array(100).fill(null), //contains the values needed to display board
-            game: Array(100).fill(null), // used to differentiate player from computer pieces
+            game: //Array(100).fill(null), // used to differentiate player from computer pieces
+                [
+                    null, null, null, null, null, null, null, null, null, null,
+                    null, null, null, null, null, null, null, null, null, null,
+                    null, null, null, null, null, null, null, null, null, null,
+                    null, null, null, null, null, null, null, null, null, null,
+                    null, null, 'X', 'X', null, null, 'X', 'X', null, null,
+                    null, null, 'X', 'X', null, null, 'X', 'X', null, null,
+                    null, null, null, null, null, null, null, null, null, null,
+                    null, null, null, null, null, null, null, null, null, null,
+                    null, null, null, null, null, null, null, null, null, null,
+                    null, null, null, null, null, null, null, null, null, null,
+                ],
             visibility_arr: Array(100).fill(false), // used to check if piece is visible or not
             updated_log: [].map((text, id) => ({ id, text })),
             pieces: ['F', 'B', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -336,10 +368,6 @@ class Game extends React.Component {
     }
 
     addToLog(log_item) {
-        if (this.state.updated_log.length >= 7) {
-            this.state.updated_log.pop();
-        }
-
         this.setState({
             updated_log: [
                 { id: this.state.id, text: log_item },
@@ -482,7 +510,7 @@ class Game extends React.Component {
 
         let warning = helper.isValidMove(this.state.current_index, i, this.state.current_piece, this.state.game);
         if (!warning) {
-            this.handleAttack(this.state.current_index, i, true);
+            this.handleAttack(this.state.current_index, i, 'C');
 
             this.setState({
                 warning: null,
@@ -491,6 +519,9 @@ class Game extends React.Component {
             })
 
             setTimeout(function () { this.handleComputerMove('P'); }.bind(this), 2000);
+            // if (this.checkMoveSetEmpty(map)) {
+                // return; FIXME
+            // }
         }
         this.setState({
             warning: warning,
@@ -499,8 +530,10 @@ class Game extends React.Component {
 
     /** 
      * This helper is called when an attacker attacks a square with a piece on it
+     * 
+     * This method works during manual play - how to modify for auto play?
     */
-    handleAttack(attack_index, defend_index, isPlayerNext) {
+    handleAttack(attack_index, defend_index, enemy) { /* maybe modify so that its enemy ? */
         const squares = this.state.squares.slice();
         const game = this.state.game.slice();
         const visibility_arr = this.state.visibility_arr.slice();
@@ -508,7 +541,8 @@ class Game extends React.Component {
         let winner = helper.comparePieceValues(squares, attack_index, defend_index);
         let attacking_piece;
         let defending_piece;
-        if (isPlayerNext) {
+        let team = (enemy === 'P') ? 'C' : 'P';
+        if (this.state.current_piece) {
             attacking_piece = this.state.current_piece;
             defending_piece = squares[defend_index];
         } else {
@@ -524,39 +558,41 @@ class Game extends React.Component {
             visibility_arr[defend_index] = false;
             game[defend_index] = null;
             squares[defend_index] = null;
-            this.handleDecrementPieceCount(attacking_piece, isPlayerNext);
-            this.handleDecrementPieceCount(defending_piece, !isPlayerNext);
+            this.handleDecrementPieceCount(attacking_piece, enemy);
+            this.handleDecrementPieceCount(defending_piece, team);
         } else {
             visibility_arr[defend_index] = true; // attacker or defender is revealed
             visibility_arr[attack_index] = false; // attacker piece is now empty 
 
             if (winner === defend_index) {
                 //defender won
-                if (isPlayerNext) {
+                if (team === 'P') {
                     this.addToLog('Computer defended cell ' + defend_index + ' with [' +
-                        defending_piece + '] and captured the player\'s [' + attacking_piece + ']'
+                        defending_piece + '] and captured the Player\'s [' + attacking_piece + ']'
                     );
+                    this.handleDecrementPieceCount(attacking_piece, 'P');
                 } else {
                     this.addToLog('Player defended cell ' + defend_index + ' with [' +
-                        defending_piece + '] and captured the player\'s [' + attacking_piece + ']'
+                        defending_piece + '] and captured the Computer\'s [' + attacking_piece + ']'
                     );
+                    this.handleDecrementPieceCount(attacking_piece, 'C');
                 }
-                this.handleDecrementPieceCount(attacking_piece, isPlayerNext);
             } else {
                 //attacker won
-                if (isPlayerNext) {
+                if (team === 'P') {
                     this.addToLog('Player attacked cell ' + defend_index + ' with [' +
-                        attacking_piece + '] and captured the computer\'s [' + defending_piece + ']'
+                        attacking_piece + '] and captured the Computer\'s [' + defending_piece + ']'
                     );
                     game[defend_index] = 'P';
+                    this.handleDecrementPieceCount(defending_piece, 'C');
                 } else {
                     this.addToLog('Computer attacked cell ' + defend_index + ' with [' +
-                        attacking_piece + '] and captured the player\'s [' + defending_piece + ']'
+                        attacking_piece + '] and captured the Player\'s [' + defending_piece + ']'
                     );
                     game[defend_index] = 'C';
+                    this.handleDecrementPieceCount(defending_piece, 'P');
                 }
                 squares[defend_index] = attacking_piece;
-                this.handleDecrementPieceCount(defending_piece, !isPlayerNext);
             }
         }
         this.setState({
@@ -578,6 +614,19 @@ class Game extends React.Component {
         });
     }
 
+    checkMoveSetEmpty(map, enemy) {
+        if (map === undefined || map.length == 0) {
+            setTimeout(function () {
+                let status = 'Game Over - ' + (enemy === 'C' ? 'Player' : 'Computer') + ' ran out of possible moves.'; // there might be an error here
+                this.addToLog(status);
+                this.handleGameOver();
+            }.bind(this), 1000);
+            this.handleGameOver();
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Helper method that calculates and moves the computer piece
      */
@@ -592,10 +641,8 @@ class Game extends React.Component {
         const visibility_arr = this.state.visibility_arr.slice();
 
         const map = helper.getMoveablePieces(game, squares, enemy);
-        if (map.length == 0) {
-            let status = 'Game over - ' + (this.state.playerIsNext ? 'Player' : 'Computer') + ' won!';
-            this.addToLog(status);
-            this.handleGameOver();
+        if (this.checkMoveSetEmpty(map)) {
+            return;
         }
 
         /**
@@ -603,7 +650,6 @@ class Game extends React.Component {
          * map[i][0] is the current index of the computer piece
          * map[i][1] is an array of possible indices that the piece could go to
          */
-
         var i = Math.floor(Math.random() * map.length) // randomly select a computer piece
         var possible_squares = map[i][1];
 
@@ -612,15 +658,13 @@ class Game extends React.Component {
         var j = k ? temp : (Math.floor(Math.random() * possible_squares.length));
         // either go down (aggressive) or select a random move wrt to the piece
 
-        // var j = Math.floor(Math.random() * possible_squares.length); // randomly select a possible move wrt to the computer piece
-
         var current_index = map[i][0];
         var current_piece = squares[current_index];
         var target_index = possible_squares[j];
 
-        if (game[target_index] === enemy) {//FIXME ADD PLAYER THInG
+        if (game[target_index] === enemy) {
             //fix with decrement too...
-            this.handleAttack(current_index, target_index, false);
+            this.handleAttack(current_index, target_index, enemy);
         } else {
             game[target_index] = team;
             game[current_index] = null;
@@ -631,11 +675,7 @@ class Game extends React.Component {
             squares[target_index] = current_piece;
             squares[current_index] = null;
 
-            //later add a check that if computer can't make a move anymore - player wins
-            //state change
-            //maybe if map is empty?
-
-            var piece = (visibility_arr[target_index]) ? current_piece : '?';
+            var piece = ((visibility_arr[target_index]) || (enemy === 'C')) ? current_piece : '?';
             var user = (enemy === 'P') ? 'Computer' : 'Player';
 
             this.addToLog(user + ' moved [' + piece + '] from cell ' + current_index + ' to cell ' + target_index);
@@ -665,12 +705,14 @@ class Game extends React.Component {
     /**
      * Helper method that decrements the number of pieces in a specific set
      */
-    handleDecrementPieceCount(piece, isPlayer) {
+    handleDecrementPieceCount(piece, piece_count_to_decrement) {
+
         let i = this.state.pieces.indexOf(piece);
-        const piece_count = isPlayer ? this.state.player_piece_count.slice() : this.state.computer_piece_count.slice();
+        const piece_count = (piece_count_to_decrement === 'P') ? this.state.player_piece_count.slice() : this.state.computer_piece_count.slice();
+
         piece_count[i] = piece_count[i] - 1;
 
-        if (isPlayer) {
+        if (piece_count_to_decrement === 'P') {
             this.setState({
                 player_piece_count: piece_count,
             });
@@ -681,9 +723,11 @@ class Game extends React.Component {
         }
 
         if (!i) {
-            let status = 'Game over - ' + (this.state.playerIsNext ? 'Player' : 'Computer') + ' won!';
-            this.addToLog(status);
-            this.handleGameOver();
+            setTimeout(function () {
+                let status = 'Game Over - ' + (piece_count_to_decrement === 'P' ? 'Computer' : 'Player') + ' won!';
+                this.addToLog(status);
+                this.handleGameOver();
+            }.bind(this), 1000);
         }
     }
 
@@ -701,7 +745,7 @@ class Game extends React.Component {
      * Handler called when the user quits
      */
     handleQuit() {
-        let status = 'Game over - Computer won!';
+        let status = 'Game over - Computer won! (Player quit)';
         this.addToLog(status);
         this.handleGameOver();
     }
@@ -710,16 +754,30 @@ class Game extends React.Component {
      * Handler that modifies user play from manual to automatic or vice versa
      */
     handleToggleAuto() {
-        let temp = this.state.interval_id;
-        // update so that it depends on if player is next who goes first// update so that no click too during fast forward
+        if (!this.state.playerIsNext) {
+            this.setState({
+                warning: 'Can\'t toggle auto play during the Computer\'s turn',
+            });
+            return;
+        }
+
+        let temp = this.state.interval_id; /* fix me check if player or computer goes first */
+        let status = (!this.state.fastForward ? 'Enabling' : 'Disabling') + ' auto play';
         if (!this.state.fastForward) {
             temp = setInterval(function () {
-                this.handleComputerMove('P');
-                setTimeout(function () { this.handleComputerMove('C'); }.bind(this), 1500);
-            }.bind(this), 3000);
+
+                this.handleComputerMove('C');
+
+                setTimeout(function () {
+                    this.handleComputerMove('P');
+                }.bind(this), 2000);
+            }.bind(this), 4000);
         } else {
             clearInterval(temp);
+            // check if ended during computer's turn or player's turn 
         }
+
+        this.addToLog(status);
 
         this.setState({
             fastForward: !this.state.fastForward,
@@ -814,6 +872,12 @@ class Game extends React.Component {
                 current_piece: null,
             })
             this.resetPieceCounts();
+
+            const map = helper.getMoveablePieces(game, squares, 'C');
+
+            if (this.checkMoveSetEmpty(map, 'C')) {
+                return;
+            }
         }
     }
 
@@ -840,30 +904,30 @@ class Game extends React.Component {
                         <Col md={2} className="mx-auto justify-content-md-center">
                             <Container>
                                 <Row className="justify-content-md-center">
-                                    <Button id="SetupBtn" className="btn-dark my-2" 
-                                    onClick={() => this.handleCompleteSetup(true)} 
-                                    disabled={this.state.setupCompleted}>
+                                    <Button id="SetupBtn" className="btn-dark my-2"
+                                        onClick={() => this.handleCompleteSetup(true)}
+                                        disabled={this.state.setupCompleted}>
                                         {"Fill in remaining pieces"}
                                     </Button>
-                                    <Button className="btn-dark my-2" 
-                                    onClick={() => this.handleCompleteSetup(false)} 
-                                    disabled={!this.state.setupCompleted || this.state.gameStart}>
+                                    <Button className="btn-dark my-2"
+                                        onClick={() => this.handleCompleteSetup(false)}
+                                        disabled={!this.state.setupCompleted || this.state.gameStart}>
                                         {"Start game"}
                                     </Button>
-                                    <Button className="btn-dark my-2" 
-                                    onClick={() => this.handleQuit()} 
-                                    disabled={!this.state.gameStart || this.state.gameOver}>
+                                    <Button className="btn-dark my-2"
+                                        onClick={() => this.handleQuit()}
+                                        disabled={!this.state.gameStart || this.state.gameOver}>
                                         {"Quit game"}
                                     </Button>
                                     <ButtonGroup>
-                                        <Button className="btn-dark mx-1" 
-                                        disabled={!this.state.fastForward || this.state.gameOver} 
-                                        onClick={() => this.handleToggleAuto()}>
+                                        <Button className="btn-dark mx-1"
+                                            disabled={!this.state.fastForward || this.state.gameOver}
+                                            onClick={() => this.handleToggleAuto()}>
                                             {"Manual"}
                                         </Button>
-                                        <Button className="btn-dark mx-1" 
-                                        disabled={this.state.fastForward || !this.state.gameStart || this.state.gameOver} 
-                                        onClick={() => this.handleToggleAuto()}>
+                                        <Button className="btn-dark mx-1"
+                                            disabled={this.state.fastForward || !this.state.gameStart || this.state.gameOver}
+                                            onClick={() => this.handleToggleAuto()}>
                                             {"Auto"}
                                         </Button>
                                     </ButtonGroup>
@@ -915,7 +979,7 @@ class Game extends React.Component {
                                 {this.state.updated_log.map((item) =>
                                     <Fade key={item.id} collapse left exit={true} appear={true} enter={true}>
                                         <div className="card">
-                                            <div className="card-body justify-content-between">
+                                            <div className={`${styles['card-body']} card-body justify-content-between`}>
                                                 {item.text}
                                             </div>
                                         </div>

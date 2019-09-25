@@ -2,6 +2,7 @@ ol, ul {
   padding-left: 30px;
 }
 
+
 /* .board-row:after { */
   /* clear: both; */
   /* content: ""; */
@@ -33,12 +34,12 @@ ol, ul {
   font-size: 24px;
   font-weight: bold;
   line-height: 34px;
-  height: 45px;
+  height: 50px;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 45px;
+  width: 50px;
 }
 
 .square:focus {
@@ -47,6 +48,25 @@ ol, ul {
 
 .square:hover{
   background: #0b8803;
+}
+
+.water{
+  background: aquamarine;
+  border: 1px solid lightseagreen;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 50px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 50px;
+}
+
+.water:focus{
+  outline: none;
 }
 
 .player-square{
@@ -75,7 +95,7 @@ ol, ul {
 }
 
 .visible-border{
-  border: 2px solid white;
+  border: 2px solid white !important;
 }
 
 .player-piece:hover{
@@ -130,4 +150,10 @@ ol, ul {
 
 .kbd-navigation .square:focus {
   background: #ddd;
+}
+
+.card-body{
+  padding: 1rem;
+  background-color: aquamarine;
+  box-shadow: 1px 1px 5px grey;
 }
