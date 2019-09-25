@@ -478,7 +478,7 @@ class Game extends React.Component {
 
         let warning = helper.isValidMove(this.state.current_index, i, this.state.current_piece, this.state.game);
         if (!warning) {
-            this.handleAttack(this.state.current_index, i, true);
+            this.handleAttack(this.state.current_index, i, 'C');
 
             this.setState({
                 warning: null,
@@ -498,7 +498,7 @@ class Game extends React.Component {
      * 
      * This method works during manual play - how to modify for auto play?
     */
-    handleAttack(attack_index, defend_index, isPlayerNext) { /* maybe modify so that its enemy ? */
+    handleAttack(attack_index, defend_index, enemy) { /* maybe modify so that its enemy ? */
         const squares = this.state.squares.slice();
         const game = this.state.game.slice();
         const visibility_arr = this.state.visibility_arr.slice();
@@ -506,9 +506,8 @@ class Game extends React.Component {
         let winner = helper.comparePieceValues(squares, attack_index, defend_index);
         let attacking_piece;
         let defending_piece;
-        // let team = (enemy === 'P') ? 'C' : 'P';
-        // var user = (enemy === 'P') ? 'Computer' : 'Player';
-        if (isPlayerNext) {
+        let team = (enemy === 'P') ? 'C' : 'P';
+        if (this.state.current_piece) {
             attacking_piece = this.state.current_piece;
             defending_piece = squares[defend_index];
         } else {
@@ -524,43 +523,41 @@ class Game extends React.Component {
             visibility_arr[defend_index] = false;
             game[defend_index] = null;
             squares[defend_index] = null;
-            this.handleDecrementPieceCount(attacking_piece, 'P');
-            this.handleDecrementPieceCount(defending_piece, 'C');
+            this.handleDecrementPieceCount(attacking_piece, enemy);
+            this.handleDecrementPieceCount(defending_piece, team);
         } else {
             visibility_arr[defend_index] = true; // attacker or defender is revealed
             visibility_arr[attack_index] = false; // attacker piece is now empty 
 
             if (winner === defend_index) {
                 //defender won
-                if (isPlayerNext) {
+                if (team === 'P') {
                     this.addToLog('Computer defended cell ' + defend_index + ' with [' +
-                        defending_piece + '] and captured the player\'s [' + attacking_piece + ']'
+                        defending_piece + '] and captured the Player\'s [' + attacking_piece + ']'
                     );
                     this.handleDecrementPieceCount(attacking_piece, 'P');
                 } else {
                     this.addToLog('Player defended cell ' + defend_index + ' with [' +
-                        defending_piece + '] and captured the computer\'s [' + attacking_piece + ']'
+                        defending_piece + '] and captured the Computer\'s [' + attacking_piece + ']'
                     );
                     this.handleDecrementPieceCount(attacking_piece, 'C');
                 }
-                // this.handleDecrementPieceCount(attacking_piece, isPlayerNext);
             } else {
                 //attacker won
-                if (isPlayerNext) {
+                if (team === 'P') {
                     this.addToLog('Player attacked cell ' + defend_index + ' with [' +
-                        attacking_piece + '] and captured the computer\'s [' + defending_piece + ']'
+                        attacking_piece + '] and captured the Computer\'s [' + defending_piece + ']'
                     );
                     game[defend_index] = 'P';
                     this.handleDecrementPieceCount(defending_piece, 'C');
                 } else {
                     this.addToLog('Computer attacked cell ' + defend_index + ' with [' +
-                        attacking_piece + '] and captured the player\'s [' + defending_piece + ']'
+                        attacking_piece + '] and captured the Player\'s [' + defending_piece + ']'
                     );
                     game[defend_index] = 'C';
                     this.handleDecrementPieceCount(defending_piece, 'P');
                 }
                 squares[defend_index] = attacking_piece;
-                // this.handleDecrementPieceCount(defending_piece, !isPlayerNext);
             }
         }
         this.setState({
@@ -625,7 +622,7 @@ class Game extends React.Component {
 
         if (game[target_index] === enemy) {
             //fix with decrement too...
-            this.handleAttack(current_index, target_index, this.state.isPlayerNext);
+            this.handleAttack(current_index, target_index, enemy);
         } else {
             game[target_index] = team;
             game[current_index] = null;
