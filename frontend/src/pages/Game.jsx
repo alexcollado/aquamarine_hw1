@@ -633,7 +633,7 @@ class Game extends React.Component {
             squares[target_index] = current_piece;
             squares[current_index] = null;
 
-            var piece = (visibility_arr[target_index]) ? current_piece : '?';
+            var piece = ((visibility_arr[target_index]) || (enemy === 'C')) ? current_piece : '?';
             var user = (enemy === 'P') ? 'Computer' : 'Player';
 
             this.addToLog(user + ' moved [' + piece + '] from cell ' + current_index + ' to cell ' + target_index);
@@ -712,12 +712,23 @@ class Game extends React.Component {
      * Handler that modifies user play from manual to automatic or vice versa
      */
     handleToggleAuto() {
+        if(!this.state.playerIsNext){
+            this.setState({
+                warning: 'Can\'t toggle auto play during the Computer\'s turn',
+            });
+            return;
+        }
+
         let temp = this.state.interval_id; /* fix me check if player or computer goes first */
         let status = (!this.state.fastForward ? 'Enabling' : 'Disabling') + ' auto play';
         if (!this.state.fastForward) {
             temp = setInterval(function () {
-                this.handleComputerMove('P');
-                setTimeout(function () { this.handleComputerMove('C'); }.bind(this), 2000);
+
+                this.handleComputerMove('C');
+
+                setTimeout(function () { 
+                    this.handleComputerMove('P'); 
+                }.bind(this), 2000);
             }.bind(this), 4000);
         } else {
             clearInterval(temp);
