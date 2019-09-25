@@ -75,7 +75,7 @@ ol, ul {
 }
 
 .visible-border{
-  border: 2px solid white;
+  border: 2px solid white !important;
 }
 
 .player-piece:hover{
