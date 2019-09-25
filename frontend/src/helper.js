@@ -30,14 +30,16 @@ export function isValidMove(current_index, target_index, current_piece, game) {
         warning = "Cannot move a bomb.";
     } else if (current_piece === 'F') {
         warning = "Cannot move the flag.";
-    } else if (current_piece === 2) {
+    } else if (game[target_index] === 'X') {
+        warning = "Cannot move a piece into the water.";
+    } else if (current_piece === 2) { /* FIXME change if scout hits water */
         let temp = [];
         isBottomValidScout(current_index, game, temp, 'C');
         isLeftValidScout(current_index, game, temp, 'C');
         isRightValidScout(current_index, game, temp, 'C');
         isTopValidScout(current_index, game, temp, 'C');
 
-        if(temp.indexOf(target_index) < 0){
+        if (temp.indexOf(target_index) < 0) {
             warning = "Can only move the scout in a straight line in up, down, left, or right direction."
         }
     } else {
@@ -161,7 +163,7 @@ function isLeftValid(i, game, team) {
         return false;  //current piece is on the left boundary
     }
     let left = i - 1;
-    return game[left] === team ? false : true;
+    return (game[left] === team || game[left] === 'X') ? false : true;
 }
 
 function isRightValidScout(index, game, temp, enemy) {
@@ -184,7 +186,7 @@ function isRightValid(i, game, team) {
         return false; // current piece is on the right boundary
     }
     let right = i + 1;
-    return game[right] === team ? false : true;
+    return (game[right] === team || game[right] === 'X') ? false : true;
 }
 
 function isTopValidScout(index, game, temp, enemy) {
@@ -207,7 +209,7 @@ function isTopValid(i, game, team) {
         return false; // current piece is on the top boundary
     }
     let top = i - 10;
-    return game[top] === team ? false : true;
+    return (game[top] === team || game[top] === 'X') ? false : true;
 }
 
 function isBottomValidScout(index, game, temp, enemy) {
@@ -230,5 +232,5 @@ function isBottomValid(i, game, team) {
         return false // current piece is on the bottom boundary
     }
     let bottom = i + 10;
-    return game[bottom] === team ? false : true;
+    return (game[bottom] === team || game[bottom] === 'X') ? false : true;
 }
