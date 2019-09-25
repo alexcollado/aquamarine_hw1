@@ -342,8 +342,8 @@ class Game extends React.Component {
                     null, null, null, null, null, null, null, null, null, null,
                     null, null, null, null, null, null, null, null, null, null,
                     null, null, null, null, null, null, null, null, null, null,
-                    null, null,  'X',  'X', null, null,  'X',  'X', null, null,
-                    null, null,  'X',  'X', null, null,  'X',  'X', null, null,
+                    null, null, 'X', 'X', null, null, 'X', 'X', null, null,
+                    null, null, 'X', 'X', null, null, 'X', 'X', null, null,
                     null, null, null, null, null, null, null, null, null, null,
                     null, null, null, null, null, null, null, null, null, null,
                     null, null, null, null, null, null, null, null, null, null,
@@ -519,6 +519,9 @@ class Game extends React.Component {
             })
 
             setTimeout(function () { this.handleComputerMove('P'); }.bind(this), 2000);
+            // if (this.checkMoveSetEmpty(map)) {
+                // return; FIXME
+            // }
         }
         this.setState({
             warning: warning,
@@ -611,6 +614,19 @@ class Game extends React.Component {
         });
     }
 
+    checkMoveSetEmpty(map, enemy) {
+        if (map === undefined || map.length == 0) {
+            setTimeout(function () {
+                let status = 'Game Over - ' + (enemy === 'C' ? 'Player' : 'Computer') + ' ran out of possible moves.'; // there might be an error here
+                this.addToLog(status);
+                this.handleGameOver();
+            }.bind(this), 1000);
+            this.handleGameOver();
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Helper method that calculates and moves the computer piece
      */
@@ -625,14 +641,7 @@ class Game extends React.Component {
         const visibility_arr = this.state.visibility_arr.slice();
 
         const map = helper.getMoveablePieces(game, squares, enemy);
-        if (map === undefined || map.length == 0) {
-            console.log('fuck you');
-            setTimeout(function () {
-                let status = 'Game Over - ' + (enemy === 'C' ? 'Player' : 'Computer') + ' ran out of possible moves.'; // there might be an error here
-                this.addToLog(status);
-                this.handleGameOver();
-            }.bind(this), 1000);
-            this.handleGameOver();
+        if (this.checkMoveSetEmpty(map)) {
             return;
         }
 
@@ -691,8 +700,6 @@ class Game extends React.Component {
             player_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
             computer_piece_count: [1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1],
         });
-
-        /*FIX ME add check if player can't move */
     }
 
     /**
@@ -865,6 +872,12 @@ class Game extends React.Component {
                 current_piece: null,
             })
             this.resetPieceCounts();
+
+            const map = helper.getMoveablePieces(game, squares, 'C');
+
+            if (this.checkMoveSetEmpty(map, 'C')) {
+                return;
+            }
         }
     }
 
