@@ -26,7 +26,11 @@ public class MoveController {
     private UserService userService;
 
     @RequestMapping(path="/newMove/{game_id}", method= RequestMethod.POST, headers = "Accept=application/json")
-    public @ResponseBody String newMove(@PathVariable int game_id) {
+    public @ResponseBody String newMove(@PathVariable int game_id,
+                                        @RequestParam int initial_position,
+                                        @RequestParam int end_position,
+                                        @RequestParam String description
+                                        ) {
 
         return "";
     }
