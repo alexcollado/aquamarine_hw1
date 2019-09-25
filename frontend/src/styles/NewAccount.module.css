@@ -1,0 +1,21 @@
+.login {
+    float: right;
+}
+
+.createAcc {
+    float: left;
+}
+
+.btn {
+    background-color: #5ceab3 !important;
+    border-color: #5ceab3 !important;
+}
+.btn:hover {
+    background-color: #53d3a0!important;
+    border-color: #53d3a0!important;
+}
+
+.titleDiv {
+    text-align: center;
+    margin-bottom: 5em;
+}
