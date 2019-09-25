@@ -518,10 +518,15 @@ class Game extends React.Component {
                 playerIsNext: !(this.state.playerIsNext),
             })
 
-            setTimeout(function () { this.handleComputerMove('P'); }.bind(this), 2000);
-            // if (this.checkMoveSetEmpty(map)) {
-                // return; FIXME
-            // }
+            setTimeout(function () { 
+                this.handleComputerMove('P'); 
+                const map = helper.getMoveablePieces(this.state.game, this.state.squares, 'C');
+                console.log(map);
+                if (this.checkMoveSetEmpty(map, 'C')) {
+                    return;
+                }
+            
+            }.bind(this), 2000);
         }
         this.setState({
             warning: warning,
@@ -774,7 +779,6 @@ class Game extends React.Component {
             }.bind(this), 4000);
         } else {
             clearInterval(temp);
-            // check if ended during computer's turn or player's turn 
         }
 
         this.addToLog(status);
@@ -818,9 +822,6 @@ class Game extends React.Component {
             left = 0;
         }
 
-        /**
-         * FIX ME: remove visibility_arr modification later
-         */
         const visibility_arr = this.state.visibility_arr.slice();
 
         for (var i = 0; i < piece_count.length; i++) {
@@ -840,9 +841,6 @@ class Game extends React.Component {
                 squares[index] = piece;
                 game[index] = playerIsNext ? 'P' : 'C';
 
-                /**
-                 * FIXME delete visibility to true later 
-                 */
                 visibility_arr[index] = true;
 
                 piece_count[i] = piece_count[i] - 1;
