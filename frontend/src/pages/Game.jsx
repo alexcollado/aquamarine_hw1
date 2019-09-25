@@ -979,7 +979,7 @@ class Game extends React.Component {
                                 {this.state.updated_log.map((item) =>
                                     <Fade key={item.id} collapse left exit={true} appear={true} enter={true}>
                                         <div className="card">
-                                            <div className="card-body justify-content-between">
+                                            <div className={`${styles['card-body']} card-body justify-content-between`}>
                                                 {item.text}
                                             </div>
                                         </div>

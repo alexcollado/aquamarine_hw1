@@ -151,3 +151,9 @@ ol, ul {
 .kbd-navigation .square:focus {
   background: #ddd;
 }
+
+.card-body{
+  padding: 1rem;
+  background-color: aquamarine;
+  box-shadow: 1px 1px 5px grey;
+}
