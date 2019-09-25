@@ -6,6 +6,8 @@ import UserMenu from './UserMenu';
 import NewAccount from './NewAccount';
 import Error from './Error';
 
+// test comment
+
 class App extends Component {
     render() {
         return (
