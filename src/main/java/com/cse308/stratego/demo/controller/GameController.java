@@ -42,7 +42,7 @@ public class GameController {
         System.out.println(player_id);
         int game_id = gameService.newGame(gamedto);
         gamedto.setId(game_id);
-        gameService.newGameMoves(gamedto, board);
+        //gameService.newGameMoves(gamedto, board);
 
         return "Saved";
     }
@@ -53,7 +53,7 @@ public class GameController {
     }
 
     @RequestMapping(path="/allGames", method= RequestMethod.GET, headers = "Accept=application/json")
-    public @ResponseBody Iterable<Game> getAllUsers() {
+    public @ResponseBody Iterable<Game> getAllGames() {
         return gameService.allGames();
     }
 }

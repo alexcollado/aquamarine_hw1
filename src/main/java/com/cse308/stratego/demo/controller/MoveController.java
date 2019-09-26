@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="/game")
+@RequestMapping(path="/api/move")
 public class MoveController {
 
 
@@ -31,22 +31,20 @@ public class MoveController {
     @Autowired
     private MoveService moveService;
 
-    @RequestMapping(path="/newMove/{game_id}", method= RequestMethod.POST, headers = "Accept=application/json")
-    public @ResponseBody String newMove(@PathVariable int game_id,
-                                        @RequestParam int initial_position,
-                                        @RequestParam int end_position,
+    @RequestMapping(path="/newMove/{player_id}/{game_id}", method= RequestMethod.POST, headers = "Accept=application/json")
+    public @ResponseBody String newMove(@PathVariable int player_id,
+                                        @PathVariable int game_id,
                                         @RequestParam String description
                                         ) {
         MoveDTO movedto = new MoveDTO()
                 .setDescription(description)
                 .setGame_id(game_id)
-                .setEnd_position(end_position)
-                .setStart_position(initial_position);
+                .setPlayer_id(player_id);
         moveService.newMove(movedto);
         return "";
     }
 
-    @RequestMapping(path="/gameMoves/{game_id}", method= RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(path="/gameMoves/{game_id}", method= RequestMethod.GET, headers = "Accept=application/json")
     public @ResponseBody Iterable<Move> gameMoves(@PathVariable int game_id) {
         return moveService.getMovesByGame(game_id);
     }

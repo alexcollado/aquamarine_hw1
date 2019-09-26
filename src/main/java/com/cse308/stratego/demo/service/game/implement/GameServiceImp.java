@@ -106,8 +106,8 @@ public class GameServiceImp implements GameService {
 
     @Override
     public List<Game> getGamesByPlayer(int player_id) {
-
-        List<Game> games = gameRepository.findByplayer(player_id);
+        System.out.println(player_id);
+        List<Game> games = gameRepository.findByplayer(userRepository.findById(player_id).get());
 
         if (games.isEmpty()) {
             return null;
