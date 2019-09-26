@@ -27,7 +27,7 @@ public class GameController {
 
 
     @RequestMapping(path="/newGame/{player_id}", method= RequestMethod.POST, headers = "Accept=application/json")
-    public @ResponseBody String newGame(@PathVariable int player_id, @RequestBody List<Integer> board) {
+    public @ResponseBody String newGame(@PathVariable int player_id) {
         Game n = new Game();
 
         Calendar calendar = Calendar.getInstance();
@@ -36,7 +36,7 @@ public class GameController {
 
         GameDTO gamedto = new GameDTO()
                 .setPlayer(player_id)
-                .setState("N")
+                .setState("O")
                 .setCreated(date.toString());
 
         System.out.println(player_id);
