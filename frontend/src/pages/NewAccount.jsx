@@ -34,16 +34,16 @@ class NewAccount extends Component {
         let form = event.target
         
         const acc = {
-            firstName: form.elements.firstName.value,
-            lastName: form.elements.lastName.value,
+            first_name: form.elements.firstName.value,
+            last_name: form.elements.lastName.value,
             email: form.elements.email.value,
             password: form.elements.password.value
         }
+        console.log(JSON.stringify(acc));
         fetch('api/user/addUser', {
             method: 'POST',
             body: JSON.stringify(acc),
             headers: {
-                Accept: 'application/json',
                 'Content-Type': 'application/json',
             }
         })
