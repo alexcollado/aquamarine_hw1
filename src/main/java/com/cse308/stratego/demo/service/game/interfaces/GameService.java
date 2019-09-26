@@ -11,8 +11,7 @@ import java.util.List;
 public interface GameService {
     int newGame(GameDTO gamedto);
     void newGameMoves(GameDTO gamedto, List board);
-    List<Move> getMovesByGame(GameDTO gameDTO);
     List<Game> allGames();
-    List<Game> getGamesByPlayer(GameDTO gamedto);
+    List<Game> getGamesByPlayer(int player_id);
 
 }

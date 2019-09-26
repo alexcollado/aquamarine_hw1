@@ -47,7 +47,12 @@ public class GameController {
         return "Saved";
     }
 
-    @RequestMapping(path="/allGames", method= RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(path="/playerGames/{player_id}", method= RequestMethod.GET, headers = "Accept=application/json")
+    public @ResponseBody Iterable<Game> playerGames(@PathVariable int player_id) {
+        return gameService.getGamesByPlayer(player_id);
+    }
+
+    @RequestMapping(path="/allGames", method= RequestMethod.GET, headers = "Accept=application/json")
     public @ResponseBody Iterable<Game> getAllUsers() {
         return gameService.allGames();
     }

@@ -52,11 +52,14 @@ public class UserController {
         int id = userService.verify(email, password);
 
         if (id == -1){
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
         }
         else{
+
             return ResponseEntity.status(HttpStatus.OK).body(id);
+
         }
     }
 }

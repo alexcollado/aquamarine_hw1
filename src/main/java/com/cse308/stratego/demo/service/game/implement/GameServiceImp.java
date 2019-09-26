@@ -32,9 +32,6 @@ public class GameServiceImp implements GameService {
     @Autowired
     private PieceRepository pieceRepository;
 
-    @Autowired
-    private MoveService moveService;
-
     @Override
     public int newGame(GameDTO gamedto) {
         Game game = new Game()
@@ -92,6 +89,7 @@ public class GameServiceImp implements GameService {
     }
 
 
+
     String mapPiece(int index) {
         int num = index % 10;
         // Ascii value of 'A'
@@ -105,20 +103,9 @@ public class GameServiceImp implements GameService {
         return String.valueOf((char)pre) + num;
     }
 
-    @Override
-    public List<Move> getMovesByGame(GameDTO gameDTO) {
-        List<Move> moves = moveRepository.findByGame_Id(gameDTO.getId());
-        if (moves.isEmpty()) {
-            return null;
-        }
-        else {
-            return moves;
-        }
-    }
 
     @Override
-    public List<Game> getGamesByPlayer(GameDTO gamedto) {
-        int player_id = gamedto.getPlayer();
+    public List<Game> getGamesByPlayer(int player_id) {
 
         List<Game> games = gameRepository.findByplayer(player_id);
 

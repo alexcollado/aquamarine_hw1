@@ -26,9 +26,9 @@ public class MoveDTO {
 
     private int piece_id;
 
-    private String start_position;
+    private int start_position;
 
-    private String end_position;
+    private int end_position;
 
     private String description;
 }

@@ -11,6 +11,8 @@ import com.cse308.stratego.demo.service.move.interfaces.MoveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cse308.stratego.demo.util.MoveUtil;
+
 import java.util.List;
 
 @Service
@@ -28,15 +30,15 @@ public class MoveServiceImp implements MoveService {
     @Autowired
     private PieceRepository pieceRepository;
 
+
     @Override
     public MoveDTO newMove(MoveDTO movedto) {
-        System.out.println("GAME_ID=" + movedto.getGame_id());
         Move move = new Move().setGame(gameRepository.findById(movedto.getGame_id()).get())
                 .setPlayer(userRepository.findById(movedto.getPlayer_id()).get())
                 .setCpu(movedto.isCpu())
                 .setPiece(pieceRepository.findById(movedto.getPiece_id()).get())
-                .setStart_position(movedto.getStart_position())
-                .setEnd_position(movedto.getEnd_position())
+                .setStart_position(MoveUtil.mapIndexToPosition(movedto.getStart_position()))
+                .setEnd_position(MoveUtil.mapIndexToPosition(movedto.getEnd_position()))
                 .setDescription(movedto.getDescription());
 
         moveRepository.save(move);
@@ -48,6 +50,15 @@ public class MoveServiceImp implements MoveService {
         return null;
     }
 
-
+    @Override
+    public List<Move> getMovesByGame(int game_id) {
+        List<Move> moves = moveRepository.findByGame_Id(game_id);
+        if (moves.isEmpty()) {
+            return null;
+        }
+        else {
+            return moves;
+        }
+    }
 
 }
