@@ -381,6 +381,12 @@ class Game extends React.Component {
             ],
             id: this.state.id + 1,
         });
+
+        /**
+         * FIXME 
+         * 
+         * this is where we can send the log to the backend
+         */
     }
 
     /**
@@ -939,7 +945,7 @@ class Game extends React.Component {
                             </Container>
                             <Container className={`${styles['game-info']} my-2`}>
                                 <Row className="justify-content-md-center">
-                                    <Card className="my-2">
+                                    <Card className={`${styles['game_card']} my-2`}>
                                         <Card.Body>{status}</Card.Body>
                                         <Card.Body>{current_piece}</Card.Body>
                                     </Card>
@@ -947,22 +953,22 @@ class Game extends React.Component {
                                 <Row className="justify-content-md-center text-danger">
                                     <div>{warning}</div>
                                 </Row>
-                                <Row className="justify-content-md-left">
-                                    <Card className="my-2">
+                                <Row className="justify-content-md-center">
+                                    <Card className={`${styles['game_card']} my-2`}>
                                         <Card.Body>
                                             <ul>
-                                                <li className="my-1">🏳️ = Flag</li>
-                                                <li className="my-1">💣 = Bomb</li>
-                                                <li className="my-1">😇 = Spy [1]</li>
-                                                <li className="my-1">🤡 = Scout [2]</li>
-                                                <li className="my-1">🤠 = Miner [3]</li>
-                                                <li className="my-1">🤑 = Sergeant [4]</li>
-                                                <li className="my-1">😂 = Lieutenant [5]</li>
-                                                <li className="my-1">😭 = Captain [6]</li>
-                                                <li className="my-1">🤮 = Major [7]</li>
-                                                <li className="my-1">😤 = Colonel [8]</li>
-                                                <li className="my-1">🤬 = General [9]</li>
-                                                <li className="my-1">😈 = Marshal [10]</li>
+                                                <li className="my-1"><span role="img">🏳️</span> = Flag</li>
+                                                <li className="my-1"><span role="img">💣</span> = Bomb</li>
+                                                <li className="my-1"><span role="img">😇</span> = Spy [1]</li>
+                                                <li className="my-1"><span role="img">🤡</span> = Scout [2]</li>
+                                                <li className="my-1"><span role="img">🤠</span> = Miner [3]</li>
+                                                <li className="my-1"><span role="img">🤑</span> = Sergeant [4]</li>
+                                                <li className="my-1"><span role="img">😂</span> = Lieutenant [5]</li>
+                                                <li className="my-1"><span role="img">😭</span> = Captain [6]</li>
+                                                <li className="my-1"><span role="img">🤮</span> = Major [7]</li>
+                                                <li className="my-1"><span role="img">😤</span> = Colonel [8]</li>
+                                                <li className="my-1"><span role="img">🤬</span> = General [9]</li>
+                                                <li className="my-1"><span role="img">😈</span> = Marshal [10]</li>
                                             </ul>
                                         </Card.Body>
                                     </Card>
@@ -1002,7 +1008,7 @@ class Game extends React.Component {
                             <TransitionGroup>
                                 {this.state.updated_log.map((item) =>
                                     <Fade key={item.id} collapse left exit={true} appear={true} enter={true}>
-                                        <div className="card">
+                                        <div className={`${styles['game_card']} my-2`}>
                                             <div className={`${styles['card-body']} card-body justify-content-between`}>
                                                 {item.text}
                                             </div>
@@ -1019,10 +1025,3 @@ class Game extends React.Component {
 }
 
 export default Game;
-
-// ========================================
-
-// ReactDOM.render(
-    // { <Game />, }
-    // document.getElementById('root')
-// );
