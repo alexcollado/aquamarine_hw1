@@ -373,6 +373,19 @@ class Game extends React.Component {
         this.state.id = this.state.updated_log.length;
     }
 
+    componentDidMount() {
+        // fetch(`api/user/getUser/${this.props.playerID}`, {
+            // method: 'GET',
+        // })
+        // .then(response => {
+            // return response.json();
+        // })
+        // .then(data => {
+            // this.setState({
+            // })
+        // })
+    }
+
     addToLog(log_item) {
         this.setState({
             updated_log: [
@@ -384,7 +397,31 @@ class Game extends React.Component {
 
         /**
          * FIXME 
-         * 
+         * fetch('api/user/login', {
+            method: 'POST',
+            body: JSON.stringify(acc),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            if(data === -1) {
+                if(this._isMounted)
+                    this.setState({
+                        validUser: false
+                    })
+            }
+            else {
+                this.props.authorize(data);
+                if(this._isMounted)
+                    this.setState({
+                        validUser: true
+                    })
+            }
+        })
          * this is where we can send the log to the backend
          */
     }
@@ -756,6 +793,38 @@ class Game extends React.Component {
         this.setState({
             gameOver: true,
         });
+
+        /**
+         * FIXME 
+         * 
+         * fetch('api/user/login', {
+            method: 'POST',
+            body: JSON.stringify(acc),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            if(data === -1) {
+                if(this._isMounted)
+                    this.setState({
+                        validUser: false
+                    })
+            }
+            else {
+                this.props.authorize(data);
+                if(this._isMounted)
+                    this.setState({
+                        validUser: true
+                    })
+            }
+        })
+
+         * this is where we can send the final game data
+         */
     }
 
     /**

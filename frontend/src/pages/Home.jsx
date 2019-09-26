@@ -74,8 +74,9 @@ class Home extends Component {
                     <Row className="justify-content-md-center">
                         <Col md={6}>
                             <div className={styles.titleDiv}>
-                                <h1 className={styles.title}>Stratego</h1>
+                                <h1 className={styles.title}>Strateg<span className={styles.emoji}>🤣</span></h1>
                                 <h5>The classic game of battlefield strategy</h5>
+                                <h6>updated for today's millenials</h6>
                             </div>
 
                             <Form onSubmit={this.handleSubmit}>
