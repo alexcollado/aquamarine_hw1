@@ -29,8 +29,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/user/allUsers").denyAll()
-                .anyRequest().permitAll();
-
+                .anyRequest().permitAll()
+                .and().csrf().disable();
     }
 
     @Bean
