@@ -91,7 +91,7 @@ function Piece(props) {
                     <Button className={`${styles['player-piece']}`}>
                         {display}
                     </Button>
-                    <div className={`${styles['text-center']} ${styles['piece-count']}`}>
+                    <div className={`text-center ${styles['piece-count']}`}>
                         {'x' + props.count}
                     </div>
                 </div>
@@ -102,7 +102,7 @@ function Piece(props) {
                     <Button className={`${styles['player-piece']}`} onClick={props.onClick}>
                         {display}
                     </Button>
-                    <div className={`${styles['text-center']} ${styles['piece-count']}`}>
+                    <div className={`text-center ${styles['piece-count']}`}>
                         {'x' + props.count}
                     </div>
                 </div>
@@ -114,7 +114,7 @@ function Piece(props) {
                 <Button className={`${styles['computer-piece']}`}>
                     {display}
                 </Button>
-                <div className={`${styles['text-center']} ${styles['piece-count']}`}>
+                <div className={`text-center ${styles['piece-count']}`}>
                     {'x' + props.count}
                 </div>
             </div>
@@ -520,14 +520,14 @@ class Game extends React.Component {
                 playerIsNext: !(this.state.playerIsNext),
             })
 
-            setTimeout(function () { 
-                this.handleComputerMove('P'); 
+            setTimeout(function () {
+                this.handleComputerMove('P');
                 const map = helper.getMoveablePieces(this.state.game, this.state.squares, 'C');
                 console.log(map);
                 if (this.checkMoveSetEmpty(map, 'C')) {
                     return;
                 }
-            
+
             }.bind(this), 2000);
         }
         this.setState({
@@ -942,6 +942,26 @@ class Game extends React.Component {
                                 </Row>
                                 <Row className="justify-content-md-center text-danger">
                                     <div>{warning}</div>
+                                </Row>
+                                <Row className="justify-content-md-left">
+                                    <Card className="my-2">
+                                        <Card.Body>
+                                            <ul>
+                                                <li className="my-1">🏳️ = Flag</li>
+                                                <li className="my-1">💣 = Bomb</li>
+                                                <li className="my-1">😇 = Spy [1]</li>
+                                                <li className="my-1">🤡 = Scout [2]</li>
+                                                <li className="my-1">🤠 = Miner [3]</li>
+                                                <li className="my-1">🤑 = Sergeant [4]</li>
+                                                <li className="my-1">😂 = Lieutenant [5]</li>
+                                                <li className="my-1">😭 = Captain [6]</li>
+                                                <li className="my-1">🤮 = Major [7]</li>
+                                                <li className="my-1">😤 = Colonel [8]</li>
+                                                <li className="my-1">🤬 = General [9]</li>
+                                                <li className="my-1">😈 = Marshal [10]</li>
+                                            </ul>
+                                        </Card.Body>
+                                    </Card>
                                 </Row>
                             </Container>
                         </Col>
