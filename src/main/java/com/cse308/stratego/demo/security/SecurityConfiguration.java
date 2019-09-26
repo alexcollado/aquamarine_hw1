@@ -28,6 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
+                .antMatchers("/user/allUsers").denyAll()
                 .anyRequest().permitAll()
                 .and().csrf().disable();
     }
