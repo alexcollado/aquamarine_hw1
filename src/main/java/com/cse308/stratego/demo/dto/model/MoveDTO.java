@@ -22,13 +22,5 @@ public class MoveDTO {
 
     private int player_id;
 
-    private boolean isCpu;
-
-    private int piece_id;
-
-    private String start_position;
-
-    private String end_position;
-
     private String description;
 }

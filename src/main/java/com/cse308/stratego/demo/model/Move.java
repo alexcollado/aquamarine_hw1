@@ -32,13 +32,10 @@ public class Move {
     @JoinColumn(name="piece_id", referencedColumnName = "id")
     private Piece piece;
 
-    @Column(name="start_position", nullable=false, length = 3)
     private String start_position;
 
-    @Column(name="end_position", nullable=false, length = 3)
     private String end_position;
 
-    @Column(name="description", nullable=false)
     private String description;
 
 

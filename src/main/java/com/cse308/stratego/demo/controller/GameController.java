@@ -18,11 +18,6 @@ import java.util.List;
 @RequestMapping(path="/api/game")
 public class GameController {
 
-    @Autowired
-    private GameRepository gameRepository;
-
-    @Autowired
-    private MoveRepository moveRepository;
 
     @Autowired
     private GameService gameService;
@@ -31,7 +26,7 @@ public class GameController {
     private UserService userService;
 
 
-    @GetMapping(path="/newGame/{player_id}")
+    @RequestMapping(path="/newGame/{player_id}", method= RequestMethod.POST, headers = "Accept=application/json")
     public @ResponseBody String newGame(@PathVariable int player_id, @RequestBody List<Integer> board) {
         Game n = new Game();
 
@@ -41,17 +36,24 @@ public class GameController {
 
         GameDTO gamedto = new GameDTO()
                 .setPlayer(player_id)
-                .setState("New Game")
+                .setState("N")
                 .setCreated(date.toString());
 
-        gameService.newGame(gamedto);
-        gameService.newGameMoves(gamedto, board);
+        System.out.println(player_id);
+        int game_id = gameService.newGame(gamedto);
+        gamedto.setId(game_id);
+        //gameService.newGameMoves(gamedto, board);
 
         return "Saved";
     }
 
-    @GetMapping(path="/allGames")
-    public @ResponseBody Iterable<Game> getAllUsers() {
-        return gameRepository.findAll();
+    @RequestMapping(path="/playerGames/{player_id}", method= RequestMethod.GET, headers = "Accept=application/json")
+    public @ResponseBody Iterable<Game> playerGames(@PathVariable int player_id) {
+        return gameService.getGamesByPlayer(player_id);
+    }
+
+    @RequestMapping(path="/allGames", method= RequestMethod.GET, headers = "Accept=application/json")
+    public @ResponseBody Iterable<Game> getAllGames() {
+        return gameService.allGames();
     }
 }

@@ -9,9 +9,9 @@ import java.util.List;
 
 //@Service
 public interface GameService {
-    void newGame(GameDTO gamedto);
+    int newGame(GameDTO gamedto);
     void newGameMoves(GameDTO gamedto, List board);
-    List<Move> getMovesByGame(GameDTO gameDTO);
-    List<Game> getGamesByPlayer(GameDTO gamedto);
+    List<Game> allGames();
+    List<Game> getGamesByPlayer(int player_id);
 
 }

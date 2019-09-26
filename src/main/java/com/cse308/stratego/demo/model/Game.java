@@ -23,7 +23,7 @@ public class Game {
     @JoinColumn(name="player_id", referencedColumnName = "id")
     private User player;
 
-    @Column(name="game_state", length = 1)
+    @Column(name="game_state", length = 20)
     private String state;
 
     private Date created;

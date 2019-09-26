@@ -20,6 +20,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
     public @ResponseBody String addNewUser (@RequestBody Person person) {
         System.out.println(person);
@@ -55,12 +56,12 @@ public class UserController {
     }
 
 
-    @GetMapping(path="/getUser/{player_id}")
+    @RequestMapping(path="/getUser/{player_id}", method= RequestMethod.GET, headers = "Accept=application/json")
     public @ResponseBody UserDTO getUser(@PathVariable int player_id) {
         return userService.findUserById(player_id);
     }
 
-    @GetMapping(path="/allUsers")
+    @RequestMapping(path="/allUsers", method= RequestMethod.GET, headers = "Accept=application/json")
     public @ResponseBody Iterable<UserDTO> getAllUsers() {
 
         return userService.findAll();
@@ -76,7 +77,9 @@ public class UserController {
 
         }
         else{
+
             return ResponseEntity.status(HttpStatus.OK).body(id);
+
         }
     }
 
