@@ -13,64 +13,75 @@ class NewAccount extends Component {
         super(props);
     
         this.state = {
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: ""
+            validCredentials: true,
+            accepted: false,
         };
     }
     
-    validateForm() {
-        return this.state.email.length > 0 && this.state.password.length > 0;
-    }
-    
-    handleChange = event => {
-        this.setState({
-          [event.target.id]: event.target.value
-        });
-    }
-    
     handleSubmit = event => {
-        let form = event.target
+            let form = event.target
         
-        const acc = {
-            first_name: form.elements.firstName.value,
-            last_name: form.elements.lastName.value,
-            email: form.elements.email.value,
-            password: form.elements.password.value
-        }
-        console.log(JSON.stringify(acc));
-        fetch('api/user/addUser', {
-            method: 'POST',
-            body: JSON.stringify(acc),
-            headers: {
-                'Content-Type': 'application/json',
+            const acc = {
+                first_name: form.elements.firstName.value,
+                last_name: form.elements.lastName.value,
+                email: form.elements.email.value,
+                password: form.elements.password.value
             }
-        })
-        .then(response => {
-            console.log(response);
-        })
-        event.preventDefault();
+            console.log(JSON.stringify(acc));
+            fetch('api/user/addUser', {
+                method: 'POST',
+                body: JSON.stringify(acc),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                if(response.status !== 200) {
+                    return null;
+                }
+                return response;
+            })
+            .then(data => {
+                if(data === null) {
+                    this.setState({
+                        validCredentials: false
+                    })
+                }
+                else {
+                    this.setState({
+                        accepted: true,
+                        validCredentials: true
+                    })
+                }
+            })
+            event.preventDefault();
     }
 
     render() {
+        let validMessage = "";
+        let invalidMessage = ""
+        if(this.state.accepted) validMessage = "Account successfully created! Please return to the login page to login."
+        if(!this.state.validCredentials) invalidMessage = "An account with that email has already been taken."
         return (
             <Fragment>
                 <Container>
                     <Row className="justify-content-md-center">
                         <Col md={6}>
                             <div className={styles.titleDiv}>
-                                {/* <h1 className={styles.title}>Stratego</h1> */}
                                 <h4>New Account</h4>
                             </div>
 
+                            <div>
+                                <h6 className={styles.validMessage}>{validMessage}</h6>
+                                <h6 className={styles.invalidMessage}>{invalidMessage}</h6>
+                            </div>
                             <Form onSubmit={this.handleSubmit}>
                                 <Form.Group controlId="firstName">
                                     <Form.Label>First Name</Form.Label>
 
                                     <Form.Control 
+                                        required
                                         type="firstName" 
-                                        // inputRef={input => this.textInput = input}
                                         placeholder="Enter first name" 
                                         value={this.state.firstName}
                                         onChange={this.handleChange}
@@ -81,6 +92,7 @@ class NewAccount extends Component {
                                     <Form.Label>Last Name</Form.Label>
 
                                     <Form.Control 
+                                        required
                                         type="lastName" 
                                         placeholder="Enter last name" 
                                         value={this.state.lastName}
@@ -92,6 +104,7 @@ class NewAccount extends Component {
                                     <Form.Label>Email address</Form.Label>
 
                                     <Form.Control 
+                                        required
                                         type="email" 
                                         placeholder="Enter email" 
                                         value={this.state.email}
@@ -106,6 +119,7 @@ class NewAccount extends Component {
                                 <Form.Group controlId="password">
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control 
+                                        required
                                         type="password" 
                                         placeholder="Enter password" 
                                         value={this.state.password}
@@ -124,7 +138,6 @@ class NewAccount extends Component {
 
                                     <Link to="/">
                                         <Button 
-                                            type="submit"
                                             className={`${styles.login} ${styles.btn}`}
                                         >
                                             Return to Login

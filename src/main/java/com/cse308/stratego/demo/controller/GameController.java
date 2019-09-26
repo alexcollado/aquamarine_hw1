@@ -7,6 +7,8 @@ import com.cse308.stratego.demo.repository.MoveRepository;
 import com.cse308.stratego.demo.service.game.interfaces.GameService;
 import com.cse308.stratego.demo.service.user.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Time;
@@ -48,8 +50,12 @@ public class GameController {
     }
 
     @RequestMapping(path="/playerGames/{player_id}", method= RequestMethod.GET, headers = "Accept=application/json")
-    public @ResponseBody Iterable<Game> playerGames(@PathVariable int player_id) {
-        return gameService.getGamesByPlayer(player_id);
+    public @ResponseBody ResponseEntity<List<Game>> playerGames(@PathVariable int player_id) {
+        List<Game> games = gameService.getGamesByPlayer(player_id);
+        if(games == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(games);
     }
 
     @RequestMapping(path="/allGames", method= RequestMethod.GET, headers = "Accept=application/json")

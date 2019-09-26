@@ -24,6 +24,10 @@
     margin-bottom: 5em;
 }
 
-.emoji{
+.emoji {
     font-size: 64px;
+}
+
+.credMessage {
+    color: #ea6a5c
 }

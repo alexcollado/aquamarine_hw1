@@ -10,6 +10,8 @@ import com.cse308.stratego.demo.service.game.interfaces.GameService;
 import com.cse308.stratego.demo.service.move.interfaces.MoveService;
 import com.cse308.stratego.demo.service.user.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Time;
@@ -45,8 +47,9 @@ public class MoveController {
     }
 
     @RequestMapping(path="/gameMoves/{game_id}", method= RequestMethod.GET, headers = "Accept=application/json")
-    public @ResponseBody Iterable<Move> gameMoves(@PathVariable int game_id) {
-        return moveService.getMovesByGame(game_id);
+    public @ResponseBody ResponseEntity<List<Move>> gameMoves(@PathVariable int game_id) {
+        List<Move> moves = moveService.getMovesByGame(game_id);
+        return ResponseEntity.status(HttpStatus.OK).body(moves);
     }
 
 }

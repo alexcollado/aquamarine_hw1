@@ -1,0 +1,58 @@
+.spinner {
+    color: #5ceab3 !important;
+}
+
+.loadingDiv {
+    text-align: center;
+    margin-top: 30vh;
+}
+
+.loadMessageDiv {
+    margin-top: 2em;
+}
+
+.title {
+    font-size: 104px;
+}
+
+.titleDiv {
+    text-align: center;
+    margin-bottom: 3em;
+}
+
+.btnDiv {
+    text-align: center;
+}
+
+.signOutBtn {
+    background-color: #ea6a5c !important;
+    border-color: #ea6a5c !important;
+}
+
+.signOutBtn:hover {
+    background-color: #d35d53 !important;
+    border-color: #d35d53 !important;
+}
+
+.btn {
+    background-color: #5ceab3 !important;
+    border-color: #5ceab3 !important;
+}
+
+.btn:hover {
+    background-color: #53d3a0!important;
+    border-color: #53d3a0!important;
+}
+
+.playBtn {
+    width: 10em;
+    margin-bottom: 2em;
+}
+
+.playLink {
+    margin-bottom: 2em;
+}
+
+.gameTable {
+    text-align: center;
+}

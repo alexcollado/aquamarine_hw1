@@ -15,7 +15,8 @@ class Home extends Component {
         super(props);
     
         this.state = {
-          validUser: false
+          validUser: false,
+          validCredentials: true
         };
     }
 
@@ -34,7 +35,6 @@ class Home extends Component {
             email: form.elements.email.value,
             password: form.elements.password.value
         }
-        console.log(acc);
         fetch('api/user/login', {
             method: 'POST',
             body: JSON.stringify(acc),
@@ -43,13 +43,17 @@ class Home extends Component {
             }
         })
         .then(response => {
+            if(response.status !== 200) {
+                return null;
+            }
             return response.json();
         })
         .then(data => {
-            if(data === -1) {
+            if(data === -1 || data === null) {
                 if(this._isMounted)
                     this.setState({
-                        validUser: false
+                        validUser: false,
+                        validCredentials: false
                     })
             }
             else {
@@ -68,6 +72,8 @@ class Home extends Component {
     }
 
     render() {
+        let invalidMessage = "";
+        if(!this.state.validCredentials) invalidMessage = "Invalid Credentials!";
         return (
             <Fragment>
                 <Container>
@@ -79,11 +85,15 @@ class Home extends Component {
                                 <h6>updated for today's millenials</h6>
                             </div>
 
+                            <div>
+                                <h6 className={styles.credMessage}>{invalidMessage}</h6>
+                            </div>
                             <Form onSubmit={this.handleSubmit}>
                                 <Form.Group controlId="email">
                                     <Form.Label>Email address</Form.Label>
 
                                     <Form.Control 
+                                        required
                                         type="email" 
                                         placeholder="Enter email" 
                                         value={this.state.email}
@@ -98,6 +108,7 @@ class Home extends Component {
                                 <Form.Group controlId="password">
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control 
+                                        required
                                         type="password" 
                                         placeholder="Password" 
                                         value={this.state.password}

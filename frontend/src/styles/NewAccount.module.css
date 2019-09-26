@@ -19,3 +19,11 @@
     text-align: center;
     margin-bottom: 5em;
 }
+
+.validMessage {
+    color: #5ceab3;
+}
+
+.invalidMessage {
+    color: #ea6a5c;
+}
