@@ -188,15 +188,15 @@ class Board extends React.Component {
         } else if (this.props.game[i] === 'X') {
             return (
                 <Square
-                    value={this.props.squares[i]}
-                    onClick={() => this.props.onClick(i)} /*FIXME add checks for water */
+                    value={helper.getDisplay(this.props.game[i])}
+                    onClick={() => this.props.onClick(i)} 
                     isWater={true}
                 />
             );
         } else {
             return (
                 <Square
-                    value={this.props.squares[i]}
+                    value={helper.getDisplay(this.props.game[i])}
                     onClick={() => this.props.onClick(i)}
                     isWater={false}
                 />
