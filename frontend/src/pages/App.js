@@ -24,7 +24,7 @@ class App extends Component {
     }
 
     render() {
-        console.log(this.state.isAuthed);
+        console.log(this.state.isAuthed, this.state.playerID);
         return (
             <Fragment>
                 <Router>
