@@ -47,9 +47,9 @@ export function getDisplay(value){
         case 10:
             return "😈";
         case null:
-            return "🌱";
+            return "🌳";
         case 'X':
-            return "💦";
+            return "🌊";
         default:
             return value;
     }

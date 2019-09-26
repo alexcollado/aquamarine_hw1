@@ -2,6 +2,10 @@ ol, ul {
   padding-left: 30px;
 }
 
+.opacity_low{
+  opacity: 0.7;
+}
+
 .piece-count{
   margin-bottom: 20px;
 }
@@ -76,7 +80,8 @@ ol, ul {
   border: 1px solid #000 !important;
   box-shadow: 2px 2px 3px rgba(0,0,0,0.5);
   margin: 5px;
-  font-size: 20px;
+  font-size: 22px !important;
+  vertical-align: middle;
   font-weight: bold;
   line-height: 34px;
   height: 34px;
@@ -115,7 +120,8 @@ ol, ul {
   box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
   border: 1px solid #000 !important;
   margin: 5px;
-  font-size: 20px;
+  font-size: 22px !important;
+  vertical-align: middle;
   font-weight: bold;
   line-height: 34px;
   height: 34px;

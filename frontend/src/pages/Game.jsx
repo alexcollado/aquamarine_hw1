@@ -18,14 +18,18 @@ function Square(props) {
     if (props.isWater) {
         return (
             <button className={styles.water} onClick={props.onClick}>
-                {props.value}
+                <span className={styles.opacity_low}>
+                    {props.value}
+                </span>
             </button>
         );
 
     } else {
         return (
             <button className={styles.square} onClick={props.onClick}>
-                {props.value}
+                <span className={styles.opacity_low}>
+                    {props.value}
+                </span>
             </button>
         );
 
