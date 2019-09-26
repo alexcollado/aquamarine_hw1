@@ -1,5 +1,5 @@
 import React, {Fragment, Component} from 'react';
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch, Redirect } from "react-router-dom";
 import styles from '../styles/Home.module.css';
 
 import Container from 'react-bootstrap/Container';
@@ -9,27 +9,62 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 class Home extends Component {
+    _isMounted = false;
+
     constructor(props) {
         super(props);
     
         this.state = {
-          email: "",
-          password: ""
+          validUser: false
         };
+    }
+
+    componentDidMount() {
+        this._isMounted = true;
     }
     
     validateForm() {
         return this.state.email.length > 0 && this.state.password.length > 0;
     }
     
-    handleChange = event => {
-        this.setState({
-          [event.target.id]: event.target.value
-        });
-    }
-    
     handleSubmit = event => {
+        let form = event.target
+        
+        const acc = {
+            email: form.elements.email.value,
+            password: form.elements.password.value
+        }
+        console.log(acc);
+        fetch('api/user/login', {
+            method: 'POST',
+            body: JSON.stringify(acc),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            if(data === -1) {
+                if(this._isMounted)
+                    this.setState({
+                        validUser: false
+                    })
+            }
+            else {
+                this.props.authorize(data);
+                if(this._isMounted)
+                    this.setState({
+                        validUser: true
+                    })
+            }
+        })
         event.preventDefault();
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     render() {
