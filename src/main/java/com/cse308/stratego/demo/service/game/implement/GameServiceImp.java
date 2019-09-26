@@ -110,9 +110,11 @@ public class GameServiceImp implements GameService {
         List<Game> games = gameRepository.findByplayer(userRepository.findById(player_id).get());
 
         if (games.isEmpty()) {
+            System.out.println("No games");
             return null;
         }
         else {
+            System.out.println("Has games");
             return games;
         }
     }

@@ -23,8 +23,14 @@ class App extends Component {
         })
     }
 
+    signOut = () => {
+        this.setState({
+            isAuthed: false,
+            playerID: -1
+        })
+    }
+
     render() {
-        console.log(this.state.isAuthed, this.state.playerID);
         return (
             <Fragment>
                 <Router>
@@ -45,7 +51,7 @@ class App extends Component {
                         )}/>
                         <Route path="/menu" render={() => (
                             this.state.isAuthed ? (
-                                <UserMenu playerID={this.state.playerID} />
+                                <UserMenu playerID={this.state.playerID} signOut={this.signOut} />
                             ) : (
                                 <Redirect to="/" />
                             )
@@ -64,17 +70,5 @@ class App extends Component {
         );
     }
 }
-
-// class PrivateRoute extends Route {
-//     render() {
-//         console.log(this.props.isAuthenticated)
-//         return this.props.isAuthenticated
-//             ? super.render()
-//             : <Redirect to={{
-//                 pathname: '/',
-//                 state: {from: this.props.location}
-//             }}/>;
-//     }
-// }
 
 export default App;
