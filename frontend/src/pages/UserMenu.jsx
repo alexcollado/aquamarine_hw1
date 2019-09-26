@@ -56,7 +56,6 @@ class UserMenu extends Component {
                     }
                     arr.push(game);
                 }
-                console.log(arr)
                 this.setState({
                     games: arr
                 })

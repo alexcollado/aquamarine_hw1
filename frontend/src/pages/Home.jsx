@@ -35,7 +35,6 @@ class Home extends Component {
             email: form.elements.email.value,
             password: form.elements.password.value
         }
-        // console.log("BRUH",acc);
         fetch('api/user/login', {
             method: 'POST',
             body: JSON.stringify(acc),

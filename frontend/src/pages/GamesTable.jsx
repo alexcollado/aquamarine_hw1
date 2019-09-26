@@ -64,14 +64,13 @@ class UserMenu extends Component {
                 let cur = this.state.allMoves.find(function(elem) {
                     return elem.id === games[i].id
                 })
-                console.log(cur);
                 gameRows.push([
                         <tr key={`wlgame${i}`}>
                             <td key={`stgame${i}`}>{`${games[i].state}`}</td>
                             <td key={`mvgame${i}`}>
-                                <ul>
-                                    {cur.moves.map(item => {
-                                        return <li>{item.description}</li>;
+                                <ul key={`ulgame${i}`}>
+                                    {cur.moves.map((item, index) => {
+                                        return <li key={`ulgame${i}${index}`}>{item.description}</li>;
                                     })}
                                 </ul>
                             </td>
