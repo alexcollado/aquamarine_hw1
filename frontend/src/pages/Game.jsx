@@ -33,6 +33,7 @@ function Square(props) {
 }
 
 function OccupiedSquare(props) {
+    let display = helper.getDisplay(props.value)
     if (props.owner === 'P') {
         if (props.isVisible) { //add white border
             return (
@@ -40,7 +41,7 @@ function OccupiedSquare(props) {
                     <HeadShake>
                         <Button className={`${styles['player-piece']} mx-auto my-auto ${styles['visible-border']}`}
                             onClick={props.onClick}>
-                            {props.value}
+                            {display}
                         </Button>
                     </HeadShake>
                 </div>
@@ -51,7 +52,7 @@ function OccupiedSquare(props) {
                     <HeadShake>
                         <Button className={`${styles['player-piece']} mx-auto my-auto`}
                             onClick={props.onClick}>
-                            {props.value}
+                            {display}
                         </Button>
                     </HeadShake>
                 </div>
@@ -63,7 +64,7 @@ function OccupiedSquare(props) {
                 <div className={styles.square}>
                     <HeadShake>
                         <Button className={`${styles['computer-piece']} mx-auto my-auto`} onClick={props.onClick}>
-                            {props.value}
+                            {display}
                         </Button>
                     </HeadShake>
                 </div>
@@ -82,12 +83,13 @@ function OccupiedSquare(props) {
 }
 
 function Piece(props) {
+    let display = helper.getDisplay(props.value)
     if (props.owner === 'P') {
         if (props.isDisabled) {
             return (
                 <div>
                     <Button className={`${styles['player-piece']}`}>
-                        {props.value}
+                        {display}
                     </Button>
                     <div className={`${styles['text-center']} ${styles['piece-count']}`}>
                         {'x' + props.count}
@@ -98,7 +100,7 @@ function Piece(props) {
             return (
                 <div>
                     <Button className={`${styles['player-piece']}`} onClick={props.onClick}>
-                        {props.value}
+                        {display}
                     </Button>
                     <div className={`${styles['text-center']} ${styles['piece-count']}`}>
                         {'x' + props.count}
@@ -110,7 +112,7 @@ function Piece(props) {
         return (
             <div>
                 <Button className={`${styles['computer-piece']}`}>
-                    {props.value}
+                    {display}
                 </Button>
                 <div className={`${styles['text-center']} ${styles['piece-count']}`}>
                     {'x' + props.count}

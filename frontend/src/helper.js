@@ -20,6 +20,16 @@ export function checkSetup(piece_count) {
     return (piece_count.reduce((x, y) => x + y) === 0);
 }
 
+export function getDisplay(value){
+    if(value === 'B'){
+        return "💣";
+    }else if(value === 'F'){
+        return "🏳️";
+    }else{
+        return value;
+    }
+}
+
 /**
  * Returns a warning if the move is not valid
  */
