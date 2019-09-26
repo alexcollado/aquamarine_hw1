@@ -2,12 +2,9 @@ ol, ul {
   padding-left: 30px;
 }
 
-
-/* .board-row:after { */
-  /* clear: both; */
-  /* content: ""; */
-  /* display: table; */
-/* } */
+.opacity_low{
+  opacity: 0.7;
+}
 
 .piece-count{
   margin-bottom: 20px;
@@ -33,7 +30,7 @@ ol, ul {
   float: left;
   font-size: 24px;
   font-weight: bold;
-  line-height: 34px;
+  line-height: 42px;
   height: 50px;
   margin-right: -1px;
   margin-top: -1px;
@@ -83,7 +80,8 @@ ol, ul {
   border: 1px solid #000 !important;
   box-shadow: 2px 2px 3px rgba(0,0,0,0.5);
   margin: 5px;
-  font-size: 20px;
+  font-size: 22px !important;
+  vertical-align: middle;
   font-weight: bold;
   line-height: 34px;
   height: 34px;
@@ -122,7 +120,8 @@ ol, ul {
   box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
   border: 1px solid #000 !important;
   margin: 5px;
-  font-size: 20px;
+  font-size: 22px !important;
+  vertical-align: middle;
   font-weight: bold;
   line-height: 34px;
   height: 34px;
@@ -150,10 +149,4 @@ ol, ul {
 
 .kbd-navigation .square:focus {
   background: #ddd;
-}
-
-.card-body{
-  padding: 1rem;
-  background-color: aquamarine;
-  box-shadow: 1px 1px 5px grey;
 }

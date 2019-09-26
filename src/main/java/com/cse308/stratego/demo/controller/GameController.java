@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="/game")
+@RequestMapping(path="/api/game")
 public class GameController {
 
 

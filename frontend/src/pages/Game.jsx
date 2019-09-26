@@ -18,14 +18,18 @@ function Square(props) {
     if (props.isWater) {
         return (
             <button className={styles.water} onClick={props.onClick}>
-                {props.value}
+                <span className={styles.opacity_low}>
+                    {props.value}
+                </span>
             </button>
         );
 
     } else {
         return (
             <button className={styles.square} onClick={props.onClick}>
-                {props.value}
+                <span className={styles.opacity_low}>
+                    {props.value}
+                </span>
             </button>
         );
 
@@ -33,6 +37,7 @@ function Square(props) {
 }
 
 function OccupiedSquare(props) {
+    let display = helper.getDisplay(props.value)
     if (props.owner === 'P') {
         if (props.isVisible) { //add white border
             return (
@@ -40,7 +45,7 @@ function OccupiedSquare(props) {
                     <HeadShake>
                         <Button className={`${styles['player-piece']} mx-auto my-auto ${styles['visible-border']}`}
                             onClick={props.onClick}>
-                            {props.value}
+                            {display}
                         </Button>
                     </HeadShake>
                 </div>
@@ -51,7 +56,7 @@ function OccupiedSquare(props) {
                     <HeadShake>
                         <Button className={`${styles['player-piece']} mx-auto my-auto`}
                             onClick={props.onClick}>
-                            {props.value}
+                            {display}
                         </Button>
                     </HeadShake>
                 </div>
@@ -63,7 +68,7 @@ function OccupiedSquare(props) {
                 <div className={styles.square}>
                     <HeadShake>
                         <Button className={`${styles['computer-piece']} mx-auto my-auto`} onClick={props.onClick}>
-                            {props.value}
+                            {display}
                         </Button>
                     </HeadShake>
                 </div>
@@ -82,14 +87,15 @@ function OccupiedSquare(props) {
 }
 
 function Piece(props) {
+    let display = helper.getDisplay(props.value)
     if (props.owner === 'P') {
         if (props.isDisabled) {
             return (
                 <div>
                     <Button className={`${styles['player-piece']}`}>
-                        {props.value}
+                        {display}
                     </Button>
-                    <div className={`${styles['text-center']} ${styles['piece-count']}`}>
+                    <div className={`text-center ${styles['piece-count']}`}>
                         {'x' + props.count}
                     </div>
                 </div>
@@ -98,9 +104,9 @@ function Piece(props) {
             return (
                 <div>
                     <Button className={`${styles['player-piece']}`} onClick={props.onClick}>
-                        {props.value}
+                        {display}
                     </Button>
-                    <div className={`${styles['text-center']} ${styles['piece-count']}`}>
+                    <div className={`text-center ${styles['piece-count']}`}>
                         {'x' + props.count}
                     </div>
                 </div>
@@ -110,9 +116,9 @@ function Piece(props) {
         return (
             <div>
                 <Button className={`${styles['computer-piece']}`}>
-                    {props.value}
+                    {display}
                 </Button>
-                <div className={`${styles['text-center']} ${styles['piece-count']}`}>
+                <div className={`text-center ${styles['piece-count']}`}>
                     {'x' + props.count}
                 </div>
             </div>
@@ -186,15 +192,15 @@ class Board extends React.Component {
         } else if (this.props.game[i] === 'X') {
             return (
                 <Square
-                    value={this.props.squares[i]}
-                    onClick={() => this.props.onClick(i)} /*FIXME add checks for water */
+                    value={helper.getDisplay(this.props.game[i])}
+                    onClick={() => this.props.onClick(i)} 
                     isWater={true}
                 />
             );
         } else {
             return (
                 <Square
-                    value={this.props.squares[i]}
+                    value={helper.getDisplay(this.props.game[i])}
                     onClick={() => this.props.onClick(i)}
                     isWater={false}
                 />
@@ -518,10 +524,15 @@ class Game extends React.Component {
                 playerIsNext: !(this.state.playerIsNext),
             })
 
-            setTimeout(function () { this.handleComputerMove('P'); }.bind(this), 2000);
-            // if (this.checkMoveSetEmpty(map)) {
-                // return; FIXME
-            // }
+            setTimeout(function () {
+                this.handleComputerMove('P');
+                const map = helper.getMoveablePieces(this.state.game, this.state.squares, 'C');
+                console.log(map);
+                if (this.checkMoveSetEmpty(map, 'C')) {
+                    return;
+                }
+
+            }.bind(this), 2000);
         }
         this.setState({
             warning: warning,
@@ -774,7 +785,6 @@ class Game extends React.Component {
             }.bind(this), 4000);
         } else {
             clearInterval(temp);
-            // check if ended during computer's turn or player's turn 
         }
 
         this.addToLog(status);
@@ -818,9 +828,6 @@ class Game extends React.Component {
             left = 0;
         }
 
-        /**
-         * FIX ME: remove visibility_arr modification later
-         */
         const visibility_arr = this.state.visibility_arr.slice();
 
         for (var i = 0; i < piece_count.length; i++) {
@@ -840,9 +847,6 @@ class Game extends React.Component {
                 squares[index] = piece;
                 game[index] = playerIsNext ? 'P' : 'C';
 
-                /**
-                 * FIXME delete visibility to true later 
-                 */
                 visibility_arr[index] = true;
 
                 piece_count[i] = piece_count[i] - 1;
@@ -942,6 +946,26 @@ class Game extends React.Component {
                                 </Row>
                                 <Row className="justify-content-md-center text-danger">
                                     <div>{warning}</div>
+                                </Row>
+                                <Row className="justify-content-md-left">
+                                    <Card className="my-2">
+                                        <Card.Body>
+                                            <ul>
+                                                <li className="my-1">🏳️ = Flag</li>
+                                                <li className="my-1">💣 = Bomb</li>
+                                                <li className="my-1">😇 = Spy [1]</li>
+                                                <li className="my-1">🤡 = Scout [2]</li>
+                                                <li className="my-1">🤠 = Miner [3]</li>
+                                                <li className="my-1">🤑 = Sergeant [4]</li>
+                                                <li className="my-1">😂 = Lieutenant [5]</li>
+                                                <li className="my-1">😭 = Captain [6]</li>
+                                                <li className="my-1">🤮 = Major [7]</li>
+                                                <li className="my-1">😤 = Colonel [8]</li>
+                                                <li className="my-1">🤬 = General [9]</li>
+                                                <li className="my-1">😈 = Marshal [10]</li>
+                                            </ul>
+                                        </Card.Body>
+                                    </Card>
                                 </Row>
                             </Container>
                         </Col>
