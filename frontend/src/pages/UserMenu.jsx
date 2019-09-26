@@ -41,15 +41,20 @@ class UserMenu extends Component {
                                 <div className={styles.titleDiv}>
                                     <h3 className={styles.title}>Welcome {this.state.name}</h3>
                                 </div>
+                                <Link to="/play">
+                                    <Button>
+                                        Play
+                                    </Button>
+                                </Link>
                             </Col>
                         </Row>
                     </Container>
                 </Fragment>
             );
         }
-        return {
-
-        }
+        return (
+            <div>loading</div>
+        )
     }
 }
 
