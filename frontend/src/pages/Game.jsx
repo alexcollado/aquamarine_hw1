@@ -790,11 +790,8 @@ class Game extends React.Component {
             gameOver: true,
         });
 
-        /*
-        let state = this.state.playerWon ? 'Won' : 'Lost'; /* FIXME add state change for winning or losing 
-        state = "Yeet";
-        console.log(this.state.game_id);
-        fetch(`api/game/setEndResult/${this.state.game_id}`, {
+        const state = this.state.playerWon ? "W" : "L";
+        fetch(`api/game/updateStatus/${this.state.game_id}`, {
             method: 'POST',
             body: JSON.stringify(state),
             headers: {
@@ -805,11 +802,8 @@ class Game extends React.Component {
             return response.json();
         })
         .then(data => {
-            setTimeout(() => {
-                console.log(data.description);
-            }, 2000);
-        })
-        */
+            console.log(data);
+        });
     }
 
     /**

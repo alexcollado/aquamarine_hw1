@@ -47,12 +47,6 @@ public class GameServiceImp implements GameService {
     }
 
     @Override
-    public Game findGameById(int id){
-        Game game = gameRepository.findById(id).get();
-        return game;
-    }
-
-    @Override
     public boolean updateGameStatus(int game_id, String state) {
         Optional<Game> game = gameRepository.findById(game_id);
         if (!game.isPresent()){
