@@ -667,12 +667,14 @@ class Game extends React.Component {
     checkMoveSetEmpty(map, enemy) {
         if (map === undefined || map.length == 0) {
             setTimeout(function () {
+                this.setState({
+                    playerWon: (enemy === 'C' ? false : true),
+                });
                 let status = 'Game Over - ' + (enemy === 'C' ? 'Player' : 'Computer') + ' ran out of possible moves.'; // there might be an error here
                 this.addToLog(status);
                 this.handleGameOver();
+                return true;
             }.bind(this), 1000);
-            this.handleGameOver();
-            return true;
         }
         return false;
     }
@@ -774,6 +776,9 @@ class Game extends React.Component {
 
         if (!i) {
             setTimeout(function () {
+                this.setState({
+                    playerWon: (piece_count_to_decrement === 'P' ? false : true),
+                });
                 let status = 'Game Over - ' + (piece_count_to_decrement === 'P' ? 'Computer' : 'Player') + ' won!';
                 this.addToLog(status);
                 this.handleGameOver();
@@ -791,6 +796,7 @@ class Game extends React.Component {
         });
 
         const state = this.state.playerWon ? "W" : "L";
+        console.log(state);
         fetch(`api/game/updateStatus/${this.state.game_id}`, {
             method: 'POST',
             body: JSON.stringify(state),

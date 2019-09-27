@@ -63,6 +63,7 @@ public class GameController {
 
     @RequestMapping(path="/updateStatus/{game_id}", method= RequestMethod.POST, headers = "Accept=application/json")
     public @ResponseBody boolean updateGameState(@PathVariable int game_id, @RequestBody String state){
+        System.out.println("state " + state);
         return gameService.updateGameStatus(game_id, state);
     }
 }
