@@ -28,6 +28,7 @@ public class GameController {
     private UserService userService;
 
 
+
     @RequestMapping(path="/newGame/{player_id}", method= RequestMethod.POST)
     public @ResponseBody GameDTO newGame(@PathVariable int player_id) {
         Game n = new Game();
@@ -38,7 +39,7 @@ public class GameController {
 
         GameDTO gamedto = new GameDTO()
                 .setPlayer(player_id)
-                .setState("N")
+                .setState("O")
                 .setCreated(date.toString());
 
         System.out.println(player_id);
@@ -62,7 +63,7 @@ public class GameController {
     }
 
     @RequestMapping(path="/updateStatus/{game_id}", method= RequestMethod.POST, headers = "Accept=application/json")
-    public @ResponseBody boolean updateGameState(@PathVariable int game_id, @RequestBody String state){
+    public @ResponseBody boolean updateGameState(@PathVariable int game_id, @RequestParam String state){
         System.out.println("state " + state);
         return gameService.updateGameStatus(game_id, state);
     }
