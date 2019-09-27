@@ -797,9 +797,8 @@ class Game extends React.Component {
 
         const state = this.state.playerWon ? "W" : "L";
         console.log(state);
-        fetch(`api/game/updateStatus/${this.state.game_id}`, {
+        fetch(`api/game/updateStatus/${this.state.game_id}/?state=${(state)}`, {
             method: 'POST',
-            body: JSON.stringify(state),
             headers: {
                 'Content-Type': 'application/json',
             }
