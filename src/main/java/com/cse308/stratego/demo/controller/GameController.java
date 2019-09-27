@@ -67,4 +67,9 @@ public class GameController {
     public @ResponseBody Iterable<Game> getAllGames() {
         return gameService.allGames();
     }
+
+    @RequestMapping(path="/updateStatus/{game_id}", method= RequestMethod.POST, headers = "Accept=application/json")
+    public @ResponseBody boolean updateGameState(@PathVariable int game_id, @RequestBody String state){
+        return gameService.updateGameStatus(game_id, state);
+    }
 }
