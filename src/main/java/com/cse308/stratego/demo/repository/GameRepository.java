@@ -15,4 +15,5 @@ import java.util.List;
 @Repository
 public interface GameRepository extends JpaRepository<Game, Integer> {
     List<Game> findByplayer(User player);
+
 }

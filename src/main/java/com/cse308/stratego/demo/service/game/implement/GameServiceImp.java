@@ -1,5 +1,6 @@
 package com.cse308.stratego.demo.service.game.implement;
 
+import com.cse308.stratego.demo.dto.mapper.GameDTOMapper;
 import com.cse308.stratego.demo.dto.model.GameDTO;
 import com.cse308.stratego.demo.dto.model.MoveDTO;
 import com.cse308.stratego.demo.model.Game;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GameServiceImp implements GameService {
@@ -42,6 +44,20 @@ public class GameServiceImp implements GameService {
         gameRepository.save(game);
         System.out.println("HAME ID IS" + game.getId());
         return game.getId();
+    }
+
+    @Override
+    public boolean updateGameStatus(int game_id, String state) {
+        Optional<Game> game = gameRepository.findById(game_id);
+        if (!game.isPresent()){
+            return false;
+        }
+        else{
+            game.get().setState(state);
+            gameRepository.save(game.get());
+        }
+
+        return true;
     }
 
     @Override

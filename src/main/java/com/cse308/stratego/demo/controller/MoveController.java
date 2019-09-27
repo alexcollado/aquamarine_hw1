@@ -34,21 +34,24 @@ public class MoveController {
     private MoveService moveService;
 
     @RequestMapping(path="/newMove/{player_id}/{game_id}", method= RequestMethod.POST, headers = "Accept=application/json")
-    public @ResponseBody String newMove(@PathVariable int player_id,
+    public @ResponseBody MoveDTO newMove(@PathVariable int player_id,
                                         @PathVariable int game_id,
-                                        @RequestParam String description
+                                        @RequestBody String description
                                         ) {
         MoveDTO movedto = new MoveDTO()
                 .setDescription(description)
                 .setGame_id(game_id)
                 .setPlayer_id(player_id);
         moveService.newMove(movedto);
-        return "";
+        return movedto;
     }
 
     @RequestMapping(path="/gameMoves/{game_id}", method= RequestMethod.GET, headers = "Accept=application/json")
     public @ResponseBody ResponseEntity<List<Move>> gameMoves(@PathVariable int game_id) {
         List<Move> moves = moveService.getMovesByGame(game_id);
+         if(moves == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(moves);
     }
 

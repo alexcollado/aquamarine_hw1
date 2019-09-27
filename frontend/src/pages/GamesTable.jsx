@@ -21,6 +21,9 @@ class UserMenu extends Component {
     }
 
     componentDidMount() {
+        /**
+         * add check if there are no moves
+         */
         const games = this.props.gameIDs;
         Promise.all(games.map(g => fetch(`api/move/gameMoves/${g.id}`, {
             method: 'GET',
@@ -43,6 +46,19 @@ class UserMenu extends Component {
                 let moveCont = {
                     id: g.id,
                     moves: arr
+                }
+                this.setState(prevState => ({
+                    allMoves: [...prevState.allMoves, moveCont],
+                }))
+                return data;
+            }else{
+                let arr = [];
+                arr.push({
+                    description: 'No moves recorded',
+                });
+                let moveCont = {
+                    id: g.id,
+                    moves: arr,
                 }
                 this.setState(prevState => ({
                     allMoves: [...prevState.allMoves, moveCont],
