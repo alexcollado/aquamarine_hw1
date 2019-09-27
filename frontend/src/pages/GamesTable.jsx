@@ -21,6 +21,9 @@ class UserMenu extends Component {
     }
 
     componentDidMount() {
+        /**
+         * add check if there are no moves
+         */
         const games = this.props.gameIDs;
         Promise.all(games.map(g => fetch(`api/move/gameMoves/${g.id}`, {
             method: 'GET',
@@ -32,6 +35,7 @@ class UserMenu extends Component {
             return response.json();
         })
         .then(data => {
+            console.log(data);
             if(data != null) {
                 let arr = [];
                 for(let i = 0; i < data.length; i++) {

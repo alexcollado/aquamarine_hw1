@@ -28,8 +28,8 @@ public class GameController {
     private UserService userService;
 
 
-    @RequestMapping(path="/newGame/{player_id}", method= RequestMethod.POST, headers = "Accept=application/json")
-    public @ResponseBody String newGame(@PathVariable int player_id, @RequestBody List<Integer> board) {
+    @RequestMapping(path="/newGame/{player_id}", method= RequestMethod.POST)
+    public @ResponseBody GameDTO newGame(@PathVariable int player_id) {
         Game n = new Game();
 
         Calendar calendar = Calendar.getInstance();
@@ -44,9 +44,14 @@ public class GameController {
         System.out.println(player_id);
         int game_id = gameService.newGame(gamedto);
         gamedto.setId(game_id);
-        //gameService.newGameMoves(gamedto, board);
+        return gamedto;
+    }
 
-        return "Saved";
+    @RequestMapping(path="/setEndResult/{game_id}", method= RequestMethod.POST, headers = "Accept=application/json")
+    public @ResponseBody Game newMove(@PathVariable int game_id,
+                                        @RequestBody String result
+                                        ) {
+        return null;
     }
 
     @RequestMapping(path="/playerGames/{player_id}", method= RequestMethod.GET, headers = "Accept=application/json")

@@ -1,5 +1,6 @@
 package com.cse308.stratego.demo.service.game.implement;
 
+import com.cse308.stratego.demo.dto.mapper.GameDTOMapper;
 import com.cse308.stratego.demo.dto.model.GameDTO;
 import com.cse308.stratego.demo.dto.model.MoveDTO;
 import com.cse308.stratego.demo.model.Game;
@@ -42,6 +43,12 @@ public class GameServiceImp implements GameService {
         gameRepository.save(game);
         System.out.println("HAME ID IS" + game.getId());
         return game.getId();
+    }
+
+    @Override
+    public Game findGameById(int id){
+        Game game = gameRepository.findById(id).get();
+        return game;
     }
 
     @Override

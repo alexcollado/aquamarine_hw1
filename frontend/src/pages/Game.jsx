@@ -363,27 +363,41 @@ class Game extends React.Component {
             playerIsNext: true,
             gameStart: false,
             gameOver: false,
+            playerWon: false,
             setupCompleted: false,
             fastForward: false,
             current_piece: null,
             current_index: null,
             warning: null,
             interval_id: null,
+            player_id: null,
+            game_id: null,
         };
         this.state.id = this.state.updated_log.length;
     }
 
     componentDidMount() {
-        // fetch(`api/user/getUser/${this.props.playerID}`, {
-            // method: 'GET',
-        // })
-        // .then(response => {
-            // return response.json();
-        // })
-        // .then(data => {
-            // this.setState({
-            // })
-        // })
+         fetch(`api/game/newGame/${this.props.playerID}`, {
+            method: 'POST',
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            this.setState({
+                player_id: data.player,
+                game_id: data.id,
+            });
+        })
+    }
+
+    componentWillUnmount(){
+        // this.handleQuit();
+        // if(this.state.gameOver){
+        //     console.log('game is actually over');
+        // }else{
+        //     console.log('unfinished');
+        // }
     }
 
     addToLog(log_item) {
@@ -395,11 +409,9 @@ class Game extends React.Component {
             id: this.state.id + 1,
         });
 
-        /**
-         * FIXME 
-         * fetch('api/user/login', {
+        fetch(`api/move/newMove/${this.state.player_id}/${this.state.game_id}`, {
             method: 'POST',
-            body: JSON.stringify(acc),
+            body: JSON.stringify(log_item),
             headers: {
                 'Content-Type': 'application/json',
             }
@@ -408,22 +420,8 @@ class Game extends React.Component {
             return response.json();
         })
         .then(data => {
-            if(data === -1) {
-                if(this._isMounted)
-                    this.setState({
-                        validUser: false
-                    })
-            }
-            else {
-                this.props.authorize(data);
-                if(this._isMounted)
-                    this.setState({
-                        validUser: true
-                    })
-            }
+            console.log(data.description);
         })
-         * this is where we can send the log to the backend
-         */
     }
 
     /**
@@ -538,8 +536,6 @@ class Game extends React.Component {
                     setupCompleted: true,
                     current_piece: null,
                 })
-
-                this.addToLog('Player setup completed');
             }
         }
     }
@@ -794,12 +790,13 @@ class Game extends React.Component {
             gameOver: true,
         });
 
-        /**
-         * FIXME 
-         * 
-         * fetch('api/user/login', {
+        /*
+        let state = this.state.playerWon ? 'Won' : 'Lost'; /* FIXME add state change for winning or losing 
+        state = "Yeet";
+        console.log(this.state.game_id);
+        fetch(`api/game/setEndResult/${this.state.game_id}`, {
             method: 'POST',
-            body: JSON.stringify(acc),
+            body: JSON.stringify(state),
             headers: {
                 'Content-Type': 'application/json',
             }
@@ -808,23 +805,11 @@ class Game extends React.Component {
             return response.json();
         })
         .then(data => {
-            if(data === -1) {
-                if(this._isMounted)
-                    this.setState({
-                        validUser: false
-                    })
-            }
-            else {
-                this.props.authorize(data);
-                if(this._isMounted)
-                    this.setState({
-                        validUser: true
-                    })
-            }
+            setTimeout(() => {
+                console.log(data.description);
+            }, 2000);
         })
-
-         * this is where we can send the final game data
-         */
+        */
     }
 
     /**
@@ -942,7 +927,6 @@ class Game extends React.Component {
                 setupCompleted: true,
                 current_piece: null,
             })
-            this.addToLog('Player setup completed');
         } else {
             this.addToLog('Computer setup completed')
             this.setState({
