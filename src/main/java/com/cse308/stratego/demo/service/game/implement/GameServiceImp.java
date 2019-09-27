@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GameServiceImp implements GameService {
@@ -49,6 +50,20 @@ public class GameServiceImp implements GameService {
     public Game findGameById(int id){
         Game game = gameRepository.findById(id).get();
         return game;
+    }
+
+    @Override
+    public boolean updateGameStatus(int game_id, String state) {
+        Optional<Game> game = gameRepository.findById(game_id);
+        if (!game.isPresent()){
+            return false;
+        }
+        else{
+            game.get().setState(state);
+            gameRepository.save(game.get());
+        }
+
+        return true;
     }
 
     @Override

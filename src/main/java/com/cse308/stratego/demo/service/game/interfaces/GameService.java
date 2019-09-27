@@ -14,4 +14,5 @@ public interface GameService {
     List<Game> allGames();
     List<Game> getGamesByPlayer(int player_id);
     Game findGameById(int id);
+    boolean updateGameStatus(int game_id, String status);
 }
