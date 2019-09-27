@@ -392,12 +392,12 @@ class Game extends React.Component {
     }
 
     componentWillUnmount(){
-        // this.handleQuit();
-        // if(this.state.gameOver){
-        //     console.log('game is actually over');
-        // }else{
-        //     console.log('unfinished');
-        // }
+        if(this.state.gameOver){
+            console.log('game is actually over');
+        }else{
+            this.handleQuit();
+            console.log('unfinished');
+        }
     }
 
     addToLog(log_item) {
