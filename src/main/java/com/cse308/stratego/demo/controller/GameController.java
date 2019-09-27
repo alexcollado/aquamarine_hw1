@@ -47,13 +47,6 @@ public class GameController {
         return gamedto;
     }
 
-    @RequestMapping(path="/setEndResult/{game_id}", method= RequestMethod.POST, headers = "Accept=application/json")
-    public @ResponseBody Game newMove(@PathVariable int game_id,
-                                        @RequestBody String result
-                                        ) {
-        return null;
-    }
-
     @RequestMapping(path="/playerGames/{player_id}", method= RequestMethod.GET, headers = "Accept=application/json")
     public @ResponseBody ResponseEntity<List<Game>> playerGames(@PathVariable int player_id) {
         List<Game> games = gameService.getGamesByPlayer(player_id);

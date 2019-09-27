@@ -49,9 +49,9 @@ public class MoveController {
     @RequestMapping(path="/gameMoves/{game_id}", method= RequestMethod.GET, headers = "Accept=application/json")
     public @ResponseBody ResponseEntity<List<Move>> gameMoves(@PathVariable int game_id) {
         List<Move> moves = moveService.getMovesByGame(game_id);
-        /**
-         * FIXME fix getMovesByGame jic there are no moves yet
-         */
+         if(moves == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(moves);
     }
 

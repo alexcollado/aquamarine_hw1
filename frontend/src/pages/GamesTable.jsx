@@ -30,12 +30,12 @@ class UserMenu extends Component {
         })
         .then(response => {
             if(response.status !== 200) {
+                console.log("no response = prob no moves");
                 return null;
             }
             return response.json();
         })
         .then(data => {
-            console.log(data);
             if(data != null) {
                 let arr = [];
                 for(let i = 0; i < data.length; i++) {
@@ -47,6 +47,20 @@ class UserMenu extends Component {
                 let moveCont = {
                     id: g.id,
                     moves: arr
+                }
+                this.setState(prevState => ({
+                    allMoves: [...prevState.allMoves, moveCont],
+                }))
+                return data;
+            }else{
+                console.log('data is null');
+                let arr = [];
+                arr.push({
+                    description: 'No moves recorded',
+                });
+                let moveCont = {
+                    id: g.id,
+                    moves: arr,
                 }
                 this.setState(prevState => ({
                     allMoves: [...prevState.allMoves, moveCont],
